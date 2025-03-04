@@ -151,7 +151,7 @@ const PopChat = ({
   if (!open) return null;
 
   return (
-    <Draggable>
+    <Draggable cancel={".noDrag"}>
       <Box sx={readOnly ? styles.readOnlyBoxHeader : styles.boxHeader}>
         <Head
           title={title}
@@ -197,6 +197,7 @@ const PopChat = ({
           >
             <Stack direction="row" spacing={1} alignItems="center">
               <TextField
+                className="noDrag"
                 variant="outlined"
                 autoComplete="off"
                 fullWidth

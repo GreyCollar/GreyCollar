@@ -21,7 +21,7 @@ const Head = memo(
     <Box sx={styles.header}>
       <Box sx={{ marginRight: "auto", color: "white" }}>{title}</Box>
       {!readOnly && (
-        <IconButton onClick={changeMute}>
+        <IconButton onClick={changeMute} className="noDrag">
           <Iconify
             icon={
               mute
@@ -32,7 +32,7 @@ const Head = memo(
           />
         </IconButton>
       )}
-      <IconButton onClick={handleClose}>
+      <IconButton onClick={handleClose} className="noDrag">
         <Iconify
           icon="solar:close-circle-line-duotone"
           sx={{ width: 26, height: 26 }}
