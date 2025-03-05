@@ -4,10 +4,9 @@ import Colleague from "../models/Colleague";
 import ColleagueKnowledge from "../models/ColleagueKnowledge";
 import Joi from "joi";
 import Knowledge from "../models/Knowledge";
-import { Op } from "sequelize";
-import express, { query } from "express";
-import schemas from "../schemas";
+import express from "express";
 import knowledge from "../functions/knowledge";
+import schemas from "../schemas";
 
 const router = express.Router();
 
@@ -86,161 +85,87 @@ router.get("/:id", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { id } = req.params;
 
-  const knowledge = await Knowledge.findAll({
-    where: { id },
+  const knowledgeItem = await Knowledge.findByPk(id, {
     include: [
       {
         model: ColleagueKnowledge,
-        where: {
-          [Op.or]: [{ teamId }, { teamId: null }],
-        },
         attributes: ["teamId", "colleagueId"],
         include: [
           {
             model: Colleague,
-            required: false,
+            attributes: ["id", "teamId"],
           },
         ],
       },
     ],
   });
 
-  const colleagueKnowledge = knowledge.map((knowledge) =>
-    knowledge.dataValues.ColleagueKnowledges.map(
-      (colleagueKnowledge) => colleagueKnowledge.dataValues
-    )
+  if (!knowledgeItem) {
+    return res.status(404).json({ message: "Knowledge not found" });
+  }
+
+  const colleagueKnowledges = Array.isArray(knowledgeItem.ColleagueKnowledge)
+    ? knowledgeItem.ColleagueKnowledge
+    : [knowledgeItem.ColleagueKnowledge];
+
+  const hasAccess = colleagueKnowledges.some(
+    (ck) =>
+      ck.teamId === teamId || (ck.Colleague && ck.Colleague.teamId === teamId)
   );
 
-  if (colleagueKnowledge[0] && colleagueKnowledge[0][0].teamId) {
-    if (colleagueKnowledge[0][0].teamId !== teamId) {
-      res.status(401).end();
-      return;
-    }
-  } else {
-    const colleaguesTeamId = colleagueKnowledge.flatMap((colleague) =>
-      colleague.map((item) => item.Colleague.dataValues.teamId)
-    );
-
-    if (colleaguesTeamId.length === 0) {
-      res.status(404).end();
-      return;
-    }
-
-    if (!colleaguesTeamId.some((teamId) => teamId === teamId)) {
-      res.status(401).end();
-      return;
-    }
-  }
-  //eslint-disable-next-line
-  const { ColleagueKnowledges, ...knowledgeData } = knowledge[0].dataValues;
-
-  const colleagueId = ColleagueKnowledges[0].dataValues.colleagueId;
-
-  if (colleagueId) {
-    res.json({ ...knowledgeData, colleagueId });
-  } else if (teamId) {
-    res.json({ ...knowledgeData, teamId });
-  }
-});
-
-router.patch("/:id", async (req, res) => {
-  const { projectId: teamId } = req.session;
-  const { id } = req.params;
-  const { body } = req;
-  const validatedBody = Joi.attempt(body, schemas.Knowledge.update);
-
-  const knowledge = await Knowledge.findAll({
-    where: { id },
-    include: [
-      {
-        model: ColleagueKnowledge,
-        where: {
-          [Op.or]: [{ teamId }, { teamId: null }],
-        },
-        attributes: ["teamId", "colleagueId"],
-        include: [
-          {
-            model: Colleague,
-            required: false,
-          },
-        ],
-      },
-    ],
-  });
-
-  const colleagueKnowledge = knowledge.map((knowledge) =>
-    knowledge.dataValues.ColleagueKnowledges.map(
-      (colleagueKnowledge) => colleagueKnowledge.dataValues
-    )
-  );
-
-  if (colleagueKnowledge[0][0].teamId) {
-    if (colleagueKnowledge[0][0].teamId !== teamId) {
-      res.status(401).end();
-      return;
-    }
-  } else {
-    const colleaguesTeamId = colleagueKnowledge.flatMap((colleague) =>
-      colleague.map((item) => item.Colleague.dataValues.teamId)
-    );
-
-    if (!colleaguesTeamId.some((teamId) => teamId === teamId)) {
-      res.status(401).end();
-      return;
-    }
+  if (!hasAccess) {
+    return res.status(403).json({ message: "Unauthorized access" });
   }
 
-  await Knowledge.update(validatedBody, { where: { id } });
+  const { ColleagueKnowledge: ColleagueKnowledgeData, ...knowledgeData } =
+    knowledgeItem.toJSON();
 
-  res.status(204).end();
+  const colleagueId = ColleagueKnowledgeData?.colleagueId;
+
+  const responseData = {
+    ...knowledgeData,
+    ...(colleagueId ? { colleagueId, teamId } : { teamId }),
+  };
+
+  return res.json(responseData);
 });
 
 router.delete("/:id", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { id } = req.params;
 
-  const knowledge = await Knowledge.findAll({
-    where: { id },
+  const knowledgeItem = await Knowledge.findByPk(id, {
     include: [
       {
         model: ColleagueKnowledge,
-        where: {
-          [Op.or]: [{ teamId }, { teamId: null }],
-        },
         attributes: ["teamId", "colleagueId"],
         include: [
           {
             model: Colleague,
-            required: false,
+            attributes: ["id", "teamId"],
           },
         ],
       },
     ],
   });
 
-  const colleagueKnowledge = knowledge
-    .map((knowledge) => knowledge.dataValues)
-    .map((knowledge) =>
-      knowledge.ColleagueKnowledges.map(
-        (colleagueKnowledge) => colleagueKnowledge.dataValues
-      )
-    );
-
-  if (colleagueKnowledge[0][0].teamId) {
-    if (colleagueKnowledge[0][0].teamId !== teamId) {
-      res.status(401).end();
-      return;
-    }
-  } else {
-    const colleaguesTeamId = colleagueKnowledge.flatMap((colleague) =>
-      colleague.map((item) => item.Colleague.dataValues.teamId)
-    );
-
-    if (!colleaguesTeamId.some((teamId) => teamId === teamId)) {
-      res.status(401).end();
-      return;
-    }
+  if (!knowledgeItem) {
+    return res.status(404).json({ message: "Knowledge not found" });
   }
+
+  const colleagueKnowledges = Array.isArray(knowledgeItem.ColleagueKnowledge)
+    ? knowledgeItem.ColleagueKnowledge
+    : [knowledgeItem.ColleagueKnowledge];
+
+  const hasAccess = colleagueKnowledges.some(
+    (ck) =>
+      ck.teamId === teamId || (ck.Colleague && ck.Colleague.teamId === teamId)
+  );
+
+  if (!hasAccess) {
+    return res.status(403).json({ message: "Unauthorized access" });
+  }
+
   await Knowledge.destroy({ where: { id } });
 
   res.status(204).end();
