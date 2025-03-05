@@ -102,7 +102,7 @@ function TeamWizard({ open, onClose }) {
   const { organizations, loading } = useOrganizations();
   const [organization, setOrganization] = useState({
     name: "",
-    id: "",
+    id: null,
   });
   const [team, setTeam] = useState({
     team: "",
@@ -151,9 +151,11 @@ function TeamWizard({ open, onClose }) {
     try {
       if (organization.id) {
         await createTeam(team, organization.id);
+        onClose();
       } else {
         const result = await createOrganization(organization);
         await createTeam(team, result.id);
+        onClose();
       }
     } catch (error) {
       console.error(error);
@@ -199,9 +201,8 @@ function TeamWizard({ open, onClose }) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSave = () => {
-    onSubmit({ organization, team });
-    onClose();
+  const handleSave = async () => {
+    await onSubmit({ organization, team });
     setActiveStep(0);
   };
 

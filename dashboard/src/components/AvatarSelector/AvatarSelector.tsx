@@ -35,9 +35,15 @@ export default function AvatarSelector({
             name={avatar}
             source={
               avatarSrc ||
-              `https://cdn.nucleoid.com/greycollar/avatars/${avatar}.jpg`
+              `https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
+                /:/g,
+                ""
+              )}.jpg`
             }
-            avatarUrl={`https://cdn.nucleoid.com/greycollar/avatars/${avatar}.jpg`}
+            avatarUrl={`https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
+              /:/g,
+              ""
+            )}.jpg`}
             sx={{
               display: "flex",
               alignSelf: "center",
