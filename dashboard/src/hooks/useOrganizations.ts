@@ -26,12 +26,15 @@ function useOrganizations() {
   const { loading, error, handleResponse } = useApi();
 
   const [teamSelected] = useEvent("TEAM_SELECTED", null);
+  const [organizationCreated] = useEvent("ORGANIZATION_CREATED", {
+    organization: null,
+  });
 
   useEffect(() => {
     getOrganizations();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamSelected]);
+  }, [teamSelected, organizationCreated]);
 
   const getOrganizations = useCallback(() => {
     handleResponse(

@@ -33,14 +33,20 @@ export default function AvatarSelector({
         >
           <SourcedAvatar
             name={avatar}
-            source={`https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
-              /:/g,
-              ""
-            )}.jpg`}
-            avatarUrl={`https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
-              /:/g,
-              ""
-            )}.jpg`}
+            source={
+              avatarSrc ||
+              `https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
+                /:/g,
+                ""
+              )}.jpg`
+            }
+            avatarUrl={
+              avatarSrc ||
+              `https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
+                /:/g,
+                ""
+              )}.jpg`
+            }
             sx={{
               display: "flex",
               alignSelf: "center",

@@ -8,7 +8,6 @@ import StepComponent from "../../components/StepComponent/StepComponent";
 import { Summary } from "../../components/ItemSummary/TeamSummary";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
-import { useEvent } from "@nucleoidai/react-event";
 import useOrganization from ".././../hooks/useOrganization";
 import { useOrganizations } from "../../hooks/useOrganizations";
 import { useState } from "react";
@@ -24,6 +23,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 const sampleColleagues = [
   {
@@ -100,10 +100,13 @@ function TeamWizard({ open, onClose }) {
   const [teamSelected] = useEvent("PROJECT_SELECTED", { projectId: null });
 
   const { organizations, loading } = useOrganizations();
-  const [organization, setOrganization] = useState({
+
+  const [organization, setOrganization] = useState<{
+    name: string;
+  }>({
     name: "",
-    id: null,
   });
+
   const [team, setTeam] = useState({
     team: "",
     avatar: "",
@@ -120,7 +123,7 @@ function TeamWizard({ open, onClose }) {
     engineName: "",
   });
 
-  const { createOrganization } = useOrganization(organizations[0]?.id);
+  const { createOrganization } = useOrganization();
   const { createColleague } = useColleagues();
   const { createTeam } = useTeams();
 
@@ -151,11 +154,11 @@ function TeamWizard({ open, onClose }) {
     try {
       if (organization.id) {
         await createTeam(team, organization.id);
-        onClose();
+        publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
       } else {
         const result = await createOrganization(organization);
         await createTeam(team, result.id);
-        onClose();
+        publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
       }
     } catch (error) {
       console.error(error);
@@ -181,7 +184,6 @@ function TeamWizard({ open, onClose }) {
       });
       setOrganization({
         name: "",
-        id: "",
       });
       setTeam({
         team: "",
@@ -207,11 +209,10 @@ function TeamWizard({ open, onClose }) {
   };
 
   const handleEmojiSelect = (emoji) => {
-    console.log(emoji);
     setTeam((prevItem) => {
       return {
         ...prevItem,
-        avatar: `${emoji.id}`,
+        avatar: `:${emoji.id}:`,
         src: `${emoji.src}`,
       };
     });
@@ -266,7 +267,6 @@ function TeamWizard({ open, onClose }) {
                   onClick={() => {
                     setOrganization({
                       name: organization.name,
-                      id: organization.id,
                     });
                     setActiveStep(activeStep + 1);
                   }}
@@ -528,7 +528,6 @@ function TeamWizard({ open, onClose }) {
           });
           setOrganization({
             name: "",
-            id: "",
           });
           setActiveStep(0);
         }
