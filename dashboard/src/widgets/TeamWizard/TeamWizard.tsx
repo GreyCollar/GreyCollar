@@ -207,7 +207,18 @@ function TeamWizard({ open, onClose }) {
   };
 
   const handleEmojiSelect = (emoji) => {
+    console.log(emoji);
     setTeam((prevItem) => {
+      return {
+        ...prevItem,
+        avatar: `${emoji.id}`,
+        src: `${emoji.src}`,
+      };
+    });
+  };
+  const handleAvatarSelect = (emoji) => {
+    console.log(emoji);
+    setColleague((prevItem) => {
       return {
         ...prevItem,
         avatar: `:${emoji.id}:`,
@@ -473,7 +484,7 @@ function TeamWizard({ open, onClose }) {
       case 3:
         return (
           <SelectAvatar
-            handleEmojiSelect={handleEmojiSelect}
+            handleEmojiSelect={handleAvatarSelect}
             avatarSrc={colleague.src}
             avatar={colleague?.avatar?.replace(/:/g, "")}
           />

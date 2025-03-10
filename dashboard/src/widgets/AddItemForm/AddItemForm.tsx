@@ -1,5 +1,5 @@
 import AppsIcon from "@mui/icons-material/Apps";
-import DepartmantIcons from "../../lib/TeamIcons";
+import ColleagueAndTeamAvatars from "../../lib/ColleagueAndTeamAvatars";
 import Picker from "@emoji-mart/react";
 import styles from "./styles";
 
@@ -110,7 +110,7 @@ function NewItemForm({
                 <Dialog open={emojiDialogOpen}>
                   <Picker
                     onEmojiSelect={handleEmojiSelect}
-                    custom={DepartmantIcons}
+                    custom={ColleagueAndTeamAvatars}
                     categories={"team_icons"}
                     emojiButtonSize={90}
                     emojiSize={75}

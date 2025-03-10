@@ -1,9 +1,9 @@
 import AddIcon from "@mui/icons-material/Add";
+import ColleagueAndTeamAvatars from "../../lib/ColleagueAndTeamAvatars";
 import IconButton from "@mui/material/IconButton";
 import Picker from "@emoji-mart/react";
 import React from "react";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
-import TeamIcons from "../../lib/TeamIcons";
 
 import { Dialog, Stack } from "@mui/material";
 
@@ -60,8 +60,8 @@ export default function IconSelector({ handleEmojiSelect, avatarSrc, avatar }) {
           onEmojiSelect={(emoji) => {
             handleEmojiSelect(emoji), setEmojiDialogOpen(false);
           }}
-          custom={TeamIcons}
-          categories={"team_icons"}
+          custom={ColleagueAndTeamAvatars}
+          categories={["team_icons"]}
           searchPosition={"none"}
           navPosition="none"
           emojiButtonSize={90}
