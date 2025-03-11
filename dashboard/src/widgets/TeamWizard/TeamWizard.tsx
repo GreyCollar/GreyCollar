@@ -9,7 +9,6 @@ import StepComponent from "../../components/StepComponent/StepComponent";
 import { Summary } from "../../components/ItemSummary/TeamSummary";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
-import { useForm } from "react-hook-form";
 import useOrganization from ".././../hooks/useOrganization";
 import { useOrganizations } from "../../hooks/useOrganizations";
 import useTeams from "../../hooks/useTeams";
@@ -24,6 +23,7 @@ import {
   DialogContent,
   Typography,
 } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 import React, { useEffect } from "react";
 import { publish, useEvent } from "@nucleoidai/react-event";
 
@@ -189,6 +189,7 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
     setValue,
     getValues,
     reset,
+    control,
     formState: { errors },
   } = methods;
 
@@ -458,17 +459,19 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
-          <SparkleInput
-            data-cy="team-wizard-org-name-input"
-            prop="Organization Name"
-            value={getValues("organization.name")}
-            onChange={(e) =>
-              setValue("organization.name", e.target.value, {
-                shouldValidate: true,
-              })
-            }
-            onRandomValue={""}
-            multiline={""}
+          <Controller
+            name="organization.name"
+            control={control}
+            render={({ field }) => (
+              <SparkleInput
+                data-cy="team-wizard-org-name-input"
+                prop="Organization Name"
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                onRandomValue={""}
+                multiline={""}
+              />
+            )}
           />
           {errors.organization?.name && (
             <Typography color="error" variant="caption">
@@ -532,15 +535,19 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
-          <SparkleInput
-            data-cy="colleague-wizard-name-input"
-            prop="Team Name"
-            value={getValues("team.name")}
-            onChange={(e) =>
-              setValue("team.name", e.target.value, { shouldValidate: true })
-            }
-            onRandomValue={""}
-            multiline={""}
+          <Controller
+            name="team.name"
+            control={control}
+            render={({ field }) => (
+              <SparkleInput
+                data-cy="colleague-wizard-name-input"
+                prop="Team Name"
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                onRandomValue={""}
+                multiline={""}
+              />
+            )}
           />
           {errors.team?.name && (
             <Typography color="error" variant="caption">
@@ -556,17 +563,19 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
-          <SparkleInput
-            data-cy="colleague-wizard-name-input"
-            prop="name"
-            value={getValues("colleague.name")}
-            onChange={(e) =>
-              setValue("colleague.name", e.target.value, {
-                shouldValidate: true,
-              })
-            }
-            onRandomValue={""}
-            multiline={""}
+          <Controller
+            name="colleague.name"
+            control={control}
+            render={({ field }) => (
+              <SparkleInput
+                data-cy="colleague-wizard-name-input"
+                prop="name"
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                onRandomValue={""}
+                multiline={""}
+              />
+            )}
           />
           {errors.colleague?.name && (
             <Typography color="error" variant="caption">
@@ -643,18 +652,20 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const Personality = () => {
     return (
       <>
-        <SparkleInput
-          data-cy="colleague-wizard-character-input"
-          prop="character"
-          onChange={(e) =>
-            setValue("colleague.character", e.target.value, {
-              shouldValidate: true,
-            })
-          }
-          onRandomValue={() => handleRandomValue("character")}
-          value={getValues("colleague.character")}
-          multiline
-          rows={11}
+        <Controller
+          name="colleague.character"
+          control={control}
+          render={({ field }) => (
+            <SparkleInput
+              data-cy="colleague-wizard-character-input"
+              prop="character"
+              onChange={(e) => field.onChange(e.target.value)}
+              onRandomValue={() => handleRandomValue("character")}
+              value={field.value}
+              multiline
+              rows={11}
+            />
+          )}
         />
         {errors.colleague?.character && (
           <Typography color="error" variant="caption">
@@ -668,16 +679,20 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const Responsibility = () => {
     return (
       <>
-        <SparkleInput
-          data-cy="colleague-wizard-role-input"
-          prop="role"
-          onChange={(e) =>
-            setValue("colleague.role", e.target.value, { shouldValidate: true })
-          }
-          onRandomValue={() => handleRandomValue("role")}
-          value={getValues("colleague.role")}
-          multiline
-          rows={11}
+        <Controller
+          name="colleague.role"
+          control={control}
+          render={({ field }) => (
+            <SparkleInput
+              data-cy="colleague-wizard-role-input"
+              prop="role"
+              onChange={(e) => field.onChange(e.target.value)}
+              onRandomValue={() => handleRandomValue("role")}
+              value={getValues("colleague.role")}
+              multiline
+              rows={11}
+            />
+          )}
         />
         {errors.colleague?.role && (
           <Typography color="error" variant="caption">
