@@ -1,8 +1,8 @@
 import { Label } from "@nucleoidai/platform/minimal/components";
-import MoreVertButton from "../MoreButton/MoreButton";
 
 import {
   Card,
+  IconButton,
   Pagination,
   Table,
   TableBody,
@@ -10,18 +10,18 @@ import {
   TableContainer,
   TableRow,
 } from "@mui/material";
-import React, { useState } from "react";
 import {
+  Iconify,
   Scrollbar,
   TableHeadCustom,
   TableSelectedAction,
 } from "@nucleoidai/platform/minimal/components";
+import React, { useState } from "react";
 
 function KnowledgeTable({
   table,
   selectedType,
   knowledges,
-  handleEdit,
   handleDeleteClick,
 }) {
   const getTableHead = (selectedType) => {
@@ -64,7 +64,7 @@ function KnowledgeTable({
   const statusLabel = (row, status) => {
     return row.teamId !== null ? (
       <>
-        {status}{" "}
+        {status}
         <Label
           sx={{
             backgroundColor: "rgba(97, 97, 97, 0.2)",
@@ -157,11 +157,18 @@ function KnowledgeTable({
                       </>
                     )}
                     <TableCell sx={{ width: "5%" }}>
-                      <MoreVertButton
-                        handleDelete={() => handleDeleteClick(row)}
-                        handleEdit={() => handleEdit(row)}
-                        isEditable={row.type !== "URL"}
-                      />
+                      <IconButton
+                        onClick={() => handleDeleteClick(row)}
+                        sx={{
+                          "&:hover": {
+                            "& svg": {
+                              color: "error.main",
+                            },
+                          },
+                        }}
+                      >
+                        <Iconify icon="mdi:trash" />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

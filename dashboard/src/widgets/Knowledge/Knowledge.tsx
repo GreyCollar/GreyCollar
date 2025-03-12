@@ -1,7 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import AddItemDialog from "../../components/AddItemDialog/AddItemDialog";
 import DeleteConfirmation from "../../components/DeleteConfirmation/DeleteConfirmation";
-import EditDialog from "../../components/EditDialog/EditDialog";
 import KnowledgeTable from "../../components/KnowledgeTable/KnowledgeTable";
 import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
@@ -12,7 +11,7 @@ import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 
 function Knowledge({ colleagueId }) {
-  const { knowledges, deleteKnowledges, updateKnowledges, createKnowledge } =
+  const { knowledges, deleteKnowledges, createKnowledge } =
     useKnowledges(colleagueId);
 
   const table = useTable();
@@ -37,7 +36,6 @@ function Knowledge({ colleagueId }) {
 
   const [selectedItem, setSelectedItem] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
 
   const filteredKnowledges =
     selectedType === "ALL"
@@ -50,13 +48,6 @@ function Knowledge({ colleagueId }) {
     setSelectedType(event.target.value);
   };
 
-  const handleEdit = (item) => {
-    if (item) {
-      setSelectedItem(item);
-      setOpenEdit(true);
-    }
-  };
-
   const handleDeleteClick = (item) => {
     setSelectedItem(item);
     setOpenDeleteDialog(true);
@@ -67,34 +58,6 @@ function Knowledge({ colleagueId }) {
       const deleteResponse = await deleteKnowledges(item);
       if (deleteResponse) {
         knowledges.filter((knowledge) => knowledge.id !== item.id);
-      }
-    }
-  };
-
-  const handleSave = async (updatedItem) => {
-    if (updatedItem) {
-      if (updatedItem.type === "TEXT") {
-        updatedItem = {
-          ...updatedItem,
-          question: undefined,
-          answer: undefined,
-          url: undefined,
-        };
-      } else if (updatedItem.type === "QA") {
-        updatedItem = {
-          ...updatedItem,
-          text: undefined,
-          url: undefined,
-        };
-      }
-
-      const updateResponse = await updateKnowledges(updatedItem);
-      if (updateResponse) {
-        knowledges.map((knowledge) =>
-          knowledge.id === updatedItem.id ? updatedItem : knowledge
-        );
-
-        setOpenEdit(false);
       }
     }
   };
@@ -128,7 +91,6 @@ function Knowledge({ colleagueId }) {
               table={table}
               selectedType={selectedType}
               knowledges={filteredKnowledges}
-              handleEdit={handleEdit}
               handleDeleteClick={handleDeleteClick}
             />
           ) : (
@@ -158,15 +120,6 @@ function Knowledge({ colleagueId }) {
             </Fab>
           </Stack>
         </Box>
-
-        <EditDialog
-          openEdit={openEdit}
-          setOpenEdit={setOpenEdit}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          selectedType={selectedType}
-          handleSave={handleSave}
-        />
 
         <DeleteConfirmation
           openDeleteDialog={openDeleteDialog}

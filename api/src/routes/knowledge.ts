@@ -1,13 +1,13 @@
 import * as platform from "@nucleoidai/platform-express";
 
+import { AuthenticationError } from "@nucleoidai/platform-express/error";
 import Colleague from "../models/Colleague";
-import ColleagueKnowledge from "../models/ColleagueKnowledge";
 import Joi from "joi";
 import Knowledge from "../models/Knowledge";
-import { Op } from "sequelize";
-import express, { query } from "express";
-import schemas from "../schemas";
+import colleague from "../functions/colleague";
+import express from "express";
 import knowledge from "../functions/knowledge";
+import schemas from "../schemas";
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 
   if (knowledgeTeamId) {
     if (knowledgeTeamId !== teamId) {
-      return res.status(401).end();
+      throw new AuthenticationError();
     }
   } else {
     const colleague = await Colleague.findOne({
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
     });
 
     if (!colleague) {
-      return res.status(401).end();
+      throw new AuthenticationError();
     }
   }
 
@@ -60,17 +60,14 @@ router.get("/", async (req, res) => {
   };
 
   if (queryTeamId && queryTeamId !== teamId) {
-    return res.status(401).end();
+    throw new AuthenticationError();
   }
 
   if (colleagueId) {
-    const colleagueInstance = await Colleague.findByPk(colleagueId);
-    if (!colleagueInstance) {
-      return res.status(404).end();
-    }
+    const colleagueInstance = await colleague.get({ colleagueId });
 
     if (colleagueInstance.teamId !== teamId) {
-      return res.status(401).end();
+      throw new AuthenticationError();
     }
   }
 
@@ -79,6 +76,7 @@ router.get("/", async (req, res) => {
     teamId: queryTeamId,
     type,
   });
+
   res.json(knowledgeList);
 });
 
@@ -86,161 +84,52 @@ router.get("/:id", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { id } = req.params;
 
-  const knowledge = await Knowledge.findAll({
-    where: { id },
-    include: [
-      {
-        model: ColleagueKnowledge,
-        where: {
-          [Op.or]: [{ teamId }, { teamId: null }],
-        },
-        attributes: ["teamId", "colleagueId"],
-        include: [
-          {
-            model: Colleague,
-            required: false,
-          },
-        ],
-      },
-    ],
+  const knowledgeItem = await knowledge.get({
+    knowledgeId: id,
+    includeColleague: true,
   });
 
-  const colleagueKnowledge = knowledge.map((knowledge) =>
-    knowledge.dataValues.ColleagueKnowledges.map(
-      (colleagueKnowledge) => colleagueKnowledge.dataValues
-    )
-  );
+  const { ColleagueKnowledge } = knowledgeItem;
 
-  if (colleagueKnowledge[0] && colleagueKnowledge[0][0].teamId) {
-    if (colleagueKnowledge[0][0].teamId !== teamId) {
-      res.status(401).end();
-      return;
-    }
-  } else {
-    const colleaguesTeamId = colleagueKnowledge.flatMap((colleague) =>
-      colleague.map((item) => item.Colleague.dataValues.teamId)
-    );
+  const hasAccess =
+    ColleagueKnowledge.teamId === teamId ||
+    ColleagueKnowledge.Colleague?.teamId === teamId;
 
-    if (colleaguesTeamId.length === 0) {
-      res.status(404).end();
-      return;
-    }
-
-    if (!colleaguesTeamId.some((teamId) => teamId === teamId)) {
-      res.status(401).end();
-      return;
-    }
-  }
-  //eslint-disable-next-line
-  const { ColleagueKnowledges, ...knowledgeData } = knowledge[0].dataValues;
-
-  const colleagueId = ColleagueKnowledges[0].dataValues.colleagueId;
-
-  if (colleagueId) {
-    res.json({ ...knowledgeData, colleagueId });
-  } else if (teamId) {
-    res.json({ ...knowledgeData, teamId });
-  }
-});
-
-router.patch("/:id", async (req, res) => {
-  const { projectId: teamId } = req.session;
-  const { id } = req.params;
-  const { body } = req;
-  const validatedBody = Joi.attempt(body, schemas.Knowledge.update);
-
-  const knowledge = await Knowledge.findAll({
-    where: { id },
-    include: [
-      {
-        model: ColleagueKnowledge,
-        where: {
-          [Op.or]: [{ teamId }, { teamId: null }],
-        },
-        attributes: ["teamId", "colleagueId"],
-        include: [
-          {
-            model: Colleague,
-            required: false,
-          },
-        ],
-      },
-    ],
-  });
-
-  const colleagueKnowledge = knowledge.map((knowledge) =>
-    knowledge.dataValues.ColleagueKnowledges.map(
-      (colleagueKnowledge) => colleagueKnowledge.dataValues
-    )
-  );
-
-  if (colleagueKnowledge[0][0].teamId) {
-    if (colleagueKnowledge[0][0].teamId !== teamId) {
-      res.status(401).end();
-      return;
-    }
-  } else {
-    const colleaguesTeamId = colleagueKnowledge.flatMap((colleague) =>
-      colleague.map((item) => item.Colleague.dataValues.teamId)
-    );
-
-    if (!colleaguesTeamId.some((teamId) => teamId === teamId)) {
-      res.status(401).end();
-      return;
-    }
+  if (!hasAccess) {
+    throw new AuthenticationError();
   }
 
-  await Knowledge.update(validatedBody, { where: { id } });
+  const { colleagueId } = ColleagueKnowledge;
 
-  res.status(204).end();
+  delete knowledgeItem.ColleagueKnowledge;
+
+  const responseData = {
+    ...knowledgeItem,
+    ...(colleagueId ? { colleagueId, teamId } : { teamId }),
+  };
+
+  return res.json(responseData);
 });
 
 router.delete("/:id", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { id } = req.params;
 
-  const knowledge = await Knowledge.findAll({
-    where: { id },
-    include: [
-      {
-        model: ColleagueKnowledge,
-        where: {
-          [Op.or]: [{ teamId }, { teamId: null }],
-        },
-        attributes: ["teamId", "colleagueId"],
-        include: [
-          {
-            model: Colleague,
-            required: false,
-          },
-        ],
-      },
-    ],
+  const knowledgeItem = await knowledge.get({
+    knowledgeId: id,
+    includeColleague: true,
   });
 
-  const colleagueKnowledge = knowledge
-    .map((knowledge) => knowledge.dataValues)
-    .map((knowledge) =>
-      knowledge.ColleagueKnowledges.map(
-        (colleagueKnowledge) => colleagueKnowledge.dataValues
-      )
-    );
+  const { ColleagueKnowledge } = knowledgeItem;
 
-  if (colleagueKnowledge[0][0].teamId) {
-    if (colleagueKnowledge[0][0].teamId !== teamId) {
-      res.status(401).end();
-      return;
-    }
-  } else {
-    const colleaguesTeamId = colleagueKnowledge.flatMap((colleague) =>
-      colleague.map((item) => item.Colleague.dataValues.teamId)
-    );
+  const hasAccess =
+    ColleagueKnowledge.teamId === teamId ||
+    ColleagueKnowledge.Colleague?.teamId === teamId;
 
-    if (!colleaguesTeamId.some((teamId) => teamId === teamId)) {
-      res.status(401).end();
-      return;
-    }
+  if (!hasAccess) {
+    throw new AuthenticationError();
   }
+
   await Knowledge.destroy({ where: { id } });
 
   res.status(204).end();

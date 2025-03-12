@@ -51,26 +51,6 @@ function useKnowledges(colleagueId) {
     [handleResponse]
   );
 
-  const updateKnowledges = useCallback(
-    (knowledges) => {
-      return handleResponse(
-        http.patch(`/knowledge/${knowledges.id}`, {
-          text: knowledges.text,
-          question: knowledges.question,
-          answer: knowledges.answer,
-        }),
-        (response) => {
-          publish("KNOWLEDGE_UPDATED", { knowledges: response.data });
-          return response.data;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    },
-    [handleResponse]
-  );
-
   const deleteKnowledges = useCallback(
     (knowledge) => {
       return handleResponse(
@@ -107,7 +87,6 @@ function useKnowledges(colleagueId) {
     loading,
     error,
     getColeagueKnowledge,
-    updateKnowledges,
     deleteKnowledges,
     createKnowledge,
   };

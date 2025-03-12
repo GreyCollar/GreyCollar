@@ -1,12 +1,11 @@
 import Colleague from "../models/Colleague";
 import ColleagueKnowledge from "../models/ColleagueKnowledge";
 import Knowledge from "../models/Knowledge";
+import { NotFoundError } from "@nucleoidai/platform-express/error";
 import { Op } from "sequelize";
-import { Project } from "@nucleoidai/platform-express/models";
 import Step from "../models/Step";
 import Task from "../models/Task";
 import scrapper from "../actions/scrapper";
-
 async function create({
   teamId,
   colleagueId,
@@ -160,4 +159,44 @@ async function list({
     }));
 }
 
-export default { create, list };
+async function get({
+  knowledgeId,
+  includeColleague = false,
+}: {
+  knowledgeId: string;
+  includeColleague?: boolean;
+}) {
+  const includeOptions: {
+    model: typeof ColleagueKnowledge;
+    attributes: string[];
+    include: {
+      model: typeof Colleague;
+      attributes: string[];
+    }[];
+  }[] = [];
+
+  if (includeColleague) {
+    includeOptions.push({
+      model: ColleagueKnowledge,
+      attributes: ["teamId", "colleagueId"],
+      include: [
+        {
+          model: Colleague,
+          attributes: ["id", "teamId"],
+        },
+      ],
+    });
+  }
+
+  const knowledgeItem = await Knowledge.findByPk(knowledgeId, {
+    include: includeOptions,
+  });
+
+  if (!knowledgeItem) {
+    throw new NotFoundError();
+  }
+
+  return knowledgeItem.toJSON();
+}
+
+export default { create, list, get };
