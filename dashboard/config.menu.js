@@ -27,6 +27,12 @@ const menuConfig = {
           icon: "carbon:ibm-cloud-pak-integration",
           path: "/integrations",
         },
+        {
+          title: "Documentation",
+          icon: "oui:documentation",
+          path: "https://greycollar.ai/docs",
+          external: true,
+        },
       ],
     },
   ],

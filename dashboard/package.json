@@ -27,7 +27,7 @@
     "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
     "@mui/styled-engine-sc": "^5.14.12",
-    "@nucleoidai/platform": "^1.0.51",
+    "@nucleoidai/platform": "^1.0.52",
     "@nucleoidai/react-event": "^1.1.7",
     "@nucleoidjs/webstorage": "^1.0.5",
     "axios": "^1.7.2",
