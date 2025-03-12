@@ -1,6 +1,7 @@
 import DialogTitle from "@mui/material/DialogTitle";
 import EnginesChart from "../AIMarketplace/AIMarketplaceCard";
 import IconSelector from "../../components/IconSelector/IconSelector";
+import type { Resolver } from "react-hook-form";
 import SelectAvatar from "../../components/AvatarSelector/AvatarSelector";
 import SparkleInput from "../../components/SparkleInput/SparkleInput";
 import { Stack } from "@mui/material";
@@ -8,11 +9,10 @@ import StepComponent from "../../components/StepComponent/StepComponent";
 import { Summary } from "../../components/ItemSummary/TeamSummary";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
-import { useEvent } from "@nucleoidai/react-event";
 import useOrganization from ".././../hooks/useOrganization";
 import { useOrganizations } from "../../hooks/useOrganizations";
-import { useState } from "react";
 import useTeams from "../../hooks/useTeams";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import {
   Box,
@@ -23,7 +23,11 @@ import {
   DialogContent,
   Typography,
 } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 import React, { useEffect } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
+
+import * as Yup from "yup";
 
 const sampleColleagues = [
   {
@@ -94,35 +98,100 @@ const roles = [
   "Paramedic",
 ];
 
-function TeamWizard({ open, onClose }) {
+type PropertyOptionType = "name" | "character" | "role";
+
+function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const projectId = storage.get("projectId");
-
   const [teamSelected] = useEvent("PROJECT_SELECTED", { projectId: null });
-
   const { organizations, loading } = useOrganizations();
-  const [organization, setOrganization] = useState({
-    name: "",
-    id: null,
-  });
-  const [team, setTeam] = useState({
-    team: "",
-    avatar: "",
-    src: "",
-    name: "",
-  });
-  const [colleague, setColleague] = useState({
-    name: "",
-    avatar: "",
-    src: "",
-    character: "",
-    role: "",
-    aiEngineId: "",
-    engineName: "",
-  });
-
-  const { createOrganization } = useOrganization(organizations[0]?.id);
+  const [activeStep, setActiveStep] = React.useState(0);
+  const { createOrganization } = useOrganization();
   const { createColleague } = useColleagues();
   const { createTeam } = useTeams();
+
+  type FormValues = {
+    organization: {
+      id?: string;
+      name: string;
+    };
+    team: {
+      name: string;
+      avatar?: string;
+      src?: string;
+    };
+    colleague: {
+      title?: string;
+      name: string;
+      avatar?: string;
+      character: string;
+      role: string;
+      teamId?: string;
+      aiEngineId: string;
+      engineName?: string;
+    };
+  };
+
+  const TeamWizardSchema = Yup.object().shape({
+    organization: Yup.object().shape({
+      id: Yup.string().optional(),
+      name: Yup.string().required("Organization name is required"),
+    }),
+    team: Yup.object().shape({
+      name: Yup.string().required("Team name is required"),
+      avatar: Yup.string().optional(),
+      src: Yup.string().optional(),
+    }),
+    colleague: Yup.object().shape({
+      title: Yup.string().optional(),
+      name: Yup.string().required("Colleague name is required"),
+      avatar: Yup.string().optional(),
+      character: Yup.string().required("Character is required"),
+      role: Yup.string().required("Role is required"),
+      teamId: Yup.string().optional(),
+      aiEngineId: Yup.string().required("AI Engine is required"),
+      engineName: Yup.string().optional(),
+    }),
+  });
+
+  const defaultValues: FormValues = {
+    organization: {
+      id: undefined,
+      name: "",
+    },
+    team: {
+      name: "",
+      avatar: "",
+      src: "",
+    },
+    colleague: {
+      title: "",
+      name: "",
+      avatar: "",
+      character: "",
+      role: "",
+      teamId: "",
+      aiEngineId: "",
+      engineName: "",
+    },
+  };
+
+  const resolver: Resolver<FormValues> = yupResolver(
+    TeamWizardSchema
+  ) as Resolver<FormValues>;
+
+  const methods = useForm<FormValues>({
+    resolver,
+    defaultValues,
+  });
+
+  const {
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    control,
+    formState: { errors },
+  } = methods;
 
   const steps = [
     "Organization",
@@ -145,75 +214,241 @@ function TeamWizard({ open, onClose }) {
     "Select your colleague's engine. this will determine your colleague's engine.",
   ];
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const onSubmit = handleSubmit(
+    async (data) => {
+      try {
+        if (data.organization.id) {
+          await createTeam(data.team, data.organization.id);
+          publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
+        } else {
+          const result = await createOrganization(data.organization);
+          await createTeam(data.team, result.id);
+          publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
+        }
 
-  const onSubmit = async ({ team, organization }) => {
-    try {
-      if (organization.id) {
-        await createTeam(team, organization.id);
+        setActiveStep(0);
         onClose();
-      } else {
-        const result = await createOrganization(organization);
-        await createTeam(team, result.id);
-        onClose();
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
+    },
+    (errors) => {
+      console.log("Validation errors:", errors);
+
+      if (errors.organization) {
+        setActiveStep(0);
+        return;
+      }
+
+      if (errors.team) {
+        setActiveStep(1);
+        return;
+      }
+
+      if (errors.colleague) {
+        if (errors.colleague.name) {
+          setActiveStep(2);
+        } else if (errors.colleague.avatar) {
+          setActiveStep(3);
+        } else if (errors.colleague.character) {
+          setActiveStep(4);
+        } else if (errors.colleague.role) {
+          setActiveStep(5);
+        } else if (errors.colleague.aiEngineId) {
+          setActiveStep(6);
+        }
+      }
     }
-  };
+  );
 
   useEffect(() => {
     const projectId = storage.get("projectId");
-
-    if (
-      teamSelected.projectId === projectId &&
-      Object.keys(colleague).length > 0
-    ) {
+    console.log("projectId", projectId);
+    console.log("name", getValues("colleague.name"));
+    if (teamSelected.projectId === projectId && getValues("colleague.name")) {
+      const colleague = getValues("colleague");
+      colleague.teamId = teamSelected.projectId;
       createColleague(colleague, projectId);
-      setColleague({
-        name: "",
-        avatar: "",
-        src: "",
-        character: "",
-        role: "",
-        aiEngineId: "",
-        engineName: "",
-      });
-      setOrganization({
-        name: "",
-        id: "",
-      });
-      setTeam({
-        team: "",
-        avatar: "",
-        src: "",
-        name: "",
-      });
+      reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamSelected]);
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    const currentStep = activeStep;
+
+    switch (currentStep) {
+      case 0:
+        methods.trigger("organization.name").then((isValid) => {
+          if (isValid) {
+            setActiveStep((prevStep) => prevStep + 1);
+          }
+        });
+        return;
+
+      case 1:
+        methods.trigger("team.name").then((isValid) => {
+          if (isValid) {
+            setActiveStep((prevStep) => prevStep + 1);
+          }
+        });
+        return;
+
+      case 2:
+        methods.trigger("colleague.name").then((isValid) => {
+          if (isValid) {
+            setActiveStep((prevStep) => prevStep + 1);
+          }
+        });
+        return;
+
+      case 3:
+        break;
+
+      case 4:
+        methods.trigger("colleague.character").then((isValid) => {
+          if (isValid) {
+            setActiveStep((prevStep) => prevStep + 1);
+          }
+        });
+        return;
+
+      case 5:
+        methods.trigger("colleague.role").then((isValid) => {
+          if (isValid) {
+            setActiveStep((prevStep) => prevStep + 1);
+          }
+        });
+        return;
+
+      case 6:
+        methods.trigger("colleague.aiEngineId").then((isValid) => {
+          if (isValid) {
+            setActiveStep((prevStep) => prevStep + 1);
+          }
+        });
+        return;
+
+      default:
+        break;
+    }
+
+    setActiveStep((prevStep) => prevStep + 1);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSave = async () => {
-    await onSubmit({ organization, team });
+  const handleSave = () => {
+    const errors = methods.formState.errors;
+
+    if (errors.organization?.name) {
+      setActiveStep(0);
+      return;
+    }
+
+    if (errors.team?.name) {
+      setActiveStep(1);
+      return;
+    }
+
+    if (errors.colleague?.name) {
+      setActiveStep(2);
+      return;
+    }
+
+    if (errors.colleague?.avatar) {
+      setActiveStep(3);
+      return;
+    }
+
+    if (errors.colleague?.character) {
+      setActiveStep(4);
+      return;
+    }
+
+    if (errors.colleague?.role) {
+      setActiveStep(5);
+      return;
+    }
+
+    if (errors.colleague?.aiEngineId) {
+      setActiveStep(6);
+      return;
+    }
+
+    onSubmit();
     setActiveStep(0);
   };
 
-  const handleEmojiSelect = (emoji) => {
-    setTeam((prevItem) => {
-      return {
-        ...prevItem,
-        avatar: `:${emoji.id}:`,
-        src: `${emoji.src}`,
-      };
+  const handleEmojiSelect = (emoji: { id: string; src: string }) => {
+    setValue("team.avatar", `:${emoji.id}:`, { shouldValidate: true });
+    setValue("team.src", `${emoji.src}`, { shouldValidate: true });
+  };
+
+  const handleAvatarSelect = (emoji: { id: string; src: string }) => {
+    setValue("colleague.avatar", `:${emoji.id}:`, { shouldValidate: true });
+  };
+
+  const handleEngineSelect = (engine: { id: string; vendor: string }) => {
+    setValue("colleague.aiEngineId", engine.id, { shouldValidate: true });
+    setValue("colleague.engineName", engine.vendor, { shouldValidate: true });
+    handleNext();
+  };
+
+  const handleRandomValue = (property: PropertyOptionType) => {
+    let randomValue = "";
+    switch (property) {
+      case "name":
+        randomValue = names[Math.floor(Math.random() * names.length)];
+        break;
+      case "character":
+        randomValue = characters[Math.floor(Math.random() * characters.length)];
+        break;
+      case "role":
+        randomValue = roles[Math.floor(Math.random() * roles.length)];
+        break;
+    }
+
+    if (property === "name") {
+      setValue("colleague.name", randomValue, { shouldValidate: true });
+    } else if (property === "character") {
+      setValue("colleague.character", randomValue, { shouldValidate: true });
+    } else if (property === "role") {
+      setValue("colleague.role", randomValue, { shouldValidate: true });
+    }
+  };
+
+  const handleTemplateSelect = (colleagueTpl: (typeof sampleColleagues)[0]) => {
+    setValue("colleague.name", colleagueTpl.name, { shouldValidate: true });
+    setValue("colleague.avatar", colleagueTpl.avatar, { shouldValidate: true });
+    setValue("colleague.character", colleagueTpl.character, {
+      shouldValidate: true,
     });
+    setValue("colleague.role", colleagueTpl.role, { shouldValidate: true });
+    setValue("colleague.aiEngineId", colleagueTpl.aiEngineId, {
+      shouldValidate: true,
+    });
+    setValue("colleague.engineName", colleagueTpl.engineName, {
+      shouldValidate: true,
+    });
+    setActiveStep(7);
+  };
+
+  const handleOrganizationSelect = (organization: {
+    id: string;
+    name: string;
+  }) => {
+    setValue(
+      "organization",
+      {
+        ...organization,
+        name: organization.name,
+      },
+      { shouldValidate: true }
+    );
+    setActiveStep(activeStep + 1);
   };
 
   const Organization = () => {
@@ -224,16 +459,25 @@ function TeamWizard({ open, onClose }) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
-          <SparkleInput
-            data-cy="team-wizard-org-name-input"
-            prop="Organization Name"
-            value={organization.name}
-            onChange={(e) =>
-              setOrganization({ ...organization, name: e.target.value })
-            }
-            onRandomValue={""}
-            multiline={""}
+          <Controller
+            name="organization.name"
+            control={control}
+            render={({ field }) => (
+              <SparkleInput
+                data-cy="team-wizard-org-name-input"
+                prop="Organization Name"
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                onRandomValue={""}
+                multiline={""}
+              />
+            )}
           />
+          {errors.organization?.name && (
+            <Typography color="error" variant="caption">
+              {errors.organization.name.message}
+            </Typography>
+          )}
         </div>
         {organizations.length > 0 && (
           <div>
@@ -252,13 +496,7 @@ function TeamWizard({ open, onClose }) {
               {organizations.map((organization) => (
                 <Card
                   key={organization.id}
-                  onClick={() => {
-                    setOrganization({
-                      name: organization.name,
-                      id: organization.id,
-                    });
-                    setActiveStep(activeStep + 1);
-                  }}
+                  onClick={() => handleOrganizationSelect(organization)}
                   sx={{
                     cursor: "pointer",
                     transition: "all 0.2s ease",
@@ -297,65 +535,53 @@ function TeamWizard({ open, onClose }) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
-          <SparkleInput
-            data-cy="colleague-wizard-name-input"
-            prop="Team Name"
-            value={team.name}
-            onChange={(e) => setTeam({ ...team, name: e.target.value })}
-            onRandomValue={""}
-            multiline={""}
+          <Controller
+            name="team.name"
+            control={control}
+            render={({ field }) => (
+              <SparkleInput
+                data-cy="colleague-wizard-name-input"
+                prop="Team Name"
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                onRandomValue={""}
+                multiline={""}
+              />
+            )}
           />
+          {errors.team?.name && (
+            <Typography color="error" variant="caption">
+              {errors.team.name.message}
+            </Typography>
+          )}
         </div>
       </div>
     );
-  };
-
-  const handleEngineSelect = (engine) => {
-    setColleague((prevItem) => ({
-      ...prevItem,
-      aiEngineId: engine.id,
-      engineName: engine.vendor,
-    }));
-    handleNext();
-  };
-
-  const handleRandomValue = (property) => {
-    let randomValue;
-    switch (property) {
-      case "name":
-        randomValue = names[Math.floor(Math.random() * names.length)];
-        break;
-      case "character":
-        randomValue = characters[Math.floor(Math.random() * characters.length)];
-        break;
-      case "role":
-        randomValue = roles[Math.floor(Math.random() * roles.length)];
-        break;
-      default:
-        randomValue = "";
-    }
-    setColleague((prevItem) => ({ ...prevItem, [property]: randomValue }));
-  };
-
-  const handleTemplateSelect = (colleague) => {
-    setColleague(colleague);
-    setActiveStep(7);
   };
 
   const ColleagueName = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
-          <SparkleInput
-            data-cy="colleague-wizard-name-input"
-            prop="name"
-            value={colleague.name}
-            onChange={(e) =>
-              setColleague({ ...colleague, name: e.target.value })
-            }
-            onRandomValue={""}
-            multiline={""}
+          <Controller
+            name="colleague.name"
+            control={control}
+            render={({ field }) => (
+              <SparkleInput
+                data-cy="colleague-wizard-name-input"
+                prop="name"
+                value={field.value}
+                onChange={(e) => field.onChange(e.target.value)}
+                onRandomValue={""}
+                multiline={""}
+              />
+            )}
           />
+          {errors.colleague?.name && (
+            <Typography color="error" variant="caption">
+              {errors.colleague.name.message}
+            </Typography>
+          )}
         </div>
 
         <div>
@@ -425,31 +651,55 @@ function TeamWizard({ open, onClose }) {
 
   const Personality = () => {
     return (
-      <SparkleInput
-        data-cy="colleague-wizard-character-input"
-        prop="character"
-        onChange={(e) =>
-          setColleague({ ...colleague, character: e.target.value })
-        }
-        onRandomValue={() => handleRandomValue("character")}
-        value={colleague.character}
-        multiline
-        rows={11}
-      />
+      <>
+        <Controller
+          name="colleague.character"
+          control={control}
+          render={({ field }) => (
+            <SparkleInput
+              data-cy="colleague-wizard-character-input"
+              prop="character"
+              onChange={(e) => field.onChange(e.target.value)}
+              onRandomValue={() => handleRandomValue("character")}
+              value={field.value}
+              multiline
+              rows={11}
+            />
+          )}
+        />
+        {errors.colleague?.character && (
+          <Typography color="error" variant="caption">
+            {errors.colleague.character.message}
+          </Typography>
+        )}
+      </>
     );
   };
 
   const Responsibility = () => {
     return (
-      <SparkleInput
-        data-cy="colleague-wizard-role-input"
-        prop="role"
-        onChange={(e) => setColleague({ ...colleague, role: e.target.value })}
-        onRandomValue={() => handleRandomValue("role")}
-        value={colleague.role}
-        multiline
-        rows={11}
-      />
+      <>
+        <Controller
+          name="colleague.role"
+          control={control}
+          render={({ field }) => (
+            <SparkleInput
+              data-cy="colleague-wizard-role-input"
+              prop="role"
+              onChange={(e) => field.onChange(e.target.value)}
+              onRandomValue={() => handleRandomValue("role")}
+              value={getValues("colleague.role")}
+              multiline
+              rows={11}
+            />
+          )}
+        />
+        {errors.colleague?.role && (
+          <Typography color="error" variant="caption">
+            {errors.colleague.role.message}
+          </Typography>
+        )}
+      </>
     );
   };
 
@@ -463,25 +713,31 @@ function TeamWizard({ open, onClose }) {
             <Name />
             <IconSelector
               handleEmojiSelect={handleEmojiSelect}
-              avatarSrc={team.src}
-              avatar={team?.avatar?.replace(/:/g, "")}
+              avatarSrc={getValues("team.src")}
+              avatar={getValues("team.avatar")?.replace(/:/g, "")}
             />
           </Stack>
         );
       case 2:
-        return ColleagueName();
+        return <ColleagueName />;
       case 3:
         return (
           <SelectAvatar
-            handleEmojiSelect={handleEmojiSelect}
-            avatarSrc={colleague.src}
-            avatar={colleague?.avatar?.replace(/:/g, "")}
+            handleEmojiSelect={handleAvatarSelect}
+            avatarSrc={
+              getValues("colleague.avatar")?.includes(":")
+                ? `https://cdn.nucleoid.com/greycollar/avatars/${getValues(
+                    "colleague.avatar"
+                  ).replace(/:/g, "")}.jpg`
+                : ""
+            }
+            avatar={getValues("colleague.avatar")?.replace(/:/g, "")}
           />
         );
       case 4:
-        return Personality();
+        return <Personality />;
       case 5:
-        return Responsibility();
+        return <Responsibility />;
       case 6:
         return (
           <EnginesChart
@@ -494,11 +750,13 @@ function TeamWizard({ open, onClose }) {
       case 7:
         return (
           <Summary
-            team={team}
-            organization={organization}
-            colleague={colleague}
+            team={getValues("team")}
+            organization={getValues("organization")}
+            colleague={getValues("colleague")}
           />
         );
+      default:
+        return null;
     }
   };
 
@@ -509,16 +767,7 @@ function TeamWizard({ open, onClose }) {
       onClose={() => {
         if (organizations.length !== 0 && projectId) {
           onClose();
-          setTeam({
-            team: "",
-            avatar: "",
-            src: "",
-            name: "",
-          });
-          setOrganization({
-            name: "",
-            id: "",
-          });
+          reset(defaultValues);
           setActiveStep(0);
         }
       }}

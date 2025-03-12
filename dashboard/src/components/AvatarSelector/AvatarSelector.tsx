@@ -1,5 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import ColleagueAvatars from "../../lib/ColleagueAvatars";
+import ColleagueAndTeamAvatars from "../../lib/ColleagueAndTeamAvatars";
 import IconButton from "@mui/material/IconButton";
 import Picker from "@emoji-mart/react";
 import React from "react";
@@ -40,10 +40,13 @@ export default function AvatarSelector({
                 ""
               )}.jpg`
             }
-            avatarUrl={`https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
-              /:/g,
-              ""
-            )}.jpg`}
+            avatarUrl={
+              avatarSrc ||
+              `https://cdn.nucleoid.com/greycollar/avatars/${avatar?.replace(
+                /:/g,
+                ""
+              )}.jpg`
+            }
             sx={{
               display: "flex",
               alignSelf: "center",
@@ -66,8 +69,8 @@ export default function AvatarSelector({
           onEmojiSelect={(emoji) => {
             handleEmojiSelect(emoji), setEmojiDialogOpen(false);
           }}
-          custom={ColleagueAvatars}
-          categories={"colleague_avatars"}
+          custom={ColleagueAndTeamAvatars}
+          categories={["colleague_avatars"]}
           searchPosition={"none"}
           navPosition="none"
           emojiButtonSize={90}

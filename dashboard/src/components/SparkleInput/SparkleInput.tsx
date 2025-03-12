@@ -1,5 +1,3 @@
-import React from "react";
-
 import { IconButton, InputAdornment, SvgIcon, TextField } from "@mui/material";
 
 export default function SparkleInput({
@@ -14,6 +12,7 @@ export default function SparkleInput({
     <TextField
       inputProps={{
         "data-cy": prop,
+        style: { textAlign: "left" },
       }}
       autoFocus
       margin="dense"
@@ -22,15 +21,17 @@ export default function SparkleInput({
       value={value || ""}
       multiline={multiline}
       onChange={onChange}
+      dir="ltr"
       InputLabelProps={{
         sx: { color: (theme) => theme.palette.text.primary },
       }}
+      style={{ direction: "ltr" }}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
             <IconButton
               onClick={onRandomValue}
-              sx={{ position: "absolute", bottom: 5, right: 5 }}
+              sx={multiline ? { marginRight: 1 } : {}}
             >
               <SvgIcon>
                 <svg
@@ -49,7 +50,9 @@ export default function SparkleInput({
           </InputAdornment>
         ),
       }}
-      sx={{ textTransform: "capitalize" }}
+      sx={{
+        textTransform: "capitalize",
+      }}
       {...others}
     />
   );

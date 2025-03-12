@@ -1,10 +1,10 @@
 import http from "../http";
 import useApi from "./useApi";
-import { useEvent } from "@nucleoidai/react-event";
 
+import { publish, useEvent } from "@nucleoidai/react-event";
 import { useCallback, useEffect, useState } from "react";
 
-function useOrganization(id) {
+function useOrganization(id?: string) {
   const [organizations, setOrganizations] = useState([]);
 
   const { loading, error, handleResponse } = useApi();
@@ -22,7 +22,10 @@ function useOrganization(id) {
 
   const createOrganization = useCallback(async (organization) => {
     const response = await http.post("/organizations", organization);
+    publish("ORGANIZATION_CREATED", { organization: response.data });
+
     return response.data;
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
