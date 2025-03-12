@@ -86,7 +86,7 @@ router.get("/:id", async (req, res) => {
 
   const knowledgeItem = await knowledge.get({
     knowledgeId: id,
-    includeOwner: true,
+    includeColleague: true,
   });
 
   const { ColleagueKnowledge } = knowledgeItem;
@@ -117,7 +117,7 @@ router.delete("/:id", async (req, res) => {
 
   const knowledgeItem = await knowledge.get({
     knowledgeId: id,
-    includeOwner: true,
+    includeColleague: true,
   });
 
   const { ColleagueKnowledge } = knowledgeItem;

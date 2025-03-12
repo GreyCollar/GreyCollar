@@ -161,10 +161,10 @@ async function list({
 
 async function get({
   knowledgeId,
-  includeOwner = false,
+  includeColleague = false,
 }: {
   knowledgeId: string;
-  includeOwner?: boolean;
+  includeColleague?: boolean;
 }) {
   const includeOptions: {
     model: typeof ColleagueKnowledge;
@@ -175,7 +175,7 @@ async function get({
     }[];
   }[] = [];
 
-  if (includeOwner) {
+  if (includeColleague) {
     includeOptions.push({
       model: ColleagueKnowledge,
       attributes: ["teamId", "colleagueId"],
