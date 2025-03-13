@@ -49,19 +49,11 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   const { projectId: teamId } = req.session;
-  const {
-    colleagueId,
-    type,
-    teamId: queryTeamId,
-  } = req.query as {
+  const { colleagueId, type } = req.query as {
     teamId?: string;
     colleagueId?: string;
     type?: string;
   };
-
-  if (queryTeamId && queryTeamId !== teamId) {
-    throw new AuthenticationError();
-  }
 
   if (colleagueId) {
     const colleagueInstance = await colleague.get({ colleagueId });
@@ -73,7 +65,7 @@ router.get("/", async (req, res) => {
 
   const knowledgeList = await knowledge.list({
     colleagueId,
-    teamId: queryTeamId,
+    teamId,
     type,
   });
 
@@ -136,3 +128,4 @@ router.delete("/:id", async (req, res) => {
 });
 
 export default router;
+
