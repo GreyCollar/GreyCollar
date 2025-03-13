@@ -1,54 +1,123 @@
 import http from "../http";
 import useApi from "./useApi";
+import { useEvent } from "@nucleoidai/react-event";
 
-import { publish, useEvent } from "@nucleoidai/react-event";
-import { useCallback, useEffect, useState } from "react";
-
-function useOrganization(id?: string) {
-  const [organizations, setOrganizations] = useState([]);
-
-  const { loading, error, handleResponse } = useApi();
-
-  // TODO - Research self-call events
-
+function useOrganization() {
+  const { createOperation } = useApi();
   const [teamSelected] = useEvent("TEAM_SELECTED", null);
 
-  useEffect(() => {
-    if (id) {
-      getOrganizationsById(id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamSelected, id]);
+  const getOrganizations = (fetchState = []) => {
+    const {
+      data: organizations,
+      loading,
+      error,
+      fetch,
+    } = createOperation(() => http.get("/organizations"), fetchState);
 
-  const createOrganization = useCallback(async (organization) => {
-    const response = await http.post("/organizations", organization);
-    publish("ORGANIZATION_CREATED", { organization: response.data });
+    return {
+      organizations,
+      loading,
+      error,
+      fetch,
+    };
+  };
 
-    return response.data;
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const getOrganizationsById = useCallback((id) => {
-    if (!id) {
-      return;
-    }
-    handleResponse(
-      http.get(`/organizations/${id}`),
-      (response) => setOrganizations(response.data),
-      (error) => {
-        console.error(error);
-      }
+  const getOrganizationById = (id, fetchState = []) => {
+    const {
+      data: organization,
+      loading,
+      error,
+      fetch,
+    } = createOperation(
+      () => http.get(`/organizations/${id}`),
+      [id, ...fetchState]
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    return {
+      organization,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const getOrganizationByTeam = (fetchState = []) => {
+    const {
+      data: organization,
+      loading,
+      error,
+      fetch,
+    } = createOperation(() => {
+      if (!teamSelected?.organizationId) return Promise.resolve({ data: null });
+      return http.get(`/organizations/${teamSelected.organizationId}`);
+    }, [teamSelected?.organizationId, ...fetchState]);
+
+    return {
+      organization,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const createOrganization = () => {
+    const {
+      data: createdOrganization,
+      loading,
+      error,
+      fetch,
+    } = createOperation((organizationData) =>
+      http.post("/organizations", organizationData)
+    );
+
+    return {
+      createdOrganization,
+      loading,
+      error,
+      create: (data) => fetch(data),
+    };
+  };
+
+  const updateOrganization = () => {
+    const {
+      data: updatedOrganization,
+      loading,
+      error,
+      fetch,
+    } = createOperation((id, data) => http.put(`/organizations/${id}`, data));
+
+    return {
+      updatedOrganization,
+      loading,
+      error,
+      update: (id, data) => fetch(id, data),
+    };
+  };
+
+  const deleteOrganization = () => {
+    const {
+      data: deleteResponse,
+      loading,
+      error,
+      fetch,
+    } = createOperation((id) => http.delete(`/organizations/${id}`));
+
+    return {
+      deleteResponse,
+      loading,
+      error,
+      remove: (id) => fetch(id),
+    };
+  };
 
   return {
+    getOrganizations,
+    getOrganizationById,
+    getOrganizationByTeam,
     createOrganization,
-    organizations,
-    loading,
-    error,
+    updateOrganization,
+    deleteOrganization,
   };
 }
 
-export default useOrganization;
+export { useOrganization };

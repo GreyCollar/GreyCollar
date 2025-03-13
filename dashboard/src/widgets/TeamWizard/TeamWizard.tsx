@@ -9,7 +9,7 @@ import StepComponent from "../../components/StepComponent/StepComponent";
 import { Summary } from "../../components/ItemSummary/TeamSummary";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
-import useOrganization from ".././../hooks/useOrganization";
+import { useOrganization } from ".././../hooks/useOrganization";
 import { useOrganizations } from "../../hooks/useOrganizations";
 import useTeams from "../../hooks/useTeams";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -103,7 +103,7 @@ type PropertyOptionType = "name" | "character" | "role";
 function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const projectId = storage.get("projectId");
   const [teamSelected] = useEvent("PROJECT_SELECTED", { projectId: null });
-  const { organizations, loading } = useOrganizations();
+  const { organizations, loading } = useOrganization().getOrganizations([]);
   const [activeStep, setActiveStep] = React.useState(0);
   const { createOrganization } = useOrganization();
   const { createColleague } = useColleagues();
