@@ -6,10 +6,12 @@ function WidgetSummaryWidget({
   title,
   chartType,
   per,
+  size,
 }: {
   title?: string;
   chartType?: "bar" | "line" | "area" | "radar" | "polarArea" | "donut";
   per?: number;
+  size?: string;
 }) {
   const theme = useTheme();
   const colors = [theme.palette["primary"].main, theme.palette["primary"].dark];
@@ -79,7 +81,7 @@ function WidgetSummaryWidget({
     <WidgetSummary
       title={title}
       percent={per}
-      total={4876}
+      total={size}
       chart={<Charst />}
       sx={{}}
     />

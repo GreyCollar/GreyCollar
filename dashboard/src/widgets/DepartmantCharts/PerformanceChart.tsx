@@ -4,11 +4,21 @@ import CardHeader from "@mui/material/CardHeader";
 import Chart from "react-apexcharts";
 import React from "react";
 import { useChart } from "@nucleoidai/platform/minimal/components";
+import useColleagues from "../../hooks/useColleagues";
+
 function PerformanceChart() {
-  const series = [44, 55, 13, 10];
+  const { colleagues } = useColleagues();
+
+  const names = [
+    ...colleagues.map((colleague) => colleague.name),
+    "No Activity",
+  ];
+
+  const series = new Array(colleagues.length).fill(1).concat(100);
 
   const chartOptions = useChart({
-    labels: ["Team A", "Team B", "Team C", "Team D"],
+    labels: names,
+    colors: [...new Array(colleagues.length).fill(undefined), "#344055"],
     legend: {
       position: "right",
       offsetX: -20,

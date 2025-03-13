@@ -11,6 +11,7 @@ import metrics from "./routes/metrics";
 import organizations from "./routes/organizations";
 import projects from "./routes/projects";
 import sessions from "./routes/sessions";
+import statistics from "./routes/statistics";
 import { subscribe } from "./lib/Event";
 import supervisings from "./routes/supervisings";
 import tasks from "./routes/tasks";
@@ -46,6 +47,7 @@ app.use("/supervisings", supervisings);
 app.use("/tasks", tasks);
 app.use("/engines", engines);
 app.use("/organizations", organizations);
+app.use("/statistics", statistics);
 
 subscribe("MESSAGE", "USER_MESSAGED", ({ teamId, content }) =>
   agent.teamChat({ teamId, content })

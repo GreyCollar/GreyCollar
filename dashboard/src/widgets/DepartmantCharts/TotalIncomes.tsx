@@ -3,7 +3,7 @@ import React from "react";
 import TotalIncomes from "../../components/TotalIncomes/TotalIncomes";
 import { useChart } from "@nucleoidai/platform/minimal/components";
 import { useTheme } from "@mui/material/styles";
-export default function TotalIncome() {
+export default function TotalIncome({ size }: { size?: string }) {
   const theme = useTheme();
   const colors = [theme.palette["primary"].main, theme.palette["primary"].dark];
 
@@ -82,8 +82,8 @@ export default function TotalIncome() {
   return (
     <TotalIncomes
       title="Total Messages"
-      total={18765}
-      percent={2.6}
+      total={size}
+      percent={0}
       chart={<Charst />}
       sx={""}
     />

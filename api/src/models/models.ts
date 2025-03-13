@@ -14,6 +14,7 @@ async function init() {
   const Knowledge = require("./Knowledge");
   const AIEngine = require("./AIEngine");
   const Step = require("./Step");
+  const Statistics = require("./Statistics");
 
   Project.hasMany(Colleague, {
     foreignKey: "teamId",
@@ -22,6 +23,8 @@ async function init() {
   Colleague.belongsTo(Project, {
     foreignKey: "teamId",
   });
+
+  Statistics.belongsTo(Project, { foreignKey: "teamId" });
 
   Project.hasMany(Colleague, { foreignKey: "teamId", as: "colleagues" });
   Colleague.belongsTo(Project, { foreignKey: "teamId", as: "colleagues" });
@@ -117,4 +120,3 @@ async function init() {
 
 export default { init };
 /* eslint disable*/
-

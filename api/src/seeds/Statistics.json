@@ -1,0 +1,23 @@
+{
+  "sequence": 13,
+  "seed": [
+    {
+      "id": "80f0ebb0-5b12-48a8-aa61-b461fb2c29ce",
+      "responseRate": 145,
+      "supervisingRate": 285,
+      "knowledgeSize": 745,
+      "taskCount": 2198,
+      "totalMessages": 22018,
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f"
+    },
+    {
+      "id": "9e744f8f-6d65-4948-b6a5-cb8707aa91dd",
+      "responseRate": 112,
+      "supervisingRate": 435,
+      "knowledgeSize": 267,
+      "taskCount": 98,
+      "totalMessages": 12432,
+      "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729"
+    }
+  ]
+}
