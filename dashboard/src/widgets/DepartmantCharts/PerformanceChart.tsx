@@ -5,9 +5,11 @@ import Chart from "react-apexcharts";
 import React from "react";
 import { useChart } from "@nucleoidai/platform/minimal/components";
 import useColleagues from "../../hooks/useColleagues";
+import { useMediaQuery } from "@mui/material";
 
 function PerformanceChart() {
   const { colleagues } = useColleagues();
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
 
   const names = [
     ...colleagues.map((colleague) => colleague.name),
@@ -51,7 +53,15 @@ function PerformanceChart() {
   });
 
   return (
-    <Card key={2}>
+    <Card
+      key={2}
+      style={{
+        width: "100%",
+        maxWidth: "100%",
+        height: "100%",
+        maxHeight: isSmallScreen ? "auto" : "600px",
+      }}
+    >
       <CardHeader title="Team Activity" />
       <CardContent>
         <Chart dir="ltr" type="pie" series={series} options={chartOptions} />

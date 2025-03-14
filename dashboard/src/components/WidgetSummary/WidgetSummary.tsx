@@ -17,7 +17,13 @@ export default function WidgetSummary({
 }) {
   return (
     <Card
-      sx={{ display: "flex", alignItems: "center", p: 3, ...sx }}
+      sx={{
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        p: 3,
+        ...sx,
+      }}
       {...other}
     >
       <Box sx={{ flexGrow: 1 }}>
