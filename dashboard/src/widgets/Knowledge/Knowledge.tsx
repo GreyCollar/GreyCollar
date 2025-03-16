@@ -1,18 +1,39 @@
 import AddIcon from "@mui/icons-material/Add";
 import AddItemDialog from "../../components/AddItemDialog/AddItemDialog";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 import DeleteConfirmation from "../../components/DeleteConfirmation/DeleteConfirmation";
 import KnowledgeTable from "../../components/KnowledgeTable/KnowledgeTable";
+import { Knowledge as KnowledgeType } from "../../hooks/useKnowledge";
 import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
-import useKnowledges from "../../hooks/useKnowledges";
+import useKnowledge from "../../hooks/useKnowledge";
 import { useTable } from "@nucleoidai/platform/minimal/components";
 
-import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Fab,
+  Stack,
+  useMediaQuery,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 
-function Knowledge({ colleagueId }) {
-  const { knowledges, deleteKnowledges, createKnowledge } =
-    useKnowledges(colleagueId);
+interface KnowledgeProps {
+  colleagueId: string;
+}
+
+function Knowledge({ colleagueId }: KnowledgeProps) {
+  const [trigger, setTrigger] = useState(false);
+  const knowledgeHook = useKnowledge();
+
+  const { knowledges, loading, error } = knowledgeHook.getColleagueKnowledges(
+    colleagueId,
+    [trigger]
+  );
+
+  const { create } = knowledgeHook.createKnowledge();
+  const { remove } = knowledgeHook.deleteKnowledge();
 
   const table = useTable();
 
@@ -34,32 +55,43 @@ function Knowledge({ colleagueId }) {
 
   const [open, setOpen] = useState(false);
 
-  const [selectedItem, setSelectedItem] = useState([]);
+  const [selectedItem, setSelectedItem] = useState<KnowledgeType | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const filteredKnowledges =
     selectedType === "ALL"
-      ? knowledges
-      : knowledges.filter(
+      ? knowledges || []
+      : (knowledges || []).filter(
           (knowledge) => knowledge && knowledge.type === selectedType
         );
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedType(event.target.value);
   };
 
-  const handleDeleteClick = (item) => {
+  const handleDeleteClick = (item: KnowledgeType) => {
     setSelectedItem(item);
     setOpenDeleteDialog(true);
   };
 
-  const handleDelete = async (item) => {
-    if (item) {
-      const deleteResponse = await deleteKnowledges(item);
+  const handleDelete = async (item: KnowledgeType | null) => {
+    if (item && item.id) {
+      const deleteResponse = await remove(item);
       if (deleteResponse) {
-        knowledges.filter((knowledge) => knowledge.id !== item.id);
+        setOpenDeleteDialog(false);
       }
+    } else {
+      console.error("Cannot delete item: Missing ID");
+      setOpenDeleteDialog(false);
     }
+  };
+
+  const handleCreateKnowledge = async (knowledge: KnowledgeType) => {
+    const result = await create(knowledge, colleagueId);
+    if (result) {
+      setOpen(false);
+    }
+    return result;
   };
 
   useEffect(() => {
@@ -71,6 +103,26 @@ function Knowledge({ colleagueId }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType]);
+
+  if (loading) {
+    return (
+      <Container>
+        <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Box sx={{ textAlign: "center", my: 4, color: "error.main" }}>
+          Error loading knowledge data: {error}
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <>
@@ -116,7 +168,19 @@ function Knowledge({ colleagueId }) {
                 setOpen(true);
               }}
             >
-              <AddIcon />
+              {<AddIcon />}
+            </Fab>
+            <Fab
+              variant="button"
+              color="default"
+              size="medium"
+              sx={{ mt: 2, zIndex: 0 }}
+              data-cy="refresh-knowledge-button"
+              onClick={() => {
+                setTrigger(!trigger);
+              }}
+            >
+              {<AutorenewIcon />}
             </Fab>
           </Stack>
         </Box>
@@ -134,7 +198,7 @@ function Knowledge({ colleagueId }) {
           setSelectedType={setSelectedType}
           open={open}
           setOpen={setOpen}
-          addItem={createKnowledge}
+          addItem={handleCreateKnowledge}
           colleagueId={colleagueId}
         />
       </Container>

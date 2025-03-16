@@ -39,6 +39,10 @@ function AddItemDialog({
     answer: "",
   };
 
+  console.log("AddItemDialog", colleagueId);
+  console.log("AddItemDialog", selectedType);
+  console.log("AddItemDialog", open);
+
   const validationSchema = Joi.object({
     inputValue:
       selectedType !== "QA"
@@ -97,7 +101,7 @@ function AddItemDialog({
   });
 
   useEffect(() => {
-    setOpen(false);
+    // setOpen(false);
     reset();
     setIsSubmitting(false);
 

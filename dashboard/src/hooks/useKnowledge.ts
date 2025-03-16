@@ -1,47 +1,183 @@
 import http from "../http";
-import useApi from "./useApi";
+import useApi from "./useApiV2";
 
-import { useCallback, useEffect, useState } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
-function useKnowledge(id) {
-  const [knowledge, setKnowledge] = useState({
-    id: "",
-    type: "",
-    text: "",
-    url: "",
-    question: "",
-    answer: "",
-    colleagueId: "",
-    status: "",
-    createdAt: "",
-    teamId: "",
-  });
+export type Knowledge = {
+  id: string;
+  type: string;
+  text: string;
+  url: string;
+  question: string;
+  answer: string;
+  colleagueId: string;
+  status: string;
+  createdAt: string;
+  teamId: string;
+};
 
-  const { loading, error, handleResponse } = useApi();
+export type KnowledgeInput = {
+  type: string;
+  text?: string;
+  url?: string;
+  question?: string;
+  answer?: string;
+};
 
-  useEffect(() => {
-    getKnowledgeById(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+type DependencyArray = unknown[];
 
-  const getKnowledgeById = useCallback((id) => {
-    handleResponse(
-      http.get(`/knowledge/${id}`),
-      (response) => {
-        setKnowledge(response.data);
-      },
-      (error) => {
-        console.error(error);
-      }
+function useKnowledge() {
+  const { CreateOperation } = useApi();
+
+  const [knowledgeCreated] = useEvent("KNOWLEDGE_CREATED", null);
+  const [knowledgeUpdated] = useEvent("KNOWLEDGE_UPDATED", null);
+  const [knowledgeDeleted] = useEvent("KNOWLEDGE_DELETED", null);
+  const [knowledgeStatusChanged] = useEvent("KNOWLEDGE_STATUS_CHANGED", null);
+
+  const getColleagueKnowledges = (
+    colleagueId: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const eventDependencies = [
+      knowledgeCreated,
+      knowledgeUpdated,
+      knowledgeDeleted,
+      knowledgeStatusChanged,
+    ];
+
+    const {
+      data: knowledges,
+      loading,
+      error,
+      fetch,
+    } = CreateOperation(
+      () => http.get(`/knowledge?colleagueId=${colleagueId}`),
+      [colleagueId, ...eventDependencies, ...fetchState]
     );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (knowledges) {
+      publish("KNOWLEDGE_LOADED", { knowledge: knowledges });
+    }
+
+    return {
+      knowledges,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const createKnowledge = () => {
+    type CreateResponse = {
+      success: boolean;
+      message?: string;
+      id?: string;
+      data?: Knowledge;
+    };
+
+    const create = async (
+      knowledge: KnowledgeInput,
+      colleagueId: string
+    ): Promise<CreateResponse | null> => {
+      if (!knowledge) {
+        console.error("Cannot create knowledge: Missing knowledge input");
+        return null;
+      }
+
+      const response = await http.post("/knowledge", {
+        url: knowledge.url,
+        text: knowledge.text,
+        question: knowledge.question,
+        answer: knowledge.answer,
+        colleagueId: colleagueId,
+        type: knowledge.type,
+      });
+
+      console.log("createResponse", response);
+
+      if (response && response.data) {
+        publish("KNOWLEDGE_CREATED", { knowledge: response.data });
+      }
+
+      return response.data;
+    };
+
+    return {
+      create,
+    };
+  };
+
+  const deleteKnowledge = () => {
+    type DeleteResponse = {
+      success: boolean;
+      message?: string;
+      id?: string;
+    };
+
+    const remove = async (
+      knowledge: Knowledge
+    ): Promise<DeleteResponse | null> => {
+      if (!knowledge || !knowledge.id) {
+        console.error("Cannot delete knowledge: Missing ID");
+        return null;
+      }
+
+      const response = await http.delete(`/knowledge/${knowledge.id}`);
+
+      console.log("deleteResponse", response);
+
+      if (response) {
+        publish("KNOWLEDGE_DELETED", { knowledge: knowledge.id });
+      }
+
+      return response.data;
+    };
+
+    return {
+      remove,
+    };
+  };
+
+  const changeKnowledgeStatus = () => {
+    type StatusResponse = {
+      id: string;
+      status: string;
+      success: boolean;
+    };
+
+    const {
+      data: statusResponse,
+      loading,
+      error,
+      fetch,
+    } = CreateOperation((knowledgeId: string, status: string) =>
+      http.patch(`/knowledge/${knowledgeId}/status`, { status })
+    );
+
+    const changeStatus = async (
+      knowledgeId: string,
+      status: string
+    ): Promise<StatusResponse | null> => {
+      const result = await fetch(knowledgeId, status);
+      if (result) {
+        publish("KNOWLEDGE_STATUS_CHANGED", { knowledge: result });
+      }
+      return result;
+    };
+
+    return {
+      statusResponse,
+      loading,
+      error,
+      changeStatus,
+    };
+  };
 
   return {
-    loading,
-    error,
-    knowledge,
+    getColleagueKnowledges,
+    createKnowledge,
+    deleteKnowledge,
+    changeKnowledgeStatus,
   };
 }
 

@@ -1,9 +1,9 @@
 import http from "../http";
-import useApi from "./useApi";
+import useApi from "./useApiV2";
 import { useEvent } from "@nucleoidai/react-event";
 
 function useOrganization() {
-  const { createOperation } = useApi();
+  const { CreateOperation } = useApi();
   const [teamSelected] = useEvent("TEAM_SELECTED", null);
 
   const getOrganizations = (fetchState = []) => {
@@ -12,7 +12,7 @@ function useOrganization() {
       loading,
       error,
       fetch,
-    } = createOperation(() => http.get("/organizations"), fetchState);
+    } = CreateOperation(() => http.get("/organizations"), fetchState);
 
     return {
       organizations,
@@ -28,7 +28,7 @@ function useOrganization() {
       loading,
       error,
       fetch,
-    } = createOperation(
+    } = CreateOperation(
       () => http.get(`/organizations/${id}`),
       [id, ...fetchState]
     );
@@ -47,7 +47,7 @@ function useOrganization() {
       loading,
       error,
       fetch,
-    } = createOperation(() => {
+    } = CreateOperation(() => {
       if (!teamSelected?.organizationId) return Promise.resolve({ data: null });
       return http.get(`/organizations/${teamSelected.organizationId}`);
     }, [teamSelected?.organizationId, ...fetchState]);
@@ -66,7 +66,7 @@ function useOrganization() {
       loading,
       error,
       fetch,
-    } = createOperation((organizationData) =>
+    } = CreateOperation((organizationData) =>
       http.post("/organizations", organizationData)
     );
 
@@ -84,7 +84,7 @@ function useOrganization() {
       loading,
       error,
       fetch,
-    } = createOperation((id, data) => http.put(`/organizations/${id}`, data));
+    } = CreateOperation((id, data) => http.put(`/organizations/${id}`, data));
 
     return {
       updatedOrganization,
@@ -100,7 +100,7 @@ function useOrganization() {
       loading,
       error,
       fetch,
-    } = createOperation((id) => http.delete(`/organizations/${id}`));
+    } = CreateOperation((id) => http.delete(`/organizations/${id}`));
 
     return {
       deleteResponse,
