@@ -6,7 +6,6 @@ import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
 import useColleagues from "../../hooks/useColleagues";
 import useKnowledges from "../../hooks/useKnowledges";
-import useOrganization from "../../hooks/useOrganization";
 import { useOrganizations } from "../../hooks/useOrganizations";
 import { useTable } from "@nucleoidai/platform/minimal/components";
 import useTeam from "../../hooks/useTeam";

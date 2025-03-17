@@ -129,12 +129,7 @@ function AddItemDialog({
     resolver,
   });
 
-  const {
-    reset,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = methods;
+  const { reset, handleSubmit, control } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     setIsSubmitting(true);
