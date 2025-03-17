@@ -1,5 +1,7 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
 import config from "../../config";
+import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
 
 const instance = axios.create({
@@ -10,6 +12,8 @@ const instance = axios.create({
     },
   },
 });
+
+axiosRetry(instance, { retries: 3 });
 
 instance.interceptors.request.use((request) => {
   const accessToken = storage.get(config.name, "accessToken");
@@ -22,18 +26,32 @@ instance.interceptors.request.use((request) => {
   return request;
 });
 
-instance.interceptors.response.use((response) => {
-  const accessToken = storage.get(config.name, "accessToken");
-  if (!accessToken) {
-    window.location.href = "/login";
+instance.interceptors.response.use(
+  (response) => {
+    const accessToken = storage.get(config.name, "accessToken");
+    if (!accessToken) {
+      window.location.href = "/login";
+    }
+    response.headers["Authorization"] = `Bearer ${accessToken}`;
+    response.headers["companyId"] = "1";
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      if (error.response.status === 400) {
+        publish("GLOBAL_MESSAGE_POSTED", {
+          status: true,
+          message: `BAD REQUEST: ${JSON.stringify(error.response.data)}`,
+          severity: "warning",
+        });
+      } else {
+        console.error("API Error:", error.response.status, error.response.data);
+      }
+    } else {
+      console.error("Network or unknown error:", error.message);
+    }
+    return Promise.reject(error);
   }
-  response.headers["Authorization"] = `Bearer ${accessToken}`;
-  response.headers["companyId"] = "1";
-  return response;
-});
-
-instance.interceptors.response.use((response) => {
-  return response;
-});
+);
 
 export default instance;
