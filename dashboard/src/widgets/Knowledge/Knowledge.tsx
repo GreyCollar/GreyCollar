@@ -1,39 +1,37 @@
 import AddIcon from "@mui/icons-material/Add";
 import AddItemDialog from "../../components/AddItemDialog/AddItemDialog";
-import AutorenewIcon from "@mui/icons-material/Autorenew";
 import DeleteConfirmation from "../../components/DeleteConfirmation/DeleteConfirmation";
 import KnowledgeTable from "../../components/KnowledgeTable/KnowledgeTable";
-import { Knowledge as KnowledgeType } from "../../hooks/useKnowledge";
 import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
-import useKnowledge from "../../hooks/useKnowledge";
+import useColleagues from "../../hooks/useColleagues";
+import useKnowledges from "../../hooks/useKnowledges";
+import { useOrganizations } from "../../hooks/useOrganizations";
 import { useTable } from "@nucleoidai/platform/minimal/components";
+import useTeam from "../../hooks/useTeam";
 
-import {
-  Box,
-  CircularProgress,
-  Container,
-  Fab,
-  Stack,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 
-interface KnowledgeProps {
-  colleagueId: string;
-}
+function Knowledge({
+  colleagueId,
+  teamId,
+}: {
+  colleagueId?: string;
+  teamId?: string;
+}) {
+  const { knowledges, deleteKnowledges, createKnowledge, teamKnowledges } =
+    useKnowledges(colleagueId);
 
-function Knowledge({ colleagueId }: KnowledgeProps) {
-  const [trigger, setTrigger] = useState(false);
-  const knowledgeHook = useKnowledge();
+  const { teamById } = useTeam(teamId);
 
-  const { knowledges, loading, error } = knowledgeHook.getColleagueKnowledges(
-    colleagueId,
-    [trigger]
-  );
+  const id = teamById.organizationId;
 
-  const { create } = knowledgeHook.createKnowledge();
-  const { remove } = knowledgeHook.deleteKnowledge();
+  const { organizations } = useOrganizations();
+
+  const filteredOrganizations = organizations.filter((org) => org.id === id);
+
+  const { colleagues } = useColleagues();
 
   const table = useTable();
 
@@ -55,43 +53,34 @@ function Knowledge({ colleagueId }: KnowledgeProps) {
 
   const [open, setOpen] = useState(false);
 
-  const [selectedItem, setSelectedItem] = useState<KnowledgeType | null>(null);
+  const [selectedItem, setSelectedItem] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const filteredKnowledges =
     selectedType === "ALL"
-      ? knowledges || []
-      : (knowledges || []).filter(
+      ? colleagueId
+        ? knowledges
+        : teamKnowledges
+      : (colleagueId ? knowledges : teamKnowledges).filter(
           (knowledge) => knowledge && knowledge.type === selectedType
         );
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event) => {
     setSelectedType(event.target.value);
   };
 
-  const handleDeleteClick = (item: KnowledgeType) => {
+  const handleDeleteClick = (item) => {
     setSelectedItem(item);
     setOpenDeleteDialog(true);
   };
 
-  const handleDelete = async (item: KnowledgeType | null) => {
-    if (item && item.id) {
-      const deleteResponse = await remove(item);
+  const handleDelete = async (item) => {
+    if (item) {
+      const deleteResponse = await deleteKnowledges(item);
       if (deleteResponse) {
-        setOpenDeleteDialog(false);
+        knowledges.filter((knowledge) => knowledge.id !== item.id);
       }
-    } else {
-      console.error("Cannot delete item: Missing ID");
-      setOpenDeleteDialog(false);
     }
-  };
-
-  const handleCreateKnowledge = async (knowledge: KnowledgeType) => {
-    const result = await create(knowledge, colleagueId);
-    if (result) {
-      setOpen(false);
-    }
-    return result;
   };
 
   useEffect(() => {
@@ -103,26 +92,6 @@ function Knowledge({ colleagueId }: KnowledgeProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedType]);
-
-  if (loading) {
-    return (
-      <Container>
-        <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
-          <CircularProgress />
-        </Box>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <Box sx={{ textAlign: "center", my: 4, color: "error.main" }}>
-          Error loading knowledge data: {error}
-        </Box>
-      </Container>
-    );
-  }
 
   return (
     <>
@@ -168,19 +137,7 @@ function Knowledge({ colleagueId }: KnowledgeProps) {
                 setOpen(true);
               }}
             >
-              {<AddIcon />}
-            </Fab>
-            <Fab
-              variant="button"
-              color="default"
-              size="medium"
-              sx={{ mt: 2, zIndex: 0 }}
-              data-cy="refresh-knowledge-button"
-              onClick={() => {
-                setTrigger(!trigger);
-              }}
-            >
-              {<AutorenewIcon />}
+              <AddIcon />
             </Fab>
           </Stack>
         </Box>
@@ -198,8 +155,12 @@ function Knowledge({ colleagueId }: KnowledgeProps) {
           setSelectedType={setSelectedType}
           open={open}
           setOpen={setOpen}
-          addItem={handleCreateKnowledge}
+          addItem={createKnowledge}
           colleagueId={colleagueId}
+          teamId={teamId}
+          teamById={teamById}
+          colleagues={colleagues}
+          organizations={filteredOrganizations}
         />
       </Container>
     </>

@@ -4,8 +4,11 @@ import CardHeader from "@mui/material/CardHeader";
 import Chart from "react-apexcharts";
 import React from "react";
 import { useChart } from "@nucleoidai/platform/minimal/components";
+import { useMediaQuery } from "@mui/material";
 
 function UsageChart() {
+  const isSmallScreen = useMediaQuery("(max-width:600px)");
+
   const series2 = [
     { name: "series1", data: [] },
     { name: "series2", data: [] },
@@ -31,17 +34,18 @@ function UsageChart() {
   });
 
   return (
-    <Card>
+    <Card
+      style={{
+        width: "100%",
+        maxWidth: "100%",
+        height: "100%",
+        maxHeight: isSmallScreen ? "auto" : "600px",
+        marginTop: isSmallScreen ? "6px" : "0",
+      }}
+    >
       <CardHeader title="TAA" />
       <CardContent>
-        <Chart
-          dir="ltr"
-          type="area"
-          series={series2}
-          options={chartOptions2}
-          width="100%"
-          height={320}
-        />
+        <Chart dir="ltr" type="area" series={series2} options={chartOptions2} />
       </CardContent>
     </Card>
   );

@@ -7,7 +7,6 @@ const instance = axios.create({
       "Content-Type": "application/json",
     },
     Authorization: `Bearer ${storage.get(config.name, "accessToken")}`,
-    companyId: "1",
   },
 });
 

@@ -69,6 +69,7 @@ function KnowledgeTable({
           sx={{
             backgroundColor: "rgba(97, 97, 97, 0.2)",
             color: "white",
+            ml: 0.5,
           }}
         >
           TEAM
