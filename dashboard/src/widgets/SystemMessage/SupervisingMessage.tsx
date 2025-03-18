@@ -33,25 +33,29 @@ function SupervisingMessage({ id, handleClick, onDateFetched }) {
           sx={{
             flexDirection: "row",
             alignItems: "center",
+            width: "100%",
           }}
         >
           <Stack
             sx={{
               p: 1.5,
               minWidth: 48,
-              maxWidth: 450,
+              maxWidth: "100%",
               borderRadius: 1,
               typography: "body2",
               color: "grey.800",
               background: (theme) => alpha(theme.palette.background.default, 1),
               flexDirection: "column",
               alignItems: "center",
+              width: "100%",
             }}
           >
             <Stack
               sx={{
                 flexDirection: "row",
                 alignItems: "center",
+                flexWrap: "wrap",
+                width: "100%",
               }}
             >
               <Chip
@@ -68,7 +72,7 @@ function SupervisingMessage({ id, handleClick, onDateFetched }) {
                 color="primary"
                 variant="filled"
               />
-              <Typography variant="body2" color="grey.500" sx={{ mx: 1 }}>
+              <Typography variant="body2" color="grey.500" sx={{ m: 1 }}>
                 {supervising.status === "ANSWERED"
                   ? "learned"
                   : "wants to learn"}
@@ -77,6 +81,10 @@ function SupervisingMessage({ id, handleClick, onDateFetched }) {
                 sx={{
                   backgroundColor: "rgba(66,165,245, .6)",
                   color: "rgba(227,242,253, .6)",
+                  textTransform: "none",
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                  my: 0.2,
                 }}
               >
                 {supervising.status === "ANSWERED"
