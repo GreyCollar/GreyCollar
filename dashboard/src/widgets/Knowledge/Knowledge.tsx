@@ -4,15 +4,34 @@ import DeleteConfirmation from "../../components/DeleteConfirmation/DeleteConfir
 import KnowledgeTable from "../../components/KnowledgeTable/KnowledgeTable";
 import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
+import useColleagues from "../../hooks/useColleagues";
 import useKnowledges from "../../hooks/useKnowledges";
+import { useOrganizations } from "../../hooks/useOrganizations";
 import { useTable } from "@nucleoidai/platform/minimal/components";
+import useTeam from "../../hooks/useTeam";
 
 import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 
-function Knowledge({ colleagueId }) {
-  const { knowledges, deleteKnowledges, createKnowledge } =
+function Knowledge({
+  colleagueId,
+  teamId,
+}: {
+  colleagueId?: string;
+  teamId?: string;
+}) {
+  const { knowledges, deleteKnowledges, createKnowledge, teamKnowledges } =
     useKnowledges(colleagueId);
+
+  const { teamById } = useTeam(teamId);
+
+  const id = teamById.organizationId;
+
+  const { organizations } = useOrganizations();
+
+  const filteredOrganizations = organizations.filter((org) => org.id === id);
+
+  const { colleagues } = useColleagues();
 
   const table = useTable();
 
@@ -39,8 +58,10 @@ function Knowledge({ colleagueId }) {
 
   const filteredKnowledges =
     selectedType === "ALL"
-      ? knowledges
-      : knowledges.filter(
+      ? colleagueId
+        ? knowledges
+        : teamKnowledges
+      : (colleagueId ? knowledges : teamKnowledges).filter(
           (knowledge) => knowledge && knowledge.type === selectedType
         );
 
@@ -136,6 +157,10 @@ function Knowledge({ colleagueId }) {
           setOpen={setOpen}
           addItem={createKnowledge}
           colleagueId={colleagueId}
+          teamId={teamId}
+          teamById={teamById}
+          colleagues={colleagues}
+          organizations={filteredOrganizations}
         />
       </Container>
     </>

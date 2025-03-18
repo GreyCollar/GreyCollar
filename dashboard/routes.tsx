@@ -5,6 +5,7 @@ import Colleagues from "./src/pages/colleagues";
 import Container from "./src/Container";
 import Dashboard from "./src/pages/dashboard";
 import Integrations from "./src/pages/integrations";
+import KnowledgeBase from "./src/pages/knowledgeBase";
 import Settings from "./src/pages/settings";
 
 import {
@@ -30,6 +31,10 @@ const routes = [
           {
             path: `/integrations`,
             element: <Integrations />,
+          },
+          {
+            path: `/knowledge`,
+            element: <KnowledgeBase />,
           },
           { path: "/colleagues/:colleagueId", element: <Colleague /> },
           { path: "/settings", element: <Settings /> },

@@ -28,6 +28,11 @@ const menuConfig = {
           path: "/integrations",
         },
         {
+          title: "Knowledge Base",
+          icon: "carbon:ibm-watson-knowledge-studio",
+          path: "/knowledge",
+        },
+        {
           title: "Documentation",
           icon: "oui:documentation",
           path: "https://greycollar.ai/docs",

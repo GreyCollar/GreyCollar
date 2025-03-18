@@ -83,10 +83,6 @@ async function list({
   type?: string;
   options?: { includeSteps?: boolean };
 }) {
-  if ((colleagueId && teamId) || (!colleagueId && !teamId)) {
-    throw new Error("INVALID_QUERY_KNOWLEDGE");
-  }
-
   const typeWhere = {} as {
     type?: string;
   };
