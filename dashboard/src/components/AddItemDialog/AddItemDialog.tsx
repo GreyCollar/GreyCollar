@@ -2,7 +2,6 @@ import { Iconify } from "@nucleoidai/platform/minimal/components";
 import LoadingButton from "@mui/lab/LoadingButton";
 import type { Resolver } from "react-hook-form";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
-import { useEvent } from "@nucleoidai/react-event";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import {
@@ -39,8 +38,6 @@ function AddItemDialog({
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [knowledgeLoaded] = useEvent("KNOWLEDGE_LOADED", null);
-
   const [selectedOptionId, setSelectedOptionId] = useState("");
   const [selectedOptionType, setSelectedOptionType] = useState("");
 
@@ -53,14 +50,6 @@ function AddItemDialog({
       setSelectedOptionType("organization");
     }
   }, [colleagueId, organizations]);
-
-  useEffect(() => {
-    setOpen(false);
-    reset();
-    setIsSubmitting(false);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [knowledgeLoaded]);
 
   const handleOptionChange = (event) => {
     const selectedOptionName = event.target.value;
