@@ -118,7 +118,12 @@ function AddItemDialog({
     resolver,
   });
 
-  const { reset, handleSubmit, control } = methods;
+  const {
+    reset,
+    handleSubmit,
+    control,
+    formState: { isValid },
+  } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     setIsSubmitting(true);
@@ -310,7 +315,7 @@ function AddItemDialog({
             <LoadingButton
               type="submit"
               variant="contained"
-              disabled={isSubmitting}
+              disabled={!isValid || isSubmitting}
               data-cy="finish"
             >
               {isSubmitting ? (
