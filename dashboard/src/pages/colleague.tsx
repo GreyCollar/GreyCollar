@@ -1,11 +1,17 @@
 import ColleagueLayout from "../layouts/ColleagueLayout";
 import Page from "../components/Page/Page";
-import React from "react";
-import useColleague from "../hooks/useColleague";
+import useColleague from "../hooks/useColleagueV3";
 import { useParams } from "react-router-dom";
+
 function Colleague() {
   const { colleagueId } = useParams();
-  const { colleague, loading } = useColleague(colleagueId);
+
+  const { getColleague } = useColleague();
+  const { colleague, loading } = getColleague(colleagueId);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>

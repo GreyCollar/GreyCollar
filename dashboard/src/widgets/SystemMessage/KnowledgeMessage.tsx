@@ -9,7 +9,10 @@ import useKnowledge from "../../hooks/useKnowledge";
 import { Chip, IconButton, Stack, Typography, alpha } from "@mui/material";
 
 function KnowledgeMessage({ id, handleClick, onDateFetched }) {
-  const { knowledge } = useKnowledge(id);
+  const { getKnowledge } = useKnowledge();
+
+  const { knowledge } = getKnowledge(id);
+
   const { colleague } = useColleague(knowledge.colleagueId);
 
   useEffect(() => {

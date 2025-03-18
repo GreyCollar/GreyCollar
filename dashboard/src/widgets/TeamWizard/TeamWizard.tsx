@@ -9,7 +9,7 @@ import StepComponent from "../../components/StepComponent/StepComponent";
 import { Summary } from "../../components/ItemSummary/TeamSummary";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
-import { useOrganization } from ".././../hooks/useOrganization";
+import useOrganizations from ".././../hooks/useOrganizations";
 import useTeams from "../../hooks/useTeams";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -102,9 +102,9 @@ type PropertyOptionType = "name" | "character" | "role";
 function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const projectId = storage.get("projectId");
   const [teamSelected] = useEvent("PROJECT_SELECTED", { projectId: null });
-  const { organizations, loading } = useOrganization().getOrganizations([]);
+  const { organizations, loading } = useOrganizations().getOrganizations([]);
   const [activeStep, setActiveStep] = React.useState(0);
-  const { createOrganization } = useOrganization();
+  const { create } = useOrganizations().createOrganization();
   const { createColleague } = useColleagues();
   const { createTeam } = useTeams();
 
@@ -220,7 +220,7 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
           await createTeam(data.team, data.organization.id);
           publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
         } else {
-          const result = await createOrganization(data.organization);
+          const result = await create(data.organization);
           await createTeam(data.team, result.id);
           publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
         }

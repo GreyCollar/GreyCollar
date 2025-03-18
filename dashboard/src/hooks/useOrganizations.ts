@@ -1,57 +1,113 @@
 import http from "../http";
-import useApi from "./useApi";
-import { useEvent } from "@nucleoidai/react-event";
+import { publish } from "@nucleoidai/react-event";
+import useSWR from "swr";
 
-import { useCallback, useEffect, useState } from "react";
+export type Organization = {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type OrganizationInput = {
+  name: string;
+  description?: string;
+};
+
+const fetcher = async (url: string) => {
+  const response = await http.get(url);
+  return response;
+};
 
 function useOrganizations() {
-  const [organizations, setOrganizations] = useState<
-    {
-      id: string;
-      name: string;
-      description: string;
-      created_at: string;
-      updated_at: string;
-    }[]
-  >([
-    {
-      id: "",
-      name: "",
-      description: "",
-      created_at: "",
-      updated_at: "",
-    },
-  ]);
+  const getOrganizations = () => {
+    const {
+      data,
+      error,
+      isLoading,
+      mutate: refetch,
+    } = useSWR("/organizations", fetcher, {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      refreshInterval: 0,
+    });
 
-  const { loading, error, handleResponse } = useApi();
+    if (data?.data) {
+      publish("ORGANIZATIONS_LOADED", { organizations: data.data });
+    }
 
-  const [teamSelected] = useEvent("TEAM_SELECTED", null);
-  const [organizationCreated] = useEvent("ORGANIZATION_CREATED", {
-    organization: null,
-  });
+    return {
+      organizations: data?.data,
+      loading: isLoading,
+      error,
+      fetch: refetch,
+    };
+  };
 
-  useEffect(() => {
-    getOrganizations();
+  const getOrganizationById = (id: string) => {
+    const shouldFetch = !!id;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamSelected, organizationCreated]);
+    const {
+      data,
+      error,
+      isLoading,
+      mutate: refetch,
+    } = useSWR(shouldFetch ? `/organizations/${id}` : null, fetcher);
 
-  const getOrganizations = useCallback(() => {
-    handleResponse(
-      http.get(`/organizations`),
-      (response) => setOrganizations(response.data),
-      (error) => {
-        console.error(error);
+    return {
+      organization: data?.data,
+      loading: isLoading,
+      error,
+      fetch: refetch,
+    };
+  };
+
+  const createOrganization = () => {
+    type CreateResponse = {
+      success: boolean;
+      message?: string;
+      id?: string;
+      data?: Organization;
+    };
+
+    const create = async (
+      organization: OrganizationInput
+    ): Promise<CreateResponse | null> => {
+      if (!organization) {
+        console.error("Cannot create organization: Missing organization input");
+        return null;
       }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+      try {
+        const response = await http.post("/organizations", {
+          name: organization.name,
+          description: organization.description,
+        });
+
+        console.log("createResponse", response);
+
+        if (response && response.data) {
+          publish("ORGANIZATION_CREATED", { organization: response.data });
+        }
+
+        return response;
+      } catch (error) {
+        console.error("Error creating organization:", error);
+        return null;
+      }
+    };
+
+    return {
+      create,
+    };
+  };
 
   return {
-    organizations,
-    loading,
-    error,
+    getOrganizations,
+    getOrganizationById,
+    createOrganization,
   };
 }
 
-export { useOrganizations };
+export default useOrganizations;

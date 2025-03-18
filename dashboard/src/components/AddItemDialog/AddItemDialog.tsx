@@ -152,7 +152,7 @@ function AddItemDialog({
     };
 
     try {
-      await addItem(payload);
+      await addItem(payload, payload.colleagueId);
       setOpen(false);
     } catch (error) {
       setOpen(false);

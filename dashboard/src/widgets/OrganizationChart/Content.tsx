@@ -1,7 +1,7 @@
 import SourcedAvatar from "../../components/SourcedAvatar/SourcedAvatar";
 import StandardNode from "./common/standard-node";
 import { storage } from "@nucleoidjs/webstorage";
-import { useOrganization } from "../../hooks/useOrganization";
+import useOrganizations from "../../hooks/useOrganizations";
 import useTeam from "../../hooks/useTeam";
 import { useTheme } from "@mui/material/styles";
 
@@ -24,11 +24,7 @@ function OrganizationalChart({ variant = "simple", sx }) {
   const organizationId = teamById?.organizationId;
 
   const { organization, loading, error } =
-    useOrganization().getOrganizationById(organizationId, [organizationId]);
-
-  console.log(organization);
-  console.log(loading);
-  console.log(error);
+    useOrganizations().getOrganizationById(organizationId);
 
   const filteredOrganizations = organization
     ? [organization].filter(

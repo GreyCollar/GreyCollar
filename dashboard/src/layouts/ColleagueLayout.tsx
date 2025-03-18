@@ -11,7 +11,7 @@ import Tasks from "../widgets/Tasks/Tasks";
 import { getBackgroundUrl } from "../utils/background";
 import { useState } from "react";
 
-import { Theme, useMediaQuery } from "@mui/material";
+import { Skeleton, Theme, useMediaQuery } from "@mui/material";
 
 const TABS = [
   {
@@ -49,28 +49,34 @@ function ColleagueLayout({ colleague, loading }) {
   return (
     <>
       <Stack margin={2} sx={{ position: "relative", marginTop: -2 }}>
-        <ProfileCard
-          TABS={TABS}
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
-          name={colleague.name}
-          avatarUrl={colleague.avatar}
-          coverUrl={getBackgroundUrl(colleague.id)}
-          role={colleague.role}
-          loading={loading}
-        />
-        <Stack
-          sx={{
-            position: "absolute",
-            bottom: mdDown ? "auto" : 20,
-            left: mdDown ? "auto" : 120,
-            top: mdDown ? 25 : "auto",
-            right: mdDown ? 25 : "auto",
-            zIndex: 1000,
-          }}
-        >
-          <PopupChatWidget />
-        </Stack>
+        {loading ? (
+          <Skeleton variant="rectangular" height={200} />
+        ) : (
+          <>
+            <ProfileCard
+              TABS={TABS}
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
+              name={colleague.name}
+              avatarUrl={colleague.avatar}
+              coverUrl={getBackgroundUrl(colleague.id)}
+              role={colleague.role}
+              loading={loading}
+            />
+            <Stack
+              sx={{
+                position: "absolute",
+                bottom: mdDown ? "auto" : 20,
+                left: mdDown ? "auto" : 120,
+                top: mdDown ? 25 : "auto",
+                right: mdDown ? 25 : "auto",
+                zIndex: 1000,
+              }}
+            >
+              <PopupChatWidget />
+            </Stack>
+          </>
+        )}
       </Stack>
       {currentTab === "profile" && <Profile colleagueId={colleague.id} />}
       {currentTab === "knowledge-base" && (
