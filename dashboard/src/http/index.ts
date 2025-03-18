@@ -22,7 +22,6 @@ instance.interceptors.request.use((request) => {
       config.base === "/" ? "/login" : `${config.base}/login`;
   }
   request.headers["Authorization"] = `Bearer ${accessToken}`;
-  request.headers["companyId"] = "1";
   return request;
 });
 
@@ -33,7 +32,6 @@ instance.interceptors.response.use(
       window.location.href = "/login";
     }
     response.headers["Authorization"] = `Bearer ${accessToken}`;
-    response.headers["companyId"] = "1";
     return response;
   },
   (error) => {
@@ -42,6 +40,12 @@ instance.interceptors.response.use(
         publish("GLOBAL_MESSAGE_POSTED", {
           status: true,
           message: `BAD REQUEST: ${JSON.stringify(error.response.data)}`,
+          severity: "warning",
+        });
+      } else if (error.response.status >= 500) {
+        publish("GLOBAL_MESSAGE_POSTED", {
+          status: true,
+          message: `SERVER ERROR: ${error.response.status}`,
           severity: "warning",
         });
       } else {
