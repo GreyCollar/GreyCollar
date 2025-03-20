@@ -1,6 +1,7 @@
 import http from "../http";
-import { publish } from "@nucleoidai/react-event";
-import useSWR from "swr";
+import useApi from "./useApiV2";
+
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 export type Organization = {
   id: string;
@@ -15,51 +16,53 @@ export type OrganizationInput = {
   description?: string;
 };
 
-const fetcher = async (url: string) => {
-  const response = await http.get(url);
-  return response;
-};
+type DependencyArray = unknown[];
 
 function useOrganizations() {
-  const getOrganizations = () => {
-    const {
-      data,
-      error,
-      isLoading,
-      mutate: refetch,
-    } = useSWR("/organizations", fetcher, {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-      refreshInterval: 0,
-    });
+  const { CreateOperation } = useApi();
 
-    if (data?.data) {
-      publish("ORGANIZATIONS_LOADED", { organizations: data.data });
+  const [organizationCreated] = useEvent("ORGANIZATION_CREATED", null);
+
+  const getOrganizations = (fetchState: DependencyArray = []) => {
+    const eventDependencies = [organizationCreated];
+
+    const { data, loading, error, fetch } = CreateOperation(
+      () => http.get("/organizations"),
+      [...eventDependencies, ...fetchState]
+    );
+
+    if (data) {
+      publish("ORGANIZATIONS_LOADED", { organizations: data });
     }
 
     return {
-      organizations: data?.data,
-      loading: isLoading,
+      organizations: data,
+      loading,
       error,
-      fetch: refetch,
+      fetch,
     };
   };
 
-  const getOrganizationById = (id: string) => {
-    const shouldFetch = !!id;
+  const getOrganizationById = (
+    id: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const eventDependencies = [organizationCreated];
 
-    const {
-      data,
-      error,
-      isLoading,
-      mutate: refetch,
-    } = useSWR(shouldFetch ? `/organizations/${id}` : null, fetcher);
+    const { data, loading, error, fetch } = CreateOperation(
+      () => (id ? http.get(`/organizations/${id}`) : null),
+      [id, ...eventDependencies, ...fetchState]
+    );
+
+    if (data) {
+      publish("ORGANIZATION_LOADED", { data });
+    }
 
     return {
-      organization: data?.data,
-      loading: isLoading,
+      organization: data,
+      loading,
       error,
-      fetch: refetch,
+      fetch,
     };
   };
 
@@ -71,6 +74,18 @@ function useOrganizations() {
       data?: Organization;
     };
 
+    const {
+      data: createResponse,
+      loading,
+      error,
+      fetch,
+    } = CreateOperation((organization: OrganizationInput) =>
+      http.post("/organizations", {
+        name: organization.name,
+        description: organization.description,
+      })
+    );
+
     const create = async (
       organization: OrganizationInput
     ): Promise<CreateResponse | null> => {
@@ -79,27 +94,64 @@ function useOrganizations() {
         return null;
       }
 
-      try {
-        const response = await http.post("/organizations", {
-          name: organization.name,
-          description: organization.description,
-        });
+      const result = await fetch(organization);
 
-        console.log("createResponse", response);
-
-        if (response && response.data) {
-          publish("ORGANIZATION_CREATED", { organization: response.data });
-        }
-
-        return response;
-      } catch (error) {
-        console.error("Error creating organization:", error);
-        return null;
+      if (result && result.data) {
+        publish("ORGANIZATION_CREATED", { organization: result.data });
       }
+
+      return result;
     };
 
     return {
+      createResponse,
+      loading,
+      error,
       create,
+    };
+  };
+
+  const updateOrganization = () => {
+    type UpdateResponse = {
+      success: boolean;
+      message?: string;
+      data?: Organization;
+    };
+
+    const {
+      data: updateResponse,
+      loading,
+      error,
+      fetch,
+    } = CreateOperation((organization: Organization) =>
+      http.put(`/organizations/${organization.id}`, {
+        name: organization.name,
+        description: organization.description,
+      })
+    );
+
+    const update = async (
+      organization: Organization
+    ): Promise<UpdateResponse | null> => {
+      if (!organization || !organization.id) {
+        console.error("Cannot update organization: Missing ID");
+        return null;
+      }
+
+      const result = await fetch(organization);
+
+      if (result) {
+        publish("ORGANIZATION_UPDATED", { organizationId: organization.id });
+      }
+
+      return result;
+    };
+
+    return {
+      updateResponse,
+      loading,
+      error,
+      update,
     };
   };
 
@@ -107,6 +159,7 @@ function useOrganizations() {
     getOrganizations,
     getOrganizationById,
     createOrganization,
+    updateOrganization,
   };
 }
 

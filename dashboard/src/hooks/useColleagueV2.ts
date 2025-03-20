@@ -28,22 +28,37 @@ function useColleague() {
   ) => {
     const eventDependencies = [colleagueUpdated];
 
-    const {
-      data: colleague,
-      loading,
-      error,
-      fetch,
-    } = CreateOperation(
+    const { data, loading, error, fetch } = CreateOperation(
       () => (colleagueId ? http.get(`/colleagues/${colleagueId}`) : null),
       [colleagueId, ...eventDependencies, ...fetchState]
     );
 
-    if (colleague) {
-      publish("COLLEAGUE_LOADED", { colleague });
+    if (data) {
+      publish("COLLEAGUE_LOADED", { data });
     }
 
     return {
-      colleague,
+      colleague: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const getColleagues = (fetchState: DependencyArray = []) => {
+    const eventDependencies = [colleagueUpdated];
+
+    const { data, loading, error, fetch } = CreateOperation(
+      () => http.get("/colleagues"),
+      [...eventDependencies, ...fetchState]
+    );
+
+    if (data) {
+      publish("COLLEAGUES_LOADED", { colleagues: data });
+    }
+
+    return {
+      colleagues: data,
       loading,
       error,
       fetch,
@@ -100,6 +115,7 @@ function useColleague() {
   };
 
   return {
+    getColleagues,
     getColleague,
     updateColleague,
   };

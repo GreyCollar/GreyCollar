@@ -49,7 +49,7 @@ function useTeam() {
     const eventDependencies = [teamUpdated, teamDeleted];
 
     const { data, loading, error, fetch } = CreateOperation(
-      () => http.get(`/projects/${teamId}`),
+      () => (teamId ? http.get(`/projects/${teamId}`) : null),
       [teamId, ...eventDependencies, ...fetchState]
     );
 
@@ -85,13 +85,9 @@ function useTeam() {
           organizationId,
         });
 
-        console.log("createResponse", response);
-
         if (response && response.data) {
           publish("PROJECT_CREATED", { project: response.data });
         }
-
-        return response;
       } catch (error) {
         console.error("Error creating team:", error);
         return null;
@@ -129,8 +125,6 @@ function useTeam() {
         if (response) {
           publish("TEAM_UPDATED", { teamId: team.id });
         }
-
-        return response;
       } catch (error) {
         console.error("Error updating team:", error);
         return null;
@@ -161,8 +155,6 @@ function useTeam() {
         if (response) {
           publish("TEAM_DELETED", { teamId });
         }
-
-        return response;
       } catch (error) {
         console.error("Error deleting team:", error);
         return null;
