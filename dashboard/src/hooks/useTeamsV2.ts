@@ -1,6 +1,7 @@
 import http from "../http";
-import { publish } from "@nucleoidai/react-event";
-import useSWR from "swr";
+import useApi from "./useApiV2";
+
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 export type Team = {
   id: string;
@@ -15,51 +16,48 @@ export type TeamInput = {
   avatar?: string;
 };
 
-const fetcher = async (url: string) => {
-  const response = await http.get(url);
-  return response;
-};
+type DependencyArray = unknown[];
 
 function useTeam() {
-  const getTeams = () => {
-    const {
-      data,
-      error,
-      isLoading,
-      mutate: refetch,
-    } = useSWR("/projects", fetcher, {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-      refreshInterval: 0,
-    });
+  const { CreateOperation } = useApi();
 
-    if (data?.data) {
-      publish("PROJECTS_LOADED", { projects: data.data });
+  const [teamCreated] = useEvent("PROJECT_CREATED", null);
+  const [teamUpdated] = useEvent("TEAM_UPDATED", null);
+  const [teamDeleted] = useEvent("TEAM_DELETED", null);
+
+  const getTeams = (fetchState: DependencyArray = []) => {
+    const eventDependencies = [teamCreated, teamUpdated, teamDeleted];
+
+    const { data, loading, error, fetch } = CreateOperation(
+      () => http.get("/projects"),
+      [...eventDependencies, ...fetchState]
+    );
+
+    if (data) {
+      publish("PROJECTS_LOADED", { projects: data });
     }
 
     return {
-      teams: data?.data,
-      loading: isLoading,
+      teams: data,
+      loading,
       error,
-      fetch: refetch,
+      fetch,
     };
   };
 
-  const getTeamById = (teamId: string) => {
-    const shouldFetch = !!teamId;
+  const getTeamById = (teamId: string, fetchState: DependencyArray = []) => {
+    const eventDependencies = [teamUpdated, teamDeleted];
 
-    const {
-      data,
-      error,
-      isLoading,
-      mutate: refetch,
-    } = useSWR(shouldFetch ? `/projects/${teamId}` : null, fetcher);
+    const { data, loading, error, fetch } = CreateOperation(
+      () => http.get(`/projects/${teamId}`),
+      [teamId, ...eventDependencies, ...fetchState]
+    );
 
     return {
-      team: data?.data,
-      loading: isLoading,
+      team: data,
+      loading,
       error,
-      fetch: refetch,
+      fetch,
     };
   };
 

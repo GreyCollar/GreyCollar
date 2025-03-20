@@ -1,7 +1,7 @@
 import http from "../http";
+import useApi from "./useApiV2";
 
 import { publish, useEvent } from "@nucleoidai/react-event";
-import useSWR, { mutate } from "swr";
 
 export type Knowledge = {
   id: string;
@@ -24,118 +24,92 @@ export type KnowledgeInput = {
   answer?: string;
 };
 
-// Define fetcher function for SWR
-const fetcher = async (url: string) => {
-  const response = await http.get(url);
-  return response;
-};
+type DependencyArray = unknown[];
 
 function useKnowledge() {
+  const { CreateOperation } = useApi();
+
   const [knowledgeCreated] = useEvent("KNOWLEDGE_CREATED", null);
   const [knowledgeUpdated] = useEvent("KNOWLEDGE_UPDATED", null);
   const [knowledgeDeleted] = useEvent("KNOWLEDGE_DELETED", null);
   const [knowledgeStatusChanged] = useEvent("KNOWLEDGE_STATUS_CHANGED", null);
 
-  const getColleagueKnowledges = (
-    colleagueId: string,
-    fetchState: unknown[] = []
+  const getKnowledge = (
+    knowledgeId: string,
+    fetchState: DependencyArray = []
   ) => {
-    // Only fetch if colleagueId exists
-    const shouldFetch = !!colleagueId;
+    const eventDependencies = [
+      knowledgeUpdated,
+      knowledgeStatusChanged,
+      knowledgeDeleted,
+    ];
 
-    const {
-      data,
-      error,
-      isValidating,
-      mutate: refetch,
-    } = useSWR(
-      shouldFetch ? `/knowledge?colleagueId=${colleagueId}` : null,
-      fetcher,
-      {
-        revalidateOnFocus: true,
-        revalidateOnReconnect: true,
-        refreshInterval: 0, // Disable polling
-      }
+    const { data, loading, error, fetch } = CreateOperation(
+      () => http.get(`/knowledge/${knowledgeId}`),
+      [knowledgeId, ...eventDependencies, ...fetchState]
     );
 
-    // Trigger revalidation when knowledge-related events occur
-    if (
-      knowledgeCreated ||
-      knowledgeUpdated ||
-      knowledgeDeleted ||
-      knowledgeStatusChanged
-    ) {
-      refetch();
-    }
-
-    // Publish event when knowledges are loaded
-    if (data?.data) {
-      publish("KNOWLEDGE_LOADED", { knowledge: data.data });
-    }
-
-    console.log("data", data);
-
     return {
-      knowledges: data?.data,
-      loading: !error && !data && shouldFetch,
+      knowledge: data,
+      loading,
       error,
-      fetch: refetch,
+      fetch,
     };
   };
 
-  const getTeamKnowledges = (teamId: string, fetchState: unknown[] = []) => {
-    // Only fetch if teamId exists
-    const shouldFetch = !!teamId;
+  const getTeamKnowledges = (
+    teamId: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const eventDependencies = [
+      knowledgeCreated,
+      knowledgeUpdated,
+      knowledgeDeleted,
+      knowledgeStatusChanged,
+    ];
 
-    const {
-      data,
-      error,
-      isValidating,
-      mutate: refetch,
-    } = useSWR(shouldFetch ? `/knowledge?teamId=${teamId}` : null, fetcher, {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
-      refreshInterval: 0, // Disable polling
-    });
+    const { data, loading, error, fetch } = CreateOperation(
+      () => http.get(`/knowledge?teamId=${teamId}`),
+      [teamId, ...eventDependencies, ...fetchState]
+    );
 
-    // Trigger revalidation when knowledge-related events occur
-    if (
-      knowledgeCreated ||
-      knowledgeUpdated ||
-      knowledgeDeleted ||
-      knowledgeStatusChanged
-    ) {
-      refetch();
-    }
-
-    // Publish event when knowledges are loaded
-    if (data?.data) {
-      publish("KNOWLEDGE_LOADED", { knowledge: data.data });
+    if (data) {
+      publish("KNOWLEDGE_LOADED", { knowledge: data });
     }
 
     return {
-      knowledges: data?.data,
-      loading: !error && !data && shouldFetch,
+      knowledges: data,
+      loading,
       error,
-      fetch: refetch,
+      fetch,
     };
   };
 
-  const getKnowledge = (knowledgeId: string) => {
-    const shouldFetch = !!knowledgeId;
+  const getColleagueKnowledges = (
+    colleagueId: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const eventDependencies = [
+      knowledgeCreated,
+      knowledgeUpdated,
+      knowledgeDeleted,
+      knowledgeStatusChanged,
+    ];
 
-    const {
-      data,
-      error,
-      isValidating,
-      mutate: refetch,
-    } = useSWR(shouldFetch ? `/knowledge/${knowledgeId}` : null, fetcher);
+    const { data, loading, error, fetch } = CreateOperation(
+      () => http.get(`/knowledge?colleagueId=${colleagueId}`),
+      [colleagueId, ...eventDependencies, ...fetchState]
+    );
+
+    if (data) {
+      publish("KNOWLEDGE_LOADED", { knowledge: data });
+    }
 
     return {
-      knowledge: data?.data,
-      loading: !error && !data && shouldFetch,
+      knowledges: data,
+      loading,
       error,
-      fetch: refetch,
+      fetch,
     };
   };
 
@@ -156,34 +130,22 @@ function useKnowledge() {
         return null;
       }
 
-      try {
-        const response = await http.post("/knowledge", {
-          url: knowledge.url,
-          text: knowledge.text,
-          question: knowledge.question,
-          answer: knowledge.answer,
-          colleagueId: colleagueId,
-          type: knowledge.type,
-        });
+      const response = await http.post("/knowledge", {
+        url: knowledge.url,
+        text: knowledge.text,
+        question: knowledge.question,
+        answer: knowledge.answer,
+        colleagueId: colleagueId,
+        type: knowledge.type,
+      });
 
-        console.log("createResponse", response);
+      console.log("createResponse", response);
 
-        if (response && response.data) {
-          // Update the SWR cache for colleague knowledges
-          mutate(`/knowledge?colleagueId=${colleagueId}`);
-          // If team ID is available in the response, update team knowledges cache too
-          if (response.data.teamId) {
-            mutate(`/knowledge?teamId=${response.data.teamId}`);
-          }
-
-          publish("KNOWLEDGE_CREATED", { knowledge: response.data });
-        }
-
-        return response.data;
-      } catch (error) {
-        console.error("Error creating knowledge:", error);
-        return null;
+      if (response && response.data) {
+        publish("KNOWLEDGE_CREATED", { knowledge: response.data });
       }
+
+      return response.data;
     };
 
     return {
@@ -206,26 +168,15 @@ function useKnowledge() {
         return null;
       }
 
-      try {
-        const response = await http.delete(`/knowledge/${knowledge.id}`);
+      const response = await http.delete(`/knowledge/${knowledge.id}`);
 
-        console.log("deleteResponse", response);
+      console.log("deleteResponse", response);
 
-        if (response) {
-          // Update relevant SWR caches
-          mutate(`/knowledge?colleagueId=${knowledge.colleagueId}`);
-          if (knowledge.teamId) {
-            mutate(`/knowledge?teamId=${knowledge.teamId}`);
-          }
-
-          publish("KNOWLEDGE_DELETED", { knowledge: knowledge.id });
-        }
-
-        return response.data;
-      } catch (error) {
-        console.error("Error deleting knowledge:", error);
-        return null;
+      if (response) {
+        publish("KNOWLEDGE_DELETED", { knowledge: knowledge.id });
       }
+
+      return response.data;
     };
 
     return {
@@ -240,50 +191,37 @@ function useKnowledge() {
       success: boolean;
     };
 
+    const {
+      data: statusResponse,
+      loading,
+      error,
+      fetch,
+    } = CreateOperation((knowledgeId: string, status: string) =>
+      http.patch(`/knowledge/${knowledgeId}/status`, { status })
+    );
+
     const changeStatus = async (
       knowledgeId: string,
       status: string
     ): Promise<StatusResponse | null> => {
-      try {
-        const result = await http.patch(`/knowledge/${knowledgeId}/status`, {
-          status,
-        });
-
-        if (result) {
-          // Fetch the full knowledge object to get colleague and team IDs
-          const knowledgeDetails = await http.get(`/knowledge/${knowledgeId}`);
-
-          if (knowledgeDetails) {
-            // Update relevant SWR caches
-            mutate(`/knowledge?colleagueId=${knowledgeDetails.colleagueId}`);
-            if (knowledgeDetails.teamId) {
-              mutate(`/knowledge?teamId=${knowledgeDetails.teamId}`);
-            }
-            // Also update the single knowledge cache
-            mutate(`/knowledge/${knowledgeId}`);
-          }
-
-          publish("KNOWLEDGE_STATUS_CHANGED", { knowledge: result });
-        }
-
-        return result;
-      } catch (error) {
-        console.error("Error changing knowledge status:", error);
-        return null;
+      const result = await fetch(knowledgeId, status);
+      if (result) {
+        publish("KNOWLEDGE_STATUS_CHANGED", { knowledge: result });
       }
+      return result;
     };
 
     return {
-      statusResponse: null,
-      loading: false,
-      error: null,
+      statusResponse,
+      loading,
+      error,
       changeStatus,
     };
   };
 
   return {
-    getTeamKnowledges,
     getKnowledge,
+    getTeamKnowledges,
     getColleagueKnowledges,
     createKnowledge,
     deleteKnowledge,
