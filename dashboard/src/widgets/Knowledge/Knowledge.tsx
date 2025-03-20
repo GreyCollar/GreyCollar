@@ -6,7 +6,7 @@ import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
 import useColleague from "../../hooks/useColleagueV2";
 import useKnowledge from "../../hooks/useKnowledge";
-import useOrganizations from "../../hooks/useOrganizations";
+import useOrganizations from "../../hooks/useOrganziationsV2";
 import { useTable } from "@nucleoidai/platform/minimal/components";
 import useTeams from "../../hooks/useTeamsV2";
 
@@ -37,11 +37,10 @@ function Knowledge({
 
   const { team } = getTeamById(teamId);
 
-  const { getOrganizationById } = useOrganizations();
+  const { getOrganizations } = useOrganizations();
 
-  const { organization: filteredOrganizations } = getOrganizationById(
-    team?.organizationId
-  );
+  const { organizations: filteredOrganizations, loading: organizationLoading } =
+    getOrganizations();
 
   const { getColleagues } = useColleague();
   const { colleagues } = getColleagues();
@@ -161,20 +160,21 @@ function Knowledge({
           handleDelete={handleDelete}
           selectedItem={selectedItem}
         />
-
-        <AddItemDialog
-          types={ADD_ITEM_TYPES}
-          selectedType={selectedType === "ALL" ? "URL" : selectedType}
-          setSelectedType={setSelectedType}
-          open={open}
-          setOpen={setOpen}
-          addItem={create}
-          colleagueId={colleagueId}
-          teamId={teamId}
-          teamById={team}
-          colleagues={colleagues}
-          organizations={filteredOrganizations}
-        />
+        {!organizationLoading ? (
+          <AddItemDialog
+            types={ADD_ITEM_TYPES}
+            selectedType={selectedType === "ALL" ? "URL" : selectedType}
+            setSelectedType={setSelectedType}
+            open={open}
+            setOpen={setOpen}
+            addItem={create}
+            colleagueId={colleagueId}
+            teamId={teamId}
+            teamById={team}
+            colleagues={colleagues}
+            organizations={filteredOrganizations}
+          />
+        ) : null}
       </Container>
     </>
   );

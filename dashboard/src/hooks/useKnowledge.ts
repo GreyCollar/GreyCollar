@@ -97,7 +97,8 @@ function useKnowledge() {
     ];
 
     const { data, loading, error, fetch } = CreateOperation(
-      () => http.get(`/knowledge?colleagueId=${colleagueId}`),
+      () =>
+        colleagueId ? http.get(`/knowledge?colleagueId=${colleagueId}`) : null,
       [colleagueId, ...eventDependencies, ...fetchState]
     );
 

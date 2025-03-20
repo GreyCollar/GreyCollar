@@ -9,7 +9,7 @@ import StepComponent from "../../components/StepComponent/StepComponent";
 import { Summary } from "../../components/ItemSummary/TeamSummary";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
-import useOrganizations from ".././../hooks/useOrganizations";
+import useOrganizations from ".././../hooks/useOrganziationsV2";
 import useTeams from "../../hooks/useTeams";
 import { yupResolver } from "@hookform/resolvers/yup";
 

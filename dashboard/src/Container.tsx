@@ -1,7 +1,7 @@
 import Onboarding from "./components/Onboarding/Onboarding";
 import { Outlet } from "react-router-dom";
 import TeamWizard from "./widgets/TeamWizard/TeamWizard";
-import useOrganizations from "./hooks/useOrganizations";
+import useOrganizations from "./hooks/useOrganziationsV2";
 
 import { publish, useEvent } from "@nucleoidai/react-event";
 
