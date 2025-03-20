@@ -36,6 +36,7 @@ function AddItemDialog({
   colleagues,
   organizations,
 }) {
+  //TODO - Refactor here
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedOptionId, setSelectedOptionId] = useState("");

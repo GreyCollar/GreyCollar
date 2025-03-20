@@ -65,7 +65,7 @@ function useColleague() {
     };
   };
 
-  const updateColleague = () => {
+  const updateColleague = (colleague: Colleague) => {
     type UpdateResponse = {
       success: boolean;
       message?: string;
@@ -77,7 +77,7 @@ function useColleague() {
       loading,
       error,
       fetch,
-    } = CreateOperation((colleague: Colleague) =>
+    } = CreateOperation(() =>
       http.put(`/colleagues/${colleague.id}`, {
         title: colleague.title,
         name: colleague.name,
