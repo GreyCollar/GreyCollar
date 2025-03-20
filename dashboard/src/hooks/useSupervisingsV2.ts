@@ -86,6 +86,7 @@ function useSupervisings() {
       loading,
       error,
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getColleagueSupervisingByStatus = useCallback(
@@ -109,6 +110,7 @@ function useSupervisings() {
         fetch,
       };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
