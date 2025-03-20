@@ -4,8 +4,8 @@ import DeleteConfirmation from "../../components/DeleteConfirmation/DeleteConfir
 import KnowledgeTable from "../../components/KnowledgeTable/KnowledgeTable";
 import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
-import useColleague from "../../hooks/useColleagueV3";
-import useKnowledge from "../../hooks/useKnowledgeV2";
+import useColleague from "../../hooks/useColleagueV2";
+import useKnowledge from "../../hooks/useKnowledge";
 import useOrganizations from "../../hooks/useOrganizations";
 import { useTable } from "@nucleoidai/platform/minimal/components";
 import useTeams from "../../hooks/useTeamsV2";
@@ -43,7 +43,8 @@ function Knowledge({
     team?.organizationId
   );
 
-  const { colleagues } = useColleague().getColleagues();
+  const { getColleagues } = useColleague();
+  const { colleagues } = getColleagues();
 
   const table = useTable();
 

@@ -1,6 +1,6 @@
 import ColleagueLayout from "../layouts/ColleagueLayout";
 import Page from "../components/Page/Page";
-import useColleague from "../hooks/useColleagueV3";
+import useColleague from "../hooks/useColleagueV2";
 import { useParams } from "react-router-dom";
 
 function Colleague() {
