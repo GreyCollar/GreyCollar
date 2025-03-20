@@ -1,7 +1,7 @@
 import SourcedAvatar from "../../components/SourcedAvatar/SourcedAvatar";
 import StandardNode from "./common/standard-node";
 import { storage } from "@nucleoidjs/webstorage";
-import useOrganizations from "../../hooks/useOrganizations";
+import useOrganizations from "../../hooks/useOrganziationsV2";
 import useTeam from "../../hooks/useTeam";
 import { useTheme } from "@mui/material/styles";
 
