@@ -9,9 +9,10 @@ import Stack from "@mui/material/Stack";
 import Supervising from "../widgets/Supervising/Supervising";
 import Tasks from "../widgets/Tasks/Tasks";
 import { getBackgroundUrl } from "../utils/background";
-import { useState } from "react";
 
 import { Skeleton, Theme, useMediaQuery } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TABS = [
   {
@@ -42,9 +43,42 @@ const TABS = [
 ];
 
 function ColleagueLayout({ colleague, loading }) {
-  const [currentTab, setCurrentTab] = useState("profile");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromQuery = queryParams.get("tab");
+
+  const [currentTab, setCurrentTab] = useState(
+    TABS.some((tab) => tab.value === tabFromQuery) ? tabFromQuery : "profile"
+  );
 
   const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+
+  const handleTabChange = (newTab) => {
+    setCurrentTab(newTab);
+
+    const newQueryParams = new URLSearchParams(location.search);
+    newQueryParams.set("tab", newTab);
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: newQueryParams.toString(),
+      },
+      { replace: true }
+    );
+  };
+
+  useEffect(() => {
+    if (
+      tabFromQuery &&
+      TABS.some((tab) => tab.value === tabFromQuery) &&
+      tabFromQuery !== currentTab
+    ) {
+      setCurrentTab(tabFromQuery);
+    }
+  }, [tabFromQuery, currentTab]);
 
   return (
     <>
@@ -56,7 +90,7 @@ function ColleagueLayout({ colleague, loading }) {
             <ProfileCard
               TABS={TABS}
               currentTab={currentTab}
-              setCurrentTab={setCurrentTab}
+              setCurrentTab={handleTabChange}
               name={colleague.name}
               avatarUrl={colleague.avatar}
               coverUrl={getBackgroundUrl(colleague.id)}
