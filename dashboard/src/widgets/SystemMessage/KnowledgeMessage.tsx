@@ -9,8 +9,11 @@ import useKnowledge from "../../hooks/useKnowledge";
 import { Chip, IconButton, Stack, Typography, alpha } from "@mui/material";
 
 function KnowledgeMessage({ id, handleClick, onDateFetched }) {
-  const { knowledge } = useKnowledge(id);
-  const { colleague } = useColleague(knowledge.colleagueId);
+  const { getKnowledge } = useKnowledge();
+
+  const { knowledge, loading } = getKnowledge(id);
+
+  const { colleague } = useColleague(loading ? null : knowledge.colleagueId);
 
   useEffect(() => {
     if (knowledge) {
@@ -18,6 +21,10 @@ function KnowledgeMessage({ id, handleClick, onDateFetched }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [knowledge?.createdAt]);
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <Stack
