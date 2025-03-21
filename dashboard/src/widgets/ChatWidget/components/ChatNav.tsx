@@ -15,6 +15,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { publish } from "@nucleoidai/react-event";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
 import { Iconify, Scrollbar } from "@nucleoidai/platform/minimal/components";
@@ -29,6 +30,8 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
 
   const NAV_WIDTH = mdDown ? "100%" : 300;
 
+  const navigate = useNavigate();
+
   const mdUp = true;
   const [colleagueCardDialogOpen, setColleagueCardDialogOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
@@ -36,6 +39,10 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
   const handleColleagueClick = (colleague) => {
     setSelectedMember(colleague);
     setColleagueCardDialogOpen(true);
+  };
+
+  const handleColleagueView = (colleague) => {
+    navigate(`/colleagues/${colleague.id}`);
   };
 
   const [searchContacts, setSearchContacts] = useState({
@@ -263,7 +270,7 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
       >
         <ColleagueCard
           colleague={selectedMember}
-          onView={() => {}}
+          onView={() => handleColleagueView(selectedMember)}
           onEdit={() => {}}
           onDelete={() => {}}
         />

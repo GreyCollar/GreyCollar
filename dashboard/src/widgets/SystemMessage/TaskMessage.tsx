@@ -51,25 +51,29 @@ function TaskMessage({ id, handleClick, onDateFetched }) {
           sx={{
             flexDirection: "row",
             alignItems: "center",
+            width: "100%",
           }}
         >
           <Stack
             sx={{
               p: 1.5,
               minWidth: 48,
-              maxWidth: 750,
+              maxWidth: "100%",
               borderRadius: 1,
               typography: "body2",
               color: "grey.800",
               background: (theme) => alpha(theme.palette.background.default, 1),
               flexDirection: "column",
               alignItems: "center",
+              width: "100%",
             }}
           >
             <Stack
               sx={{
                 flexDirection: "row",
                 alignItems: "center",
+                flexWrap: "wrap",
+                width: "100%",
               }}
             >
               <Chip
@@ -86,7 +90,7 @@ function TaskMessage({ id, handleClick, onDateFetched }) {
                 color="primary"
                 variant="filled"
               />
-              <Typography variant="body2" color="grey.500" sx={{ mx: 1 }}>
+              <Typography variant="body2" color="grey.500" sx={{ m: 1 }}>
                 {task.status === "DONE"
                   ? "finished"
                   : task.status === "IN_PROGRESS"
@@ -97,6 +101,10 @@ function TaskMessage({ id, handleClick, onDateFetched }) {
                 sx={{
                   backgroundColor: "rgba(171,71,188, .6)",
                   color: "rgba(243,229,245, .6)",
+                  textTransform: "none",
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                  my: 0.2,
                 }}
               >
                 {task.description ? truncateContent(task.description) : "task"}
