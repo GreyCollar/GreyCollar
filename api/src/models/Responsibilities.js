@@ -10,7 +10,11 @@ const Responsibilities = sequelize.define("Responsibilities", {
     primaryKey: true,
     allowNull: false,
   },
-  responsibilities: {
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
     type: DataTypes.STRING,
     allowNull: false,
   },
