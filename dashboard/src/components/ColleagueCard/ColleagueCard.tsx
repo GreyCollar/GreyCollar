@@ -22,7 +22,7 @@ export default function ColleagueCard({ colleague, onView, onEdit, onDelete }) {
   const popover = usePopover();
 
   return (
-    <Card sx={{ width: "250px" }}>
+    <Card sx={{ width: "300px" }}>
       <Fab
         data-cy="colleague-card-more-vert"
         color="default"
@@ -48,7 +48,7 @@ export default function ColleagueCard({ colleague, onView, onEdit, onDelete }) {
         key={colleague.name}
         sx={{
           textAlign: "center",
-          width: "250px",
+          width: "300px",
           minWidth: 200,
           cursor: "pointer",
         }}
