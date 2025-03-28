@@ -1,4 +1,4 @@
-import ChatHistory from "./ChatHistory";
+import ChatTitle from "./ChatTitle";
 import MessageBox from "./MessageBox";
 import WelcomeMessage from "./WelcomeMessage";
 
@@ -20,7 +20,7 @@ const ChatDisplay = ({ loading, messages, selectedItem }) => {
         paddingTop: "5px",
       }}
     >
-      <ChatHistory selectedItem={selectedItem} />
+      <ChatTitle selectedItem={selectedItem} />
       {messages.length === 0 && <WelcomeMessage />}
 
       {messages.map((message, index) => (
