@@ -1,0 +1,93 @@
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes dashoffset {
+  from {
+    stroke-dashoffset: 24;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animated-edge {
+  stroke-dasharray: 5, 5;
+  animation: dashoffset 1s linear infinite;
+}
+
+.hidden-icon {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.spin-icon {
+  animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1);
+  opacity: 1;
+}
+
+.bounce-icon {
+  animation: bounce 0.8s ease-in-out;
+  opacity: 1;
+}
+
+.settled-icon {
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.node-ripple-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(66, 153, 225, 0.4) 0%,
+    rgba(66, 153, 225, 0) 70%
+  );
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+  animation: ripple 2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
