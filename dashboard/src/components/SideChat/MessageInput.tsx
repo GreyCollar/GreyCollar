@@ -1,17 +1,25 @@
 import SendIcon from "@mui/icons-material/Send";
 
 import { Box, IconButton, TextField, useTheme } from "@mui/material";
-import React, { forwardRef, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
-const MessageInput = forwardRef(() => {
+const MessageInput = ({ addMessage }) => {
   const theme = useTheme();
-
   const [isInputEmpty, setIsInputEmpty] = useState(true);
-
   const inputRef = useRef(null);
 
   const handleInputChange = (event) => {
     setIsInputEmpty(!event.target.value.trim());
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const message = inputRef.current.value.trim();
+    if (message) {
+      addMessage(message);
+      inputRef.current.value = "";
+      setIsInputEmpty(true);
+    }
   };
 
   return (
@@ -23,13 +31,14 @@ const MessageInput = forwardRef(() => {
         padding: "10px",
         backgroundColor: theme.palette.background.paper,
       }}
+      onSubmit={handleSubmit}
     >
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: { xs: "100%", sm: "90%", md: "80%", lg: "70%" },
+          width: "100%",
           borderRadius: 1,
           padding: "10px",
           border: `1px solid`,
@@ -41,7 +50,7 @@ const MessageInput = forwardRef(() => {
           fullWidth
           variant="standard"
           onChange={handleInputChange}
-          placeholder="Type your message here..."
+          placeholder="Type here what you want your colleague to do."
           InputProps={{
             disableUnderline: true,
           }}
@@ -63,6 +72,6 @@ const MessageInput = forwardRef(() => {
       </Box>
     </Box>
   );
-});
+};
 
 export default MessageInput;

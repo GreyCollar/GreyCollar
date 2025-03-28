@@ -2,7 +2,8 @@ import Box from "@mui/material/Box";
 import ChatDisplay from "./ChatDisplay";
 import MessageInput from "./MessageInput";
 
-function SideChat() {
+import React, { useState } from "react";
+
 const predefinedResponses = {
   "What is an AI agent?":
     "An AI agent is a system that can perceive its environment and take actions to achieve its goals.",
@@ -20,6 +21,27 @@ const predefinedResponses = {
   "Can I train my own AI agent?":
     "Absolutely! With the right tools and data, anyone can build and train an AI agent.",
 };
+
+function SideChat({ onAiResponse, selectedItem }) {
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  const addMessage = (message, role = "user") => {
+    setMessages((prevMessages) => [...prevMessages, { text: message, role }]);
+
+    if (role === "user" && predefinedResponses[message]) {
+      setLoading(true);
+      setTimeout(() => {
+        const response = predefinedResponses[message];
+        addMessage(response, "assistant");
+        if (onAiResponse) {
+          onAiResponse(response);
+        }
+        setLoading(false);
+      }, 2000);
+    }
+  };
+
   return (
     <Box
       sx={{

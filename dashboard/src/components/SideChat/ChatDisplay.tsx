@@ -1,9 +1,10 @@
-import { GitHub } from "@mui/icons-material";
+import ChatHistory from "./ChatHistory";
+import MessageBox from "./MessageBox";
 import WelcomeMessage from "./WelcomeMessage";
 
-import { Box, Fab, Tooltip, useTheme } from "@mui/material";
+import { Box, CircularProgress, useTheme } from "@mui/material";
 
-const ChatDisplay = () => {
+const ChatDisplay = ({ loading, messages, selectedItem }) => {
   const theme = useTheme();
 
   return (
@@ -16,28 +17,23 @@ const ChatDisplay = () => {
         alignItems: "center",
         backgroundColor: theme.palette.background.paper,
         paddingX: { xs: "8px", sm: "16px", md: "20px" },
-        paddingTop: "20px",
+        paddingTop: "5px",
       }}
     >
-      <Tooltip
-        title="GreyCollar"
-        onClick={() =>
-          window.open("https://github.com/GreyCollar/GreyCollar", "_blank")
-        }
-        sx={{
-          position: "absolute",
-          top: "30px",
-          right: "20px",
-          cursor: "pointer",
-          backgroundColor: theme.palette.background.paper,
-        }}
-      >
-        <Fab variant="button">
-          <GitHub />
-        </Fab>
-      </Tooltip>
+      <ChatHistory selectedItem={selectedItem} />
+      {messages.length === 0 && <WelcomeMessage />}
 
-      <WelcomeMessage />
+      {messages.map((message, index) => (
+        <MessageBox key={index} message={message} />
+      ))}
+
+      {loading && (
+        <CircularProgress
+          sx={{
+            color: theme.palette.grey[500],
+          }}
+        />
+      )}
     </Box>
   );
 };
