@@ -30,6 +30,7 @@
     "@nucleoidai/platform": "^1.0.52",
     "@nucleoidai/react-event": "^1.1.7",
     "@nucleoidjs/webstorage": "^1.0.5",
+    "@xyflow/react": "^12.4.4",
     "axios": "^1.7.2",
     "axios-auth-refresh": "^3.3.6",
     "axios-retry": "^3.5.0",
