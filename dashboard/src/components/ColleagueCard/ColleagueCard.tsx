@@ -12,7 +12,13 @@ import {
   Image,
   usePopover,
 } from "@nucleoidai/platform/minimal/components";
-import { Fab, IconButton, MenuItem, Typography } from "@mui/material";
+import {
+  Fab,
+  IconButton,
+  MenuItem,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
@@ -20,9 +26,10 @@ import { alpha, useTheme } from "@mui/material/styles";
 export default function ColleagueCard({ colleague, onView, onEdit, onDelete }) {
   const theme = useTheme();
   const popover = usePopover();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down(345));
 
   return (
-    <Card sx={{ width: "250px" }}>
+    <Card sx={{ width: "300px" }}>
       <Fab
         data-cy="colleague-card-more-vert"
         color="default"
@@ -48,7 +55,7 @@ export default function ColleagueCard({ colleague, onView, onEdit, onDelete }) {
         key={colleague.name}
         sx={{
           textAlign: "center",
-          width: "250px",
+          width: "300px",
           minWidth: 200,
           cursor: "pointer",
         }}
