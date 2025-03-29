@@ -22,7 +22,7 @@ const predefinedResponses = {
     "Absolutely! With the right tools and data, anyone can build and train an AI agent.",
 };
 
-function SideChat({ onAiResponse, selectedItem }) {
+function ResponsibilityChat({ onAiResponse, selectedItem }) {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
 
@@ -64,4 +64,4 @@ function SideChat({ onAiResponse, selectedItem }) {
   );
 }
 
-export default SideChat;
+export default ResponsibilityChat;

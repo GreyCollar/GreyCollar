@@ -1,6 +1,6 @@
-import FlowReact from "../ReactFlow/FlowReact";
 import React from "react";
-import SideChat from "../SideChat/SideChat";
+import ResponsibilityChat from "../ResponsibilityChat/ResponsibilityChat";
+import ResponsibilityFlow from "../ResponsibilityFlow/ResponsibilityFlow";
 
 import { Box, Drawer, Grid, useTheme } from "@mui/material";
 
@@ -50,7 +50,7 @@ const ResponsibilityDrawer = ({
                     height: "100%",
                   }}
                 >
-                  <SideChat
+                  <ResponsibilityChat
                     onAiResponse={handleAiResponse}
                     selectedItem={selectedItem}
                   />
@@ -66,7 +66,7 @@ const ResponsibilityDrawer = ({
                 }}
               >
                 <Box>
-                  <FlowReact aiResponse={aiResponse} />
+                  <ResponsibilityFlow aiResponse={aiResponse} />
                 </Box>
               </Box>
             </Grid>

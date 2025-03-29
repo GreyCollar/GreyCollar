@@ -1,4 +1,4 @@
-import FlowReact from "./FlowReact";
+import FlowReact from "./ResponsibilityFlow";
 import React from "react";
 
 import {

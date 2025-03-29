@@ -99,7 +99,7 @@ const nodeTypes = {
   aiResponse: AIResponseNode,
 };
 
-export default function FlowReact({ aiResponse }) {
+function ResponsibilityFlow({ aiResponse }) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [processedResponses, setProcessedResponses] = useState([]);
@@ -202,3 +202,5 @@ export default function FlowReact({ aiResponse }) {
     </div>
   );
 }
+
+export default ResponsibilityFlow;
