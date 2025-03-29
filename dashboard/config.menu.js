@@ -18,7 +18,7 @@ const menuConfig = {
           path: "/colleagues",
         },
         {
-          title: "Chat",
+          title: "Team Chat",
           icon: "ic:baseline-chat",
           path: "/chat",
         },
