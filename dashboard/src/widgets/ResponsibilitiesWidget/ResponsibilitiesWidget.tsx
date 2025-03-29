@@ -1,12 +1,12 @@
 import ResponsibilityCard from "../../components/ResponsibilityCard/ResponsibilityCard";
 import ResponsibilityDrawer from "../../components/ResponsbilityDrawer/ResponsibilityDrawer";
-import ResponsibilityFlowDialog from "../../components/ReactFlow/ResponsibilityFlowDialog";
+import ResponsibilityFlowDialog from "../../components/ResponsibilityFlow/ResponsibilityFlowDialog";
 import useResponsibility from "../../hooks/useResponsibility";
 
 import { Box, Container } from "@mui/material";
 import React, { useState } from "react";
 
-function Responsibility() {
+function ResponsibilitiesWidget() {
   const { responsibility } = useResponsibility();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -68,4 +68,4 @@ function Responsibility() {
   );
 }
 
-export default Responsibility;
+export default ResponsibilitiesWidget;
