@@ -1,10 +1,10 @@
-import IntegrationWidget from "../widgets/IntegrationWidget/IntegrationWidget";
+import IntegrationsWidget from "../widgets/IntegrationsWidget/IntegrationsWidget";
 import React from "react";
 
 function Integrations() {
   return (
     <>
-      <IntegrationWidget />
+      <IntegrationsWidget />
     </>
   );
 }
