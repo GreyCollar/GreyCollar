@@ -2,7 +2,7 @@ import React from "react";
 
 import { Box, Typography } from "@mui/material";
 
-function MessageBox({ message }) {
+function ChatInput({ message }) {
   return (
     <Box
       data-cy="message-box"
@@ -40,4 +40,4 @@ function MessageBox({ message }) {
   );
 }
 
-export default MessageBox;
+export default ChatInput;
