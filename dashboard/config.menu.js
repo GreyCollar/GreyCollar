@@ -23,14 +23,14 @@ const menuConfig = {
           path: "/chat",
         },
         {
-          title: "Integrations",
-          icon: "carbon:ibm-cloud-pak-integration",
-          path: "/integrations",
-        },
-        {
           title: "Knowledge Base",
           icon: "carbon:ibm-watson-knowledge-studio",
           path: "/knowledge",
+        },
+        {
+          title: "Integrations",
+          icon: "carbon:ibm-cloud-pak-integration",
+          path: "/integrations",
         },
         {
           title: "Documentation",
