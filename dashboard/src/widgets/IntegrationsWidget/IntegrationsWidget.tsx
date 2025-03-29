@@ -190,7 +190,7 @@ const mockIntegrations = [
   },
 ];
 
-const IntegrationWidget = () => {
+const IntegrationsWidget = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedIntegration, setSelectedIntegration] = useState(null);
@@ -376,4 +376,4 @@ const IntegrationWidget = () => {
   );
 };
 
-export default IntegrationWidget;
+export default IntegrationsWidget;
