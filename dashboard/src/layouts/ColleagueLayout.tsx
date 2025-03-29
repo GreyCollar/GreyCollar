@@ -5,26 +5,16 @@ import PopupChatWidget from "../widgets/PopupChatWidget";
 import Profile from "../widgets/Profile/Profile";
 import ProfileCard from "../components/ProfileCard/ProfileCard";
 import React from "react";
-import Responsibility from "../widgets/Responsibility/Responsibility";
+import ResponsibilitiesWidget from "../widgets/ResponsibilitiesWidget/ResponsibilitiesWidget";
 import Stack from "@mui/material/Stack";
 import Supervising from "../widgets/Supervising/Supervising";
-import Tasks from "../widgets/Tasks/Tasks";
+import TasksWidget from "../widgets/TasksWidget/TasksWidget";
 import { getBackgroundUrl } from "../utils/background";
 import { useState } from "react";
 
 import { Theme, useMediaQuery } from "@mui/material";
 
 const TABS = [
-  {
-    value: "responsibility",
-    label: "Responsibility",
-    icon: (
-      <Iconify
-        icon="healthicons:crisis-response-center-person-outline"
-        width={24}
-      />
-    ),
-  },
   {
     value: "profile",
     label: "Profile",
@@ -36,24 +26,34 @@ const TABS = [
     icon: <Iconify icon="solar:heart-bold" width={24} />,
   },
   {
-    value: "supervising",
-    label: "Supervising",
+    value: "responsibilities",
+    label: "Responsibilities",
+    icon: (
+      <Iconify
+        icon="healthicons:crisis-response-center-person-outline"
+        width={24}
+      />
+    ),
+  },
+  {
+    value: "supervisings",
+    label: "Supervisings",
     icon: <Iconify icon="solar:users-group-rounded-bold" width={24} />,
   },
   {
-    value: "task",
-    label: "Task",
+    value: "tasks",
+    label: "Tasks",
     icon: <Iconify icon="material-symbols:task" width={24} />,
   },
   {
-    value: "integration",
-    label: "Integration",
+    value: "integrations",
+    label: "Integrations",
     icon: <Iconify icon="carbon:ibm-cloud-pak-integration" width={24} />,
   },
 ];
 
 function ColleagueLayout({ colleague, loading }) {
-  const [currentTab, setCurrentTab] = useState("responsibility");
+  const [currentTab, setCurrentTab] = useState("profile");
 
   const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
@@ -83,16 +83,16 @@ function ColleagueLayout({ colleague, loading }) {
           <PopupChatWidget />
         </Stack>
       </Stack>
-      {currentTab === "responsibility" && <Responsibility />}
       {currentTab === "profile" && <Profile colleagueId={colleague.id} />}
       {currentTab === "knowledge-base" && (
         <Knowledge colleagueId={colleague.id} />
       )}
-      {currentTab === "supervising" && (
+      {currentTab === "responsibilities" && <ResponsibilitiesWidget />}
+      {currentTab === "supervisings" && (
         <Supervising colleagueId={colleague.id} />
       )}
-      {currentTab === "task" && <Tasks colleagueId={colleague.id} />}
-      {currentTab === "integration" && (
+      {currentTab === "tasks" && <TasksWidget colleagueId={colleague.id} />}
+      {currentTab === "integrations" && (
         <ColleagueIntegration colleague={colleague} />
       )}
     </>
