@@ -7,7 +7,7 @@ import useTasks from "../../hooks/useTasks";
 import { Box, Container, Fab, Stack } from "@mui/material";
 import React, { useState } from "react";
 
-function Tasks({ colleagueId }) {
+function TasksWidget({ colleagueId }) {
   const { tasks, getSteps, steps, createTask } = useTasks(colleagueId);
   const [expandedTaskId, setExpandedTaskId] = useState(null);
 
@@ -90,4 +90,4 @@ function Tasks({ colleagueId }) {
   );
 }
 
-export default Tasks;
+export default TasksWidget;

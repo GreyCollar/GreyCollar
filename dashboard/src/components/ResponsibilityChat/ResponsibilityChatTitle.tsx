@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-const ChatTitle = ({ selectedItem }) => {
+const ResponsibilityChatTitle = ({ selectedItem }) => {
   const theme = useTheme();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(selectedItem.title);
@@ -134,4 +134,4 @@ const ChatTitle = ({ selectedItem }) => {
   );
 };
 
-export default ChatTitle;
+export default ResponsibilityChatTitle;
