@@ -10,9 +10,10 @@ import Stack from "@mui/material/Stack";
 import Supervising from "../widgets/Supervising/Supervising";
 import TasksWidget from "../widgets/TasksWidget/TasksWidget";
 import { getBackgroundUrl } from "../utils/background";
-import { useState } from "react";
 
-import { Theme, useMediaQuery } from "@mui/material";
+import { Skeleton, Theme, useMediaQuery } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TABS = [
   {
@@ -53,35 +54,74 @@ const TABS = [
 ];
 
 function ColleagueLayout({ colleague, loading }) {
-  const [currentTab, setCurrentTab] = useState("profile");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const queryParams = new URLSearchParams(location.search);
+  const tabFromQuery = queryParams.get("tab");
+
+  const [currentTab, setCurrentTab] = useState(
+    TABS.some((tab) => tab.value === tabFromQuery) ? tabFromQuery : "profile"
+  );
 
   const mdDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+
+  const handleTabChange = (newTab) => {
+    setCurrentTab(newTab);
+
+    const newQueryParams = new URLSearchParams(location.search);
+    newQueryParams.set("tab", newTab);
+
+    navigate(
+      {
+        pathname: location.pathname,
+        search: newQueryParams.toString(),
+      },
+      { replace: true }
+    );
+  };
+
+  useEffect(() => {
+    if (
+      tabFromQuery &&
+      TABS.some((tab) => tab.value === tabFromQuery) &&
+      tabFromQuery !== currentTab
+    ) {
+      setCurrentTab(tabFromQuery);
+    }
+  }, [tabFromQuery, currentTab]);
 
   return (
     <>
       <Stack margin={2} sx={{ position: "relative", marginTop: -2 }}>
-        <ProfileCard
-          TABS={TABS}
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
-          name={colleague.name}
-          avatarUrl={colleague.avatar}
-          coverUrl={getBackgroundUrl(colleague.id)}
-          role={colleague.role}
-          loading={loading}
-        />
-        <Stack
-          sx={{
-            position: "absolute",
-            bottom: mdDown ? "auto" : 20,
-            left: mdDown ? "auto" : 120,
-            top: mdDown ? 25 : "auto",
-            right: mdDown ? 25 : "auto",
-            zIndex: 1000,
-          }}
-        >
-          <PopupChatWidget />
-        </Stack>
+        {loading ? (
+          <Skeleton variant="rectangular" height={200} />
+        ) : (
+          <>
+            <ProfileCard
+              TABS={TABS}
+              currentTab={currentTab}
+              setCurrentTab={handleTabChange}
+              name={colleague.name}
+              avatarUrl={colleague.avatar}
+              coverUrl={getBackgroundUrl(colleague.id)}
+              role={colleague.role}
+              loading={loading}
+            />
+            <Stack
+              sx={{
+                position: "absolute",
+                bottom: mdDown ? "auto" : 20,
+                left: mdDown ? "auto" : 120,
+                top: mdDown ? 25 : "auto",
+                right: mdDown ? 25 : "auto",
+                zIndex: 1000,
+              }}
+            >
+              <PopupChatWidget />
+            </Stack>
+          </>
+        )}
       </Stack>
       {currentTab === "profile" && <Profile colleagueId={colleague.id} />}
       {currentTab === "knowledge-base" && (
