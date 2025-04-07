@@ -1,9 +1,9 @@
 import Card from "@mui/material/Card";
 import ChatHeaderDetail from "./components/ChatHeaderDetail.jsx";
 import ChatMessageContent from "./components/ChatMessageContent.jsx";
-import ChatMessageInput from "./components/ChatMessageInput.jsx";
+import ChatMessageInput from "../ChatMessageInput/ChatMessageInput.js";
 import ChatNav from "./components/ChatNav.jsx";
-import { Commands } from "./components/CommandArea/chat.config.js";
+import { Commands } from "../../components/CommandArea/chat.config.js";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { createEditor } from "slate";

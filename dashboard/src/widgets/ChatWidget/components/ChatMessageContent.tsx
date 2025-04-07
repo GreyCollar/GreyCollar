@@ -4,7 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import { ReactEditor } from "slate-react";
 import SystemMessage from "../../SystemMessage/SystemMessage";
-import { Types } from "./CommandArea/chat.config";
+import { Types } from "../../../components/CommandArea/chat.config";
 
 import { Label, Scrollbar } from "@nucleoidai/platform/minimal/components";
 import { memo, useEffect, useRef } from "react";
