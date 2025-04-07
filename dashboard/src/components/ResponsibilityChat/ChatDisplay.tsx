@@ -1,5 +1,5 @@
-import ChatInput from "../ChatInput/ChatInput";
 import ResponsibilityChatTitle from "./ResponsibilityChatTitle";
+import SideChatInput from "../SideChatInput/SideChatInput";
 import WelcomeMessage from "./WelcomeMessage";
 
 import { Box, CircularProgress, useTheme } from "@mui/material";
@@ -24,7 +24,7 @@ const ChatDisplay = ({ loading, messages, selectedItem }) => {
       {messages.length === 0 && <WelcomeMessage />}
 
       {messages.map((message, index) => (
-        <ChatInput key={index} message={message} />
+        <SideChatInput key={index} message={message} />
       ))}
 
       {loading && (
