@@ -1,4 +1,4 @@
-import http from "../../../../http";
+import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
 
 const learnAction = async (command) => {
@@ -176,6 +176,24 @@ const Commands = [
   },
 ];
 
+const SideChatCommands = [
+  {
+    name: "/integrations",
+    icon: "carbon:ibm-cloud-pak-integration",
+    description: "Integrate with other tools",
+  },
+  {
+    name: "/handoff",
+    icon: "carbon:ibm-cloud-pak-business-automation",
+    description: "Handoff to another colleague",
+  },
+  {
+    name: "/colleague",
+    icon: "material-symbols:person",
+    description: "Find a colleague",
+  },
+];
+
 const Types = [
   {
     name: "SUPERVISING",
@@ -207,4 +225,4 @@ const Types = [
   },
 ];
 
-export { Commands, Types };
+export { Commands, Types, SideChatCommands };

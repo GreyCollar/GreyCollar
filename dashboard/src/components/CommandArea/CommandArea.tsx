@@ -1,12 +1,12 @@
-import "../../../../styles/chat.css";
+import "../../styles/chat.css";
 
 import { BaseEditor } from "slate";
-import CommandList from "./components/CommandList";
+import CommandList from "./CommandList";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
-import MentionList from "./components/MentionList";
-import MentionText from "./components/MentiontText";
+import MentionList from "./MentionList";
+import MentionText from "./MentiontText";
 import { isKeyHotkey } from "is-hotkey";
-import useColleagues from "../../../../hooks/useColleagues";
+import useColleagues from "../../hooks/useColleagues";
 import { useEvent } from "@nucleoidai/react-event";
 import { useLocation } from "react-router-dom";
 
@@ -17,7 +17,7 @@ import {
   InputComponent,
   OptionalBadge,
   Text,
-} from "./components";
+} from ".";
 import { Editable, ReactEditor } from "slate-react";
 import { Editor, Range, Transforms } from "slate";
 import React, { useCallback, useEffect, useState } from "react";
