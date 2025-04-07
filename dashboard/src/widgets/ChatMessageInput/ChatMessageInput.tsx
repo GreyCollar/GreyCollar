@@ -1,11 +1,11 @@
-import CommandArea from "../../components/CommandArea/CommandArea.js";
-import { Commands } from "../../components/CommandArea/chat.config.js";
+import ChatInput from "../../components/ChatInput/ChatInput.js";
+import { Commands } from "../../components/ChatInput/chat.config.js";
 /* eslint-disable */
 import IconButton from "@mui/material/IconButton";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
-import { SideChatCommands } from "../../components/CommandArea/chat.config.js";
+import { SideChatCommands } from "../../components/ChatInput/chat.config.js";
 import Stack from "@mui/material/Stack";
-import { Types } from "../../components/CommandArea/chat.config.js";
+import { Types } from "../../components/ChatInput/chat.config.js";
 import { sub } from "date-fns";
 import { v4 as uuid } from "uuid";
 
@@ -81,7 +81,7 @@ const ChatMessageInput = memo(function ChatMessageInput({
 
   return (
     <>
-      <CommandArea
+      <ChatInput
         createMessage={createMessage}
         userId={userId}
         editor={editor}
