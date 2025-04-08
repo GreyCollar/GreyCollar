@@ -176,7 +176,7 @@ const Commands = [
   },
 ];
 
-const SideChatCommands = [
+const ResponsibilityCommands = [
   {
     name: "/integrations",
     icon: "carbon:ibm-cloud-pak-integration",
@@ -225,4 +225,4 @@ const Types = [
   },
 ];
 
-export { Commands, Types, SideChatCommands };
+export { Commands, Types, ResponsibilityCommands };

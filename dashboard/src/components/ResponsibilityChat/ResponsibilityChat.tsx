@@ -67,7 +67,11 @@ function ResponsibilityChat({ onAiResponse, selectedItem }) {
         messages={messages}
         selectedItem={selectedItem}
       />
-      <ChatInput onSendMessage={addMessage} editor={editor} sideChat={true} />
+      <ChatInput
+        onSendMessage={addMessage}
+        editor={editor}
+        responsibilityChat={true}
+      />
     </Box>
   );
 }

@@ -3,7 +3,7 @@ import { Commands } from "../../components/ChatInput/chat.config.js";
 /* eslint-disable */
 import IconButton from "@mui/material/IconButton";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
-import { SideChatCommands } from "../../components/ChatInput/chat.config.js";
+import { ResponsibilityCommands } from "../../components/ChatInput/chat.config.js";
 import Stack from "@mui/material/Stack";
 import { Types } from "../../components/ChatInput/chat.config.js";
 import { sub } from "date-fns";
@@ -19,7 +19,7 @@ const ChatInput = memo(function ChatMessageInput({
   replied,
   createMessage,
   userId,
-  sideChat = false,
+  responsibilityChat = false,
 }: {
   disabled?: boolean;
   onSendMessage?: (message: string | { command: Event }) => void;
@@ -28,7 +28,7 @@ const ChatInput = memo(function ChatMessageInput({
   replied?: { current: boolean };
   createMessage?: (message: string) => void;
   userId?: string;
-  sideChat?: boolean;
+  responsibilityChat?: boolean;
 }) {
   const fileRef = useRef(null);
 
@@ -48,7 +48,7 @@ const ChatInput = memo(function ChatMessageInput({
     async (event) => {
       if (event.key === "Enter") {
         try {
-          if (sideChat) {
+          if (responsibilityChat) {
             const message = messageRef.current.trim();
             if (message) {
               onSendMessage(message);
@@ -74,7 +74,7 @@ const ChatInput = memo(function ChatMessageInput({
             onSendMessage(messageRef.current);
           }
 
-          if (!sideChat) {
+          if (!responsibilityChat) {
             messageRef.current = "";
           }
         } catch (error) {
@@ -85,7 +85,7 @@ const ChatInput = memo(function ChatMessageInput({
     [onSendMessage]
   );
 
-  const commands = sideChat ? SideChatCommands : Commands;
+  const commands = responsibilityChat ? ResponsibilityCommands : Commands;
 
   return (
     <>
