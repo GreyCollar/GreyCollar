@@ -4,7 +4,7 @@ import ResponsibilityWelcomeMessage from "./ResponsibilityWelcomeMessage";
 
 import { Box, CircularProgress, useTheme } from "@mui/material";
 
-const ResponsibilityChatDisplay = ({ loading, messages, selectedItem }) => {
+const ResponsibilityChatContent = ({ loading, messages, selectedItem }) => {
   const theme = useTheme();
 
   return (
@@ -38,4 +38,4 @@ const ResponsibilityChatDisplay = ({ loading, messages, selectedItem }) => {
   );
 };
 
-export default ResponsibilityChatDisplay;
+export default ResponsibilityChatContent;

@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import ChatInput from "../../widgets/ChatInput/ChatInput";
-import ResponsibilityChatDisplay from "./ResponsibilityChatDisplay";
+import ResponsibilityChatContent from "./ResponsibilityChatContent";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
@@ -62,7 +62,7 @@ function ResponsibilityChat({ onAiResponse, selectedItem }) {
         width: 700,
       }}
     >
-      <ResponsibilityChatDisplay
+      <ResponsibilityChatContent
         loading={loading}
         messages={messages}
         selectedItem={selectedItem}
