@@ -1,17 +1,17 @@
 import Card from "@mui/material/Card";
-import ChatHeaderDetail from "./components/ChatHeaderDetail.jsx";
 import ChatInput from "../ChatInput/ChatInput.js";
-import ChatMessageContent from "./components/ChatMessageContent.jsx";
-import ChatNav from "./components/ChatNav.jsx";
 import { Commands } from "../../components/ChatInput/chat.config.js";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import TeamChatHeaderDetail from "./components/TeamChatHeaderDetail.js";
+import TeamChatMessageContent from "./components/TeamChatMessageContent.js";
+import TeamChatNav from "./components/TeamChatNav.js";
 import { createEditor } from "slate";
 import useChat from "../../hooks/useChat.js";
 import useColleagues from "../../hooks/useColleagues.js";
 import { useMediaQuery } from "@mui/material";
 import useMessage from "../../hooks/useMessage.js";
-import { useSocket } from "../../hooks/useSocket";
+import { useSocket } from "../../hooks/useSocket.js";
 import useSupervisings from "../../hooks/useSupervisings.js";
 import useTeam from "../../hooks/useTeam.js";
 import { useTheme } from "@mui/material/styles";
@@ -21,7 +21,7 @@ import { withReact } from "slate-react";
 
 import React, { memo, useCallback, useMemo, useRef, useState } from "react";
 
-const ChatWidget = memo(function ChatWidget({
+const TeamChatWidget = memo(function ChatWidget({
   projectId,
 }: {
   projectId: string;
@@ -121,7 +121,11 @@ const ChatWidget = memo(function ChatWidget({
       sx={{ pr: 1, pl: 2.5, py: 1, height: mdDown ? 45 : 72 }}
     >
       {teamLoading ? null : (
-        <>{details && <ChatHeaderDetail mdDown={mdDown} title={team.name} />}</>
+        <>
+          {details && (
+            <TeamChatHeaderDetail mdDown={mdDown} title={team.name} />
+          )}
+        </>
       )}
     </Stack>
   );
@@ -133,7 +137,7 @@ const ChatWidget = memo(function ChatWidget({
       return (
         <Stack sx={{ width: 1, height: 1, overflow: "hidden" }}>
           {!messagesLoading && (
-            <ChatMessageContent
+            <TeamChatMessageContent
               replied={replied}
               user={user}
               editor={editor}
@@ -180,7 +184,7 @@ const ChatWidget = memo(function ChatWidget({
         }}
       >
         {loading ? null : (
-          <ChatNav
+          <TeamChatNav
             collapsed={collapsed}
             setCollapsed={setCollapsed}
             colleagues={colleagues}
@@ -214,7 +218,7 @@ const ChatWidget = memo(function ChatWidget({
   );
 });
 
-export default ChatWidget;
+export default TeamChatWidget;
 
 const withInlines = (editor) => {
   const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =

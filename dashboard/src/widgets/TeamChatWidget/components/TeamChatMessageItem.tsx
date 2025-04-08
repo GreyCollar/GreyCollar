@@ -9,7 +9,7 @@ import useTeamDetails from "../../../hooks/useTeamDetails";
 import { Avatar, Box, IconButton } from "@mui/material";
 import { alpha, useTheme } from "@mui/material";
 
-function ChatMessageItem({
+function TeamChatMessageItem({
   user,
   content,
   isAI,
@@ -354,4 +354,4 @@ function ChatMessageItem({
   );
 }
 
-export default ChatMessageItem;
+export default TeamChatMessageItem;

@@ -1,7 +1,7 @@
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 
-function ChatNavItemSkeleton({ sx, ...other }) {
+function TeamChatNavItemSkeleton({ sx, ...other }) {
   return (
     <Stack
       spacing={2}
@@ -24,4 +24,4 @@ function ChatNavItemSkeleton({ sx, ...other }) {
   );
 }
 
-export default ChatNavItemSkeleton;
+export default TeamChatNavItemSkeleton;
