@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
-import ChatDisplay from "./ChatDisplay";
-import ChatMessageInput from "../../widgets/ChatMessageInput/ChatMessageInput";
+import ChatInput from "../../widgets/ChatInput/ChatInput";
+import ResponsibilityChatDisplay from "./ResponsibilityChatDisplay";
 import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
@@ -62,16 +62,12 @@ function ResponsibilityChat({ onAiResponse, selectedItem }) {
         width: 700,
       }}
     >
-      <ChatDisplay
+      <ResponsibilityChatDisplay
         loading={loading}
         messages={messages}
         selectedItem={selectedItem}
       />
-      <ChatMessageInput
-        onSendMessage={addMessage}
-        editor={editor}
-        sideChat={true}
-      />
+      <ChatInput onSendMessage={addMessage} editor={editor} sideChat={true} />
     </Box>
   );
 }

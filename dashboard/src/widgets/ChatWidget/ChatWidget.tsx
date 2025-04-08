@@ -1,7 +1,7 @@
 import Card from "@mui/material/Card";
 import ChatHeaderDetail from "./components/ChatHeaderDetail.jsx";
+import ChatInput from "../ChatInput/ChatInput.js";
 import ChatMessageContent from "./components/ChatMessageContent.jsx";
-import ChatMessageInput from "../ChatMessageInput/ChatMessageInput.js";
 import ChatNav from "./components/ChatNav.jsx";
 import { Commands } from "../../components/ChatInput/chat.config.js";
 import Container from "@mui/material/Container";
@@ -143,7 +143,7 @@ const ChatWidget = memo(function ChatWidget({
               selectedMessage={selectedMessage}
             />
           )}
-          <ChatMessageInput
+          <ChatInput
             createMessage={createMessage}
             userId={user.id}
             replied={replied}
