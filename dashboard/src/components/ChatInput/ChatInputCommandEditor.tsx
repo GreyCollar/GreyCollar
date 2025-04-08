@@ -50,7 +50,7 @@ declare module "slate" {
   }
 }
 
-const ChatInput = ({
+const ChatInputCommandEditor = ({
   onKeyUp,
   onChange,
   placeholder,
@@ -504,4 +504,4 @@ const Element = (props) => {
   }
 };
 
-export default ChatInput;
+export default ChatInputCommandEditor;

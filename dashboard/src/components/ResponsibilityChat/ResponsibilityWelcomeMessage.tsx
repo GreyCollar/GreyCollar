@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-const WelcomeMessage = () => {
+const ResponsibilityWelcomeMessage = () => {
   return (
     <Box
       data-cy="chat-welcome-message"
@@ -28,4 +28,4 @@ const WelcomeMessage = () => {
   );
 };
 
-export default WelcomeMessage;
+export default ResponsibilityWelcomeMessage;

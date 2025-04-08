@@ -1,4 +1,4 @@
-import ChatInput from "../../components/ChatInput/ChatInput.js";
+import ChatInputCommandEditor from "../../components/ChatInput/ChatInputCommandEditor.js";
 import { Commands } from "../../components/ChatInput/chat.config.js";
 /* eslint-disable */
 import IconButton from "@mui/material/IconButton";
@@ -11,7 +11,7 @@ import { v4 as uuid } from "uuid";
 
 import { memo, useCallback, useRef } from "react";
 
-const ChatMessageInput = memo(function ChatMessageInput({
+const ChatInput = memo(function ChatMessageInput({
   disabled,
   onSendMessage,
   editor,
@@ -48,9 +48,15 @@ const ChatMessageInput = memo(function ChatMessageInput({
     async (event) => {
       if (event.key === "Enter") {
         try {
-          if (event.target.value instanceof Map) {
+          if (sideChat) {
+            const message = messageRef.current.trim();
+            if (message) {
+              onSendMessage(message);
+              messageRef.current = "";
+            }
+          } else if (event.target.value instanceof Map) {
             onSendMessage({ command: event.target.value });
-          } else if (selectedMessage.current) {
+          } else if (selectedMessage?.current) {
             const messageType = selectedMessage.current.type;
             const typeObject = Types.find((type) => type.name === messageType);
 
@@ -68,7 +74,9 @@ const ChatMessageInput = memo(function ChatMessageInput({
             onSendMessage(messageRef.current);
           }
 
-          messageRef.current = "";
+          if (!sideChat) {
+            messageRef.current = "";
+          }
         } catch (error) {
           console.error(error);
         }
@@ -81,7 +89,7 @@ const ChatMessageInput = memo(function ChatMessageInput({
 
   return (
     <>
-      <ChatInput
+      <ChatInputCommandEditor
         createMessage={createMessage}
         userId={userId}
         editor={editor}
@@ -121,4 +129,4 @@ const ChatMessageInput = memo(function ChatMessageInput({
   );
 });
 
-export default ChatMessageInput;
+export default ChatInput;

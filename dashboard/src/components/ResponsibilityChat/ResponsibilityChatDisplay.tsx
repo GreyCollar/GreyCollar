@@ -1,10 +1,10 @@
 import ResponsibilityChatTitle from "./ResponsibilityChatTitle";
-import SideChatInput from "../SideChatInput/SideChatInput";
-import WelcomeMessage from "./WelcomeMessage";
+import ResponsibilityMessageBox from "../ResponsibilityMessageBox/ResponsibilityMessageBox";
+import ResponsibilityWelcomeMessage from "./ResponsibilityWelcomeMessage";
 
 import { Box, CircularProgress, useTheme } from "@mui/material";
 
-const ChatDisplay = ({ loading, messages, selectedItem }) => {
+const ResponsibilityChatDisplay = ({ loading, messages, selectedItem }) => {
   const theme = useTheme();
 
   return (
@@ -21,10 +21,10 @@ const ChatDisplay = ({ loading, messages, selectedItem }) => {
       }}
     >
       <ResponsibilityChatTitle selectedItem={selectedItem} />
-      {messages.length === 0 && <WelcomeMessage />}
+      {messages.length === 0 && <ResponsibilityWelcomeMessage />}
 
       {messages.map((message, index) => (
-        <SideChatInput key={index} message={message} />
+        <ResponsibilityMessageBox key={index} message={message} />
       ))}
 
       {loading && (
@@ -38,4 +38,4 @@ const ChatDisplay = ({ loading, messages, selectedItem }) => {
   );
 };
 
-export default ChatDisplay;
+export default ResponsibilityChatDisplay;

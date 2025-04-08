@@ -2,7 +2,7 @@ import React from "react";
 
 import { Box, Typography } from "@mui/material";
 
-function SideChatInput({ message }) {
+function ResponsibilityMessageBox({ message }) {
   return (
     <Box
       data-cy="message-box"
@@ -40,4 +40,4 @@ function SideChatInput({ message }) {
   );
 }
 
-export default SideChatInput;
+export default ResponsibilityMessageBox;
