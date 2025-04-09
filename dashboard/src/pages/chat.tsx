@@ -1,8 +1,8 @@
 import "../styles/chat.css";
 
-import { ChatWidget } from "../widgets/ChatWidget";
 import { Helmet } from "react-helmet-async";
 import React from "react";
+import { TeamChatWidget } from "../widgets/TeamChatWidget";
 import config from "../../config";
 import { storage } from "@nucleoidjs/webstorage";
 
@@ -15,7 +15,7 @@ function Chat() {
         <title> {config.name} - Chat </title>
       </Helmet>
 
-      <ChatWidget projectId={projectId} />
+      <TeamChatWidget projectId={projectId} />
     </>
   );
 }

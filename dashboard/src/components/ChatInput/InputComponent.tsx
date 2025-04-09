@@ -1,7 +1,7 @@
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import InlineChromiumBugfix from "./InlineChromiumBugFix";
 import { ReactEditor } from "slate-react";
-import SourcedAvatar from "../../../../../components/SourcedAvatar/SourcedAvatar";
+import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
 import { css } from "@emotion/css";
 
 import { Editor, Transforms } from "slate";

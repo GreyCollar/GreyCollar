@@ -3,7 +3,7 @@ import { SearchNotFound } from "@nucleoidai/platform/minimal/components";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
 import Typography from "@mui/material/Typography";
 
-function ChatNavSearchResults({ query, results, onClickResult }) {
+function TeamChatNavSearchResults({ query, results, onClickResult }) {
   const totalResults = results.length;
 
   const notFound = !totalResults && !!query;
@@ -56,4 +56,4 @@ function ChatNavSearchResults({ query, results, onClickResult }) {
   );
 }
 
-export default ChatNavSearchResults;
+export default TeamChatNavSearchResults;

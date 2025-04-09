@@ -1,9 +1,5 @@
 import { AvatarGroup } from "@mui/material";
 import Box from "@mui/material/Box";
-import ChatNavAccount from "./ChatNavAccount";
-import ChatNavItem from "./ChatNavItem";
-import ChatNavItemSkeleton from "./ChatSkeleton";
-import ChatNavSearchResults from "./ChatNavSearchResults";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import ColleagueCard from "../../../components/ColleagueCard";
 import Dialog from "@mui/material/Dialog";
@@ -12,6 +8,10 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
 import Stack from "@mui/material/Stack";
+import TeamChatNavAccount from "./TeamChatNavAccount";
+import TeamChatNavItem from "./TeamChatNavItem";
+import TeamChatNavItemSkeleton from "./TeamChatSkeleton";
+import TeamChatNavSearchResults from "./TeamChatNavSearchResults";
 import TextField from "@mui/material/TextField";
 import { publish } from "@nucleoidai/react-event";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -23,7 +23,7 @@ import { useCallback, useEffect, useState } from "react";
 
 const NAV_COLLAPSE_WIDTH = 96;
 
-function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
+function TeamChatNav({ loading, colleagues, collapsed, setCollapsed }) {
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up("lg"));
   const mdDown = useMediaQuery(theme.breakpoints.down("md"));
@@ -109,7 +109,7 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
   const renderSkeleton = (
     <>
       {[...Array(12)].map((_, index) => (
-        <ChatNavItemSkeleton sx={""} key={index} />
+        <TeamChatNavItemSkeleton sx={""} key={index} />
       ))}
     </>
   );
@@ -117,7 +117,7 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
   const renderList = (
     <Stack flexDirection={collapsed && mdDown ? "row" : "column"}>
       {colleagues.map((member) => (
-        <ChatNavItem
+        <TeamChatNavItem
           key={member.id}
           member={member}
           collapse={collapsed}
@@ -146,7 +146,7 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
   );
 
   const renderListResults = (
-    <ChatNavSearchResults
+    <TeamChatNavSearchResults
       query={searchContacts.query}
       results={searchContacts.results}
       onClickResult={handleClickResult}
@@ -193,7 +193,7 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
 
         {!collapsed && (
           <>
-            <ChatNavAccount />
+            <TeamChatNavAccount />
             <Box sx={{ flexGrow: 1 }} />
           </>
         )}
@@ -279,4 +279,4 @@ function ChatNav({ loading, colleagues, collapsed, setCollapsed }) {
   );
 }
 
-export default ChatNav;
+export default TeamChatNav;

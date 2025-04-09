@@ -2,7 +2,7 @@ import { ListItemText } from "@mui/material";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
 import useTeamDetails from "../../../hooks/useTeamDetails";
 
-function ChatNavAccount() {
+function TeamChatNavAccount() {
   const { teamDetails } = useTeamDetails();
 
   return (
@@ -32,4 +32,4 @@ function ChatNavAccount() {
   );
 }
 
-export default ChatNavAccount;
+export default TeamChatNavAccount;

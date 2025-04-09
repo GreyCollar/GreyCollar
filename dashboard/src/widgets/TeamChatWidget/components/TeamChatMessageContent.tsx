@@ -1,15 +1,15 @@
 import Box from "@mui/material/Box";
-import ChatMessageItem from "./ChatMessageItem";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton } from "@mui/material";
 import { ReactEditor } from "slate-react";
 import SystemMessage from "../../SystemMessage/SystemMessage";
-import { Types } from "./CommandArea/chat.config";
+import TeamChatMessageItem from "./TeamChatMessageItem";
+import { Types } from "../../../components/ChatInput/chat.config";
 
 import { Label, Scrollbar } from "@nucleoidai/platform/minimal/components";
 import { memo, useEffect, useRef } from "react";
 
-const ChatMessageContent = memo(function ChatMessageList({
+const TeamChatMessageContent = memo(function ChatMessageList({
   user,
   messages,
   replied,
@@ -94,7 +94,7 @@ const ChatMessageContent = memo(function ChatMessageList({
       }
       case "ASSISTANT":
         return (
-          <ChatMessageItem
+          <TeamChatMessageItem
             key={message.id}
             content={message.content}
             message={message}
@@ -106,7 +106,7 @@ const ChatMessageContent = memo(function ChatMessageList({
         );
       case "USER":
         return (
-          <ChatMessageItem
+          <TeamChatMessageItem
             key={message.id}
             replied={replied}
             message={message}
@@ -152,4 +152,4 @@ const ChatMessageContent = memo(function ChatMessageList({
   );
 });
 
-export default ChatMessageContent;
+export default TeamChatMessageContent;

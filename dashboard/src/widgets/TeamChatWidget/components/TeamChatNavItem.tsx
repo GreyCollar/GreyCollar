@@ -4,7 +4,7 @@ import React from "react";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
 import Stack from "@mui/material/Stack";
 
-function ChatNavItem({ member, selected, collapse, onClick }) {
+function TeamChatNavItem({ member, selected, collapse, onClick }) {
   const { name, avatar, role } = member;
 
   const handleClickMember = () => {
@@ -52,4 +52,4 @@ function ChatNavItem({ member, selected, collapse, onClick }) {
     </>
   );
 }
-export default ChatNavItem;
+export default TeamChatNavItem;

@@ -2,7 +2,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { ReactEditor } from "slate-react";
-import SourcedAvatar from "../../../../../components/SourcedAvatar/SourcedAvatar";
+import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
 import { alpha } from "@mui/material";
 
 import React, { useEffect, useRef, useState } from "react";
