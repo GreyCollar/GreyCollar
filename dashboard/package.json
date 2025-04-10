@@ -36,6 +36,7 @@
     "axios-retry": "^3.5.0",
     "cypress-real-events": "^1.13.0",
     "dayjs": "^1.11.13",
+    "elkjs": "^0.10.0",
     "emoji-mart": "^5.6.0",
     "joi": "^17.13.3",
     "jwt-decode": "^4.0.0",

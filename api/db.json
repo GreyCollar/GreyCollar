@@ -1,0 +1,33 @@
+{
+  "nodes": [
+    {
+      "id": 1,
+      "label": "Integration",
+      "icon": "fluent-mdl2:account-management"
+    },
+    {
+      "id": 2,
+      "label": "Trigger Event",
+      "icon": "fluent-mdl2:trigger-approval",
+      "dependencyId": 1
+    },
+    {
+      "id": 3,
+      "label": "Fetch Data",
+      "icon": "fluent-mdl2:data-management-settings",
+      "dependencyId": 2
+    },
+    {
+      "id": 4,
+      "label": "Process Data",
+      "icon": "fluent-mdl2:processing",
+      "dependencyId": 3
+    },
+    {
+      "id": 5,
+      "label": "Decision Making",
+      "icon": "fluent-mdl2:decision-solid",
+      "dependencyId": 4
+    }
+  ]
+}
