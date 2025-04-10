@@ -18,7 +18,6 @@ import React, { useCallback, useEffect, useState } from "react";
 
 const elk = new ELK();
 
-// ELK layout options
 const elkOptions = {
   "elk.algorithm": "layered",
   "elk.layered.spacing.nodeNodeBetweenLayers": "100",
@@ -73,52 +72,39 @@ function ResponsibilityFlow({ aiResponse }) {
   const [isLoading, setIsLoading] = useState(true);
   const { fitView } = useReactFlow();
 
-  // Fetch data from JSON server
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // Fetch nodes
-        const nodeResponse = await fetch("http://localhost:3001/nodes");
-        const nodeData = await nodeResponse.json();
+      const nodeResponse = await fetch("http://localhost:3001/nodes");
+      const nodeData = await nodeResponse.json();
 
-        // Fetch edges
-        const edgeResponse = await fetch("http://localhost:3001/edges");
-        const edgeData = await edgeResponse.json();
+      const formattedNodes = nodeData.map((node) => ({
+        id: node.id.toString(),
+        position: { x: 0, y: 0 },
+        data: {
+          label: node.label,
+          icon: node.icon,
+        },
+        type: "custom",
+      }));
 
-        // Format nodes for React Flow
-        const formattedNodes = nodeData.map((node) => ({
-          id: node.id.toString(),
-          // Position will be calculated by ELK
-          position: { x: 0, y: 0 },
-          data: {
-            label: node.label,
-            icon: node.icon,
-          },
-          type: "custom",
-        }));
-
-        // Format edges for React Flow
-        const formattedEdges = edgeData.map((edge) => ({
-          id: `e${edge.source}-${edge.target}`,
-          source: edge.source.toString(),
-          target: edge.target.toString(),
+      const formattedEdges = nodeData
+        .filter((node) => node.dependencyId)
+        .map((node) => ({
+          id: `e${node.dependencyId}-${node.id}`,
+          source: node.dependencyId.toString(),
+          target: node.id.toString(),
           style: { strokeDasharray: "5,5" },
         }));
 
-        // Apply layout using ELK
-        getLayoutedElements(formattedNodes, formattedEdges, {
-          "elk.direction": "DOWN",
-          ...elkOptions,
-        }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
-          setNodes(layoutedNodes);
-          setEdges(layoutedEdges);
-          setIsLoading(false);
-          setTimeout(() => fitView(), 50);
-        });
-      } catch (error) {
-        console.error("Error fetching flow data:", error);
+      getLayoutedElements(formattedNodes, formattedEdges, {
+        "elk.direction": "DOWN",
+        ...elkOptions,
+      }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
+        setNodes(layoutedNodes);
+        setEdges(layoutedEdges);
         setIsLoading(false);
-      }
+        setTimeout(() => fitView(), 50);
+      });
     };
 
     fetchData();
@@ -142,7 +128,6 @@ function ResponsibilityFlow({ aiResponse }) {
       return sortedNodes[0];
     }
 
-    // Find terminal nodes (nodes with no outgoing edges)
     const hasOutgoing = new Set();
     edges.forEach((edge) => {
       hasOutgoing.add(edge.source);
@@ -153,11 +138,9 @@ function ResponsibilityFlow({ aiResponse }) {
     );
 
     if (terminalNodes.length > 0) {
-      // Sort by Y position to find the lowest one
       return terminalNodes.sort((a, b) => b.position.y - a.position.y)[0];
     }
 
-    // Fallback: return the node with the highest ID
     return nodes.sort((a, b) => {
       const aId = parseInt(a.id);
       const bId = parseInt(b.id);
@@ -183,7 +166,6 @@ function ResponsibilityFlow({ aiResponse }) {
       const lastNode = findLastNode();
       if (!lastNode) return;
 
-      // Position based on the last node, but place it below
       const newNode = {
         id: newId,
         position: {
@@ -213,7 +195,6 @@ function ResponsibilityFlow({ aiResponse }) {
 
         setEdges((eds) => [...eds, newEdge]);
 
-        // We don't auto-layout after adding AI nodes to maintain a clean appearance
         setTimeout(() => {
           setIsAnimating(false);
         }, 2500);
@@ -261,7 +242,6 @@ function ResponsibilityFlow({ aiResponse }) {
   );
 }
 
-// Wrap with ReactFlowProvider
 function WrappedResponsibilityFlow(props) {
   return (
     <ReactFlowProvider>
