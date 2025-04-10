@@ -1,0 +1,61 @@
+{
+    "nodes": [
+        {
+            "id": 1,
+            "label": "Integration",
+            "icon": "fluent-mdl2:account-management"
+        },
+        {
+            "id": 2,
+            "label": "Trigger Event",
+            "icon": "fluent-mdl2:trigger-approval"
+        },
+        {
+            "id": 3,
+            "label": "Fetch Data",
+            "icon": "fluent-mdl2:data-management-settings"
+        },
+        {
+            "id": 4,
+            "label": "Process Data",
+            "icon": "fluent-mdl2:processing"
+        },
+        {
+            "id": 5,
+            "label": "Decision Making",
+            "icon": "fluent-mdl2:decision-solid"
+        }
+    ],
+    "edges": [
+        {
+            "id": 1,
+            "source": 1,
+            "target": 2
+        },
+        {
+            "id": 2,
+            "source": 1,
+            "target": 3
+        },
+        {
+            "id": 3,
+            "source": 3,
+            "target": 4
+        },
+        {
+            "id": 4,
+            "source": 2,
+            "target": 4
+        },
+        {
+            "id": 5,
+            "source": 3,
+            "target": 4
+        },
+        {
+            "id": 6,
+            "source": 4,
+            "target": 5
+        }
+    ]
+}
