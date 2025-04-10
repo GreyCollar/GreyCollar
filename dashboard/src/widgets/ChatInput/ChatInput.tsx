@@ -1,16 +1,17 @@
-import CommandArea from "./CommandArea/CommandArea.jsx";
-import { Commands } from "./CommandArea/chat.config.js";
+import ChatInputCommandEditor from "../../components/ChatInput/ChatInputCommandEditor.js";
+import { Commands } from "../../components/ChatInput/chat.config.js";
 /* eslint-disable */
 import IconButton from "@mui/material/IconButton";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { ResponsibilityCommands } from "../../components/ChatInput/chat.config.js";
 import Stack from "@mui/material/Stack";
-import { Types } from "./CommandArea/chat.config.js";
+import { Types } from "../../components/ChatInput/chat.config.js";
 import { sub } from "date-fns";
 import { v4 as uuid } from "uuid";
 
 import { memo, useCallback, useRef } from "react";
 
-const ChatMessageInput = memo(function ChatMessageInput({
+const ChatInput = memo(function ChatMessageInput({
   disabled,
   onSendMessage,
   editor,
@@ -18,14 +19,16 @@ const ChatMessageInput = memo(function ChatMessageInput({
   replied,
   createMessage,
   userId,
+  responsibilityChat = false,
 }: {
-  disabled: boolean;
-  onSendMessage: (message: string | { command: Event }) => void;
+  disabled?: boolean;
+  onSendMessage?: (message: string | { command: Event }) => void;
   editor: [];
-  selectedMessage: { current: { type: string } };
-  replied: { current: boolean };
-  createMessage: (message: string) => void;
-  userId: string;
+  selectedMessage?: { current: { type: string } };
+  replied?: { current: boolean };
+  createMessage?: (message: string) => void;
+  userId?: string;
+  responsibilityChat?: boolean;
 }) {
   const fileRef = useRef(null);
 
@@ -45,9 +48,15 @@ const ChatMessageInput = memo(function ChatMessageInput({
     async (event) => {
       if (event.key === "Enter") {
         try {
-          if (event.target.value instanceof Map) {
+          if (responsibilityChat) {
+            const message = messageRef.current.trim();
+            if (message) {
+              onSendMessage(message);
+              messageRef.current = "";
+            }
+          } else if (event.target.value instanceof Map) {
             onSendMessage({ command: event.target.value });
-          } else if (selectedMessage.current) {
+          } else if (selectedMessage?.current) {
             const messageType = selectedMessage.current.type;
             const typeObject = Types.find((type) => type.name === messageType);
 
@@ -65,7 +74,9 @@ const ChatMessageInput = memo(function ChatMessageInput({
             onSendMessage(messageRef.current);
           }
 
-          messageRef.current = "";
+          if (!responsibilityChat) {
+            messageRef.current = "";
+          }
         } catch (error) {
           console.error(error);
         }
@@ -74,16 +85,18 @@ const ChatMessageInput = memo(function ChatMessageInput({
     [onSendMessage]
   );
 
+  const commands = responsibilityChat ? ResponsibilityCommands : Commands;
+
   return (
     <>
-      <CommandArea
+      <ChatInputCommandEditor
         createMessage={createMessage}
         userId={userId}
         editor={editor}
         onKeyUp={handleSendMessage}
         onChange={handleChangeMessage}
         placeholder="Type a message"
-        chatCommands={Commands}
+        chatCommands={commands}
         startAdornment={
           <IconButton>
             <Iconify icon="eva:smiling-face-fill" />
@@ -116,4 +129,4 @@ const ChatMessageInput = memo(function ChatMessageInput({
   );
 });
 
-export default ChatMessageInput;
+export default ChatInput;

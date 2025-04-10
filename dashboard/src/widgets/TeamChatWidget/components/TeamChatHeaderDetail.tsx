@@ -3,7 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import Typography from "@mui/material/Typography";
 
-function ChatHeaderDetail({ title, mdDown }) {
+function TeamChatHeaderDetail({ title, mdDown }) {
   return (
     <Box
       display="flex"
@@ -29,4 +29,4 @@ function ChatHeaderDetail({ title, mdDown }) {
   );
 }
 
-export default ChatHeaderDetail;
+export default TeamChatHeaderDetail;

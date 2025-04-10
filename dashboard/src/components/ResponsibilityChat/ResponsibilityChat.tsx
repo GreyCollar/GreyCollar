@@ -1,8 +1,11 @@
 import Box from "@mui/material/Box";
-import ChatDisplay from "./ChatDisplay";
-import MessageInput from "./MessageInput";
+import ChatInput from "../../widgets/ChatInput/ChatInput";
+import ResponsibilityChatContent from "./ResponsibilityChatContent";
+import { createEditor } from "slate";
+import { withHistory } from "slate-history";
+import { withReact } from "slate-react";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 const predefinedResponses = {
   "What is an AI agent?":
@@ -25,6 +28,11 @@ const predefinedResponses = {
 function ResponsibilityChat({ onAiResponse, selectedItem }) {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
+
+  const editor = useMemo(
+    () => withMentions(withInlines(withHistory(withReact(createEditor())))),
+    []
+  );
 
   const addMessage = (message, role = "user") => {
     setMessages((prevMessages) => [...prevMessages, { text: message, role }]);
@@ -54,14 +62,62 @@ function ResponsibilityChat({ onAiResponse, selectedItem }) {
         width: 700,
       }}
     >
-      <ChatDisplay
+      <ResponsibilityChatContent
         loading={loading}
         messages={messages}
         selectedItem={selectedItem}
       />
-      <MessageInput addMessage={addMessage} />
+      <ChatInput
+        onSendMessage={addMessage}
+        editor={editor}
+        responsibilityChat={true}
+      />
     </Box>
   );
 }
 
 export default ResponsibilityChat;
+
+const withInlines = (editor) => {
+  const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =
+    editor;
+
+  editor.isInline = (element) =>
+    ["commandText", "input", "optional"].includes(element.type) ||
+    isInline(element);
+
+  editor.isElementReadOnly = (element) =>
+    element.type === "input" ||
+    element.type === "commandText" ||
+    element.type === "optional" ||
+    isElementReadOnly(element);
+
+  editor.isSelectable = (element) =>
+    element.type !== "input" ||
+    element.type !== "optional" ||
+    (element.type !== "commandText" && isSelectable(element));
+
+  editor.insertText = (text) => {
+    insertText(text);
+  };
+
+  editor.insertData = (data) => {
+    insertData(data);
+  };
+
+  return editor;
+};
+
+const withMentions = (editor) => {
+  const { isInline, isVoid, markableVoid } = editor;
+  editor.isInline = (element) => {
+    return element.type === "mention" ? true : isInline(element);
+  };
+  editor.isVoid = (element) => {
+    return element.type === "mention" ? true : isVoid(element);
+  };
+  editor.markableVoid = (element) => {
+    return element.type === "mention" || markableVoid(element);
+  };
+  return editor;
+};
