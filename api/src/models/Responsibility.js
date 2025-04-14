@@ -8,6 +8,7 @@ const Responsibility = sequelize.define("Responsibility", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
+    defaultValue: DataTypes.UUIDV4,
     allowNull: false,
   },
   title: {
@@ -22,7 +23,7 @@ const Responsibility = sequelize.define("Responsibility", {
     type: DataTypes.UUID,
     allowNull: false,
     references: {
-      model: "Colleagues",
+      model: "Colleague",
       key: "id",
     },
   },
