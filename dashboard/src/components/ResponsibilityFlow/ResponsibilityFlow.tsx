@@ -4,6 +4,8 @@ import "./flow.css";
 import AIResponseNode from "./AIResponseNode";
 import CustomNode from "./CustomNode";
 import ELK from "elkjs/lib/elk.bundled.js";
+import { convertToNodesAndEdges } from "./flowAdapter";
+import http from "../../http/index";
 
 import {
   Background,
@@ -65,7 +67,7 @@ const getLayoutedElements = (nodes, edges, options = {}) => {
     });
 };
 
-function ResponsibilityFlow({ aiResponse }) {
+function ResponsibilityFlow({ aiResponse, responsibility }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [processedResponses, setProcessedResponses] = useState([]);
@@ -77,18 +79,21 @@ function ResponsibilityFlow({ aiResponse }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch nodes
-        const nodeResponse = await fetch("http://localhost:3001/nodes");
-        const nodeData = await nodeResponse.json();
+        const response = await http.get(
+          `/responsibilities/${responsibility.id}`
+        );
 
-        // Fetch edges
-        const edgeResponse = await fetch("http://localhost:3001/edges");
-        const edgeData = await edgeResponse.json();
+        console.log("Fetched responsibility data:", response.data);
 
-        // Format nodes for React Flow
-        const formattedNodes = nodeData.map((node) => ({
-          id: node.id.toString(),
-          // Position will be calculated by ELK
+        const resultWithOriginalIds = convertToNodesAndEdges(
+          response.data.Nodes
+        );
+        console.log("Result with original IDs:");
+        console.log(JSON.stringify(resultWithOriginalIds, null, 2));
+        console.log("Nodes:", resultWithOriginalIds.nodes);
+
+        const formattedNodes = resultWithOriginalIds.nodes.map((node) => ({
+          id: node.id,
           position: { x: 0, y: 0 },
           data: {
             label: node.label,
@@ -97,15 +102,13 @@ function ResponsibilityFlow({ aiResponse }) {
           type: "custom",
         }));
 
-        // Format edges for React Flow
-        const formattedEdges = edgeData.map((edge) => ({
+        const formattedEdges = resultWithOriginalIds.edges.map((edge) => ({
           id: `e${edge.source}-${edge.target}`,
           source: edge.source.toString(),
           target: edge.target.toString(),
           style: { strokeDasharray: "5,5" },
         }));
 
-        // Apply layout using ELK
         getLayoutedElements(formattedNodes, formattedEdges, {
           "elk.direction": "DOWN",
           ...elkOptions,
