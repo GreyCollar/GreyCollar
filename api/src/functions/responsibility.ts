@@ -27,38 +27,50 @@ async function getWithNodes(id: string) {
   return responsibility.toJSON();
 }
 
-async function createResponsibility(title, description, colleagueId) {
-  if (!title || !description || !colleagueId) {
-    throw new Error("Title, description and colleagueId are required");
-  }
-
-  const responsibility = await Responsibility.create({
-    title,
-    description,
-    colleagueId,
-  });
-
-  return responsibility;
-}
-
 type NodeType = {
   id: string;
-  label: string;
-  icon: string;
+  properties: {
+    label: string;
+    icon: string;
+  };
+  type: string;
+  responsibilityId?: string;
   dependencyId?: string;
 };
 
-async function connectResponsibilityWithNodes(
-  responsibilityId,
-  nodes: NodeType[] = []
+async function upsert(
+  title: string,
+  description: string,
+  colleagueId: string,
+  nodes: NodeType[] = [],
+  id?: string
 ) {
-  if (!responsibilityId) {
-    throw new Error("ResponsibilityId is required");
+
+  let responsibility;
+
+  if (id) {
+    const existingResponsibility = await Responsibility.findByPk(id);
+
+    if (!existingResponsibility) {
+      throw new NotFoundError();
+    }
+
+    await ResponsibilityNode.destroy({
+      where: { responsibilityId: id },
+    });
+
+    await existingResponsibility.update({ title, description, colleagueId });
+
+    responsibility = existingResponsibility;
+  } else {
+    responsibility = await Responsibility.create({
+      title,
+      description,
+      colleagueId,
+    });
   }
 
   const idMap = new Map();
-  let createdNodes = [];
-
   const nodesToCreate = nodes.map((node: NodeType) => {
     const nodeUuid = uuidv4();
     idMap.set(node.id, nodeUuid);
@@ -67,10 +79,10 @@ async function connectResponsibilityWithNodes(
       id: nodeUuid,
       type: "standard",
       properties: {
-        label: node.label,
-        icon: node.icon,
+        label: node.properties.label,
+        icon: node.properties.icon,
       },
-      responsibilityId,
+      responsibilityId: responsibility.id,
       dependencyId: null,
     };
   });
@@ -85,12 +97,15 @@ async function connectResponsibilityWithNodes(
     }
   });
 
-  createdNodes = await ResponsibilityNode.bulkCreate(nodesToCreate);
-  return createdNodes;
+  const createdNodes = await ResponsibilityNode.bulkCreate(nodesToCreate);
+
+  return {
+    ...responsibility.toJSON(),
+    Nodes: createdNodes,
+  };
 }
 
 export default {
   getWithNodes,
-  createResponsibility,
-  connectResponsibilityWithNodes,
+  upsert,
 };
