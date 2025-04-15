@@ -19,7 +19,7 @@ export type TeamInput = {
 type DependencyArray = unknown[];
 
 function useTeam() {
-  const { CreateOperation } = useApi();
+  const { Api } = useApi();
 
   const [teamCreated] = useEvent("PROJECT_CREATED", null);
   const [teamUpdated] = useEvent("TEAM_UPDATED", null);
@@ -28,7 +28,7 @@ function useTeam() {
   const getTeams = (fetchState: DependencyArray = []) => {
     const eventDependencies = [teamCreated, teamUpdated, teamDeleted];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => http.get("/projects"),
       [...eventDependencies, ...fetchState]
     );
@@ -48,7 +48,7 @@ function useTeam() {
   const getTeamById = (teamId: string, fetchState: DependencyArray = []) => {
     const eventDependencies = [teamUpdated, teamDeleted];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => (teamId ? http.get(`/projects/${teamId}`) : null),
       [teamId, ...eventDependencies, ...fetchState]
     );

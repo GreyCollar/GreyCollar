@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 function useApi() {
-  const CreateOperation = (apiCall, dependencies = []) => {
+  const Api = (apiCall, dependencies = []) => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -36,7 +36,7 @@ function useApi() {
     };
   };
 
-  return { CreateOperation };
+  return { Api };
 }
 
 export default useApi;

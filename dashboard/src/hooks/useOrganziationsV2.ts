@@ -19,14 +19,14 @@ export type OrganizationInput = {
 type DependencyArray = unknown[];
 
 function useOrganizations() {
-  const { CreateOperation } = useApi();
+  const { Api } = useApi();
 
   const [organizationCreated] = useEvent("ORGANIZATION_CREATED", null);
 
   const getOrganizations = (fetchState: DependencyArray = []) => {
     const eventDependencies = [organizationCreated];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => http.get("/organizations"),
       [...eventDependencies, ...fetchState]
     );
@@ -49,7 +49,7 @@ function useOrganizations() {
   ) => {
     const eventDependencies = [organizationCreated];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => (id ? http.get(`/organizations/${id}`) : null),
       [id, ...eventDependencies, ...fetchState]
     );
@@ -79,7 +79,7 @@ function useOrganizations() {
       loading,
       error,
       fetch,
-    } = CreateOperation((organization: OrganizationInput) =>
+    } = Api((organization: OrganizationInput) =>
       http.post("/organizations", {
         name: organization.name,
         description: organization.description,
@@ -123,7 +123,7 @@ function useOrganizations() {
       loading,
       error,
       fetch,
-    } = CreateOperation((organization: Organization) =>
+    } = Api((organization: Organization) =>
       http.put(`/organizations/${organization.id}`, {
         name: organization.name,
         description: organization.description,

@@ -18,7 +18,7 @@ export type Colleague = {
 type DependencyArray = unknown[];
 
 function useColleague() {
-  const { CreateOperation } = useApi();
+  const { Api } = useApi();
 
   const [colleagueUpdated] = useEvent("COLLEAGUE_UPDATED", null);
 
@@ -28,7 +28,7 @@ function useColleague() {
   ) => {
     const eventDependencies = [colleagueUpdated];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => (colleagueId ? http.get(`/colleagues/${colleagueId}`) : null),
       [colleagueId, ...eventDependencies, ...fetchState]
     );
@@ -48,7 +48,7 @@ function useColleague() {
   const getColleagues = (fetchState: DependencyArray = []) => {
     const eventDependencies = [colleagueUpdated];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => http.get("/colleagues"),
       [...eventDependencies, ...fetchState]
     );
@@ -77,7 +77,7 @@ function useColleague() {
       loading,
       error,
       fetch,
-    } = CreateOperation(() =>
+    } = Api(() =>
       http.put(`/colleagues/${colleague.id}`, {
         title: colleague.title,
         name: colleague.name,

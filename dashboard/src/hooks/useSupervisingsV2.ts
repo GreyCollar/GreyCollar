@@ -11,12 +11,12 @@ type SupervisingInput = {
 };
 
 function useSupervisings() {
-  const { CreateOperation } = useApi();
+  const { Api } = useApi();
 
   const [supervisingAnswered] = useEvent("SUPERVISING_ANSWERED", null);
 
   const createSupervising = () => {
-    const { loading, error, fetch } = CreateOperation(
+    const { loading, error, fetch } = Api(
       (supervising: SupervisingInput) =>
         http.post(`/supervisings`, {
           conversationId: supervising.conversationId,
@@ -43,7 +43,7 @@ function useSupervisings() {
   };
 
   const updateSupervising = () => {
-    const { loading, error, fetch } = CreateOperation(
+    const { loading, error, fetch } = Api(
       (params: { supervisingId: string; inputValue: string }) =>
         http.patch(`/supervisings/${params.supervisingId}`, {
           status: "ANSWERED",
@@ -76,7 +76,7 @@ function useSupervisings() {
   const getColleagueSupervising = useCallback((colleagueId?: string) => {
     if (!colleagueId) return;
 
-    const { data, loading, error } = CreateOperation(
+    const { data, loading, error } = Api(
       () => http.get(`/colleagues/${colleagueId}/supervisings`),
       [colleagueId, supervisingAnswered]
     );
@@ -98,7 +98,7 @@ function useSupervisings() {
           ? `/colleagues/${colleagueId}/supervisings`
           : `/colleagues/${colleagueId}/supervisings?status=${status}`;
 
-      const { data, loading, error, fetch } = CreateOperation(
+      const { data, loading, error, fetch } = Api(
         () => http.get(endpoint),
         [colleagueId, status, supervisingAnswered]
       );

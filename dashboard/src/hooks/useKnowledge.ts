@@ -27,7 +27,7 @@ export type KnowledgeInput = {
 type DependencyArray = unknown[];
 
 function useKnowledge() {
-  const { CreateOperation } = useApi();
+  const { Api } = useApi();
 
   const [knowledgeCreated] = useEvent("KNOWLEDGE_CREATED", null);
   const [knowledgeUpdated] = useEvent("KNOWLEDGE_UPDATED", null);
@@ -44,7 +44,7 @@ function useKnowledge() {
       knowledgeDeleted,
     ];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => http.get(`/knowledge/${knowledgeId}`),
       [knowledgeId, ...eventDependencies, ...fetchState]
     );
@@ -68,7 +68,7 @@ function useKnowledge() {
       knowledgeStatusChanged,
     ];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () => (teamId ? http.get(`/knowledge?teamId=${teamId}`) : null),
       [teamId, ...eventDependencies, ...fetchState]
     );
@@ -96,7 +96,7 @@ function useKnowledge() {
       knowledgeStatusChanged,
     ];
 
-    const { data, loading, error, fetch } = CreateOperation(
+    const { data, loading, error, fetch } = Api(
       () =>
         colleagueId ? http.get(`/knowledge?colleagueId=${colleagueId}`) : null,
       [colleagueId, ...eventDependencies, ...fetchState]
@@ -197,7 +197,7 @@ function useKnowledge() {
       loading,
       error,
       fetch,
-    } = CreateOperation((knowledgeId: string, status: string) =>
+    } = Api((knowledgeId: string, status: string) =>
       http.patch(`/knowledge/${knowledgeId}/status`, { status })
     );
 
