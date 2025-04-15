@@ -15,7 +15,7 @@ export type Colleague = {
   projectId?: string;
 };
 
-type DependencyArray = unknown[];
+type DependencyArray = object[];
 
 function useColleague() {
   const { Api } = useApi();

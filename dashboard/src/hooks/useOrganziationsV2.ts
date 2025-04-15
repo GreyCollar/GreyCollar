@@ -16,7 +16,7 @@ export type OrganizationInput = {
   description?: string;
 };
 
-type DependencyArray = unknown[];
+type DependencyArray = object[];
 
 function useOrganizations() {
   const { Api } = useApi();

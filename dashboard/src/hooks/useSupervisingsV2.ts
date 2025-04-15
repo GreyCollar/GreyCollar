@@ -16,13 +16,12 @@ function useSupervisings() {
   const [supervisingAnswered] = useEvent("SUPERVISING_ANSWERED", null);
 
   const createSupervising = () => {
-    const { loading, error, fetch } = Api(
-      (supervising: SupervisingInput) =>
-        http.post(`/supervisings`, {
-          conversationId: supervising.conversationId,
-          colleagueId: supervising.colleagueId,
-          sessionId: supervising.sessionId,
-        })
+    const { loading, error, fetch } = Api((supervising: SupervisingInput) =>
+      http.post(`/supervisings`, {
+        conversationId: supervising.conversationId,
+        colleagueId: supervising.colleagueId,
+        sessionId: supervising.sessionId,
+      })
     );
 
     const create = async (supervising: SupervisingInput) => {

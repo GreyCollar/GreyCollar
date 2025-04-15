@@ -16,7 +16,7 @@ export type TeamInput = {
   avatar?: string;
 };
 
-type DependencyArray = unknown[];
+type DependencyArray = object[];
 
 function useTeam() {
   const { Api } = useApi();

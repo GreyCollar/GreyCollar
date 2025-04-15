@@ -24,7 +24,7 @@ export type KnowledgeInput = {
   answer?: string;
 };
 
-type DependencyArray = unknown[];
+type DependencyArray = object[];
 
 function useKnowledge() {
   const { Api } = useApi();
