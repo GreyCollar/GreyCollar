@@ -4,7 +4,6 @@ import Knowledge from "./Knowledge";
 import Message from "./Message";
 import Project from "./Project";
 import Responsibility from "./Responsibility";
-import ResponsibilityNode from "./ResponsibilityNode";
 import Session from "./Session";
 import Supervising from "./Supervising";
 import Team from "./Team";
@@ -19,6 +18,4 @@ export default {
   Supervising,
   Command,
   Responsibility,
-  ResponsibilityNode,
 };
-
