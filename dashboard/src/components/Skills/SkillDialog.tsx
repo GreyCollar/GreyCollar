@@ -5,6 +5,7 @@ import ClosableDialogTitle from "./ClosableDialogTitle";
 import { Icon } from "@iconify/react";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
+import { getProviderLogo } from "../../utils/icon";
 
 import {
   Avatar,
@@ -79,9 +80,15 @@ const SkillDialog = ({
       <ClosableDialogTitle handleClose={handleClose} />
       <DialogContent>
         <Box sx={{ textAlign: "center" }}>
-          <Icon icon={skill.logo} width="20" height="20" />
+          <Icon icon={getProviderLogo(skill.title)} width="20" height="20" />
           <Typography variant="h4" sx={{ mt: 1 }}>
-            {skill.title}
+            {skill.title
+              .split(" ")
+              .map(
+                (word) =>
+                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+              )
+              .join(" ")}
           </Typography>
         </Box>
         <Box sx={{ mt: 3 }}>{skill.description}</Box>
