@@ -1,5 +1,6 @@
 import Colleague from "./Colleague";
 import Command from "./Command";
+import Integration from "./Integration";
 import Knowledge from "./Knowledge";
 import Message from "./Message";
 import Project from "./Project";
@@ -16,4 +17,5 @@ export default {
   Session,
   Supervising,
   Command,
+  Integration,
 };
