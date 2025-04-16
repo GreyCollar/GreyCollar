@@ -1,10 +1,10 @@
+import {
+  NotFoundError,
+  ValidationError,
+} from "@nucleoidai/platform-express/error";
+
 import Colleague from "../models/Colleague";
 import Integration from "../models/Integration";
-import Knowledge from "../models/Knowledge";
-import { NotFoundError } from "@nucleoidai/platform-express/error";
-import { Op } from "sequelize";
-import Step from "../models/Step";
-import Task from "../models/Task";
 
 async function create({
   teamId,
@@ -17,19 +17,20 @@ async function create({
     provider: string;
     scope: string;
     description: string;
+    direction: string;
     acquired?: boolean;
     colleagueId?: string;
     teamId?: string;
   };
 }) {
   if (!teamId && !colleagueId) {
-    throw new Error("INVALID_TEAM_OR_COLLEAGUE");
+    throw new ValidationError();
   }
 
   if (colleagueId) {
     const colleagueInstance = await Colleague.findByPk(colleagueId);
     if (!colleagueInstance) {
-      throw new Error("COLLEAGUE_NOT_FOUND");
+      throw new NotFoundError();
     }
 
     integration.colleagueId = colleagueId;
