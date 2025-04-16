@@ -28,7 +28,16 @@ async function init() {
 
   Responsibilities.belongsTo(Project, { foreignKey: "teamId" });
 
-  Integration.belongsTo(Project, { foreignKey: "teamId" });
+  Integration.belongsToMany(Project, {
+    through: "Integration",
+    foreignKey: "id",
+  });
+
+  Project.belongsToMany(Integration, {
+    through: "Integration",
+    foreignKey: "teamId",
+  });
+
   Integration.belongsTo(Colleague, { foreignKey: "colleagueId" });
 
   Statistics.belongsTo(Project, { foreignKey: "teamId" });
