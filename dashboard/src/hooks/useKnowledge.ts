@@ -1,47 +1,177 @@
 import http from "../http";
-import useApi from "./useApi";
+import useApi from "./useApiV2";
 
-import { useCallback, useEffect, useState } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
-function useKnowledge(id) {
-  const [knowledge, setKnowledge] = useState({
-    id: "",
-    type: "",
-    text: "",
-    url: "",
-    question: "",
-    answer: "",
-    colleagueId: "",
-    status: "",
-    createdAt: "",
-    teamId: "",
-  });
+export type Knowledge = {
+  id: string;
+  type: string;
+  text: string;
+  url: string;
+  question: string;
+  answer: string;
+  colleagueId: string;
+  status: string;
+  createdAt: string;
+  teamId: string;
+};
 
-  const { loading, error, handleResponse } = useApi();
+export type KnowledgeInput = {
+  type: string;
+  text?: string;
+  url?: string;
+  question?: string;
+  answer?: string;
+};
 
-  useEffect(() => {
-    getKnowledgeById(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+type DependencyArray = object[];
 
-  const getKnowledgeById = useCallback((id) => {
-    handleResponse(
-      http.get(`/knowledge/${id}`),
-      (response) => {
-        setKnowledge(response.data);
-      },
-      (error) => {
-        console.error(error);
-      }
+function useKnowledge() {
+  const { Api } = useApi();
+
+  const [knowledgeCreated] = useEvent("KNOWLEDGE_CREATED", null);
+  const [knowledgeUpdated] = useEvent("KNOWLEDGE_UPDATED", null);
+  const [knowledgeDeleted] = useEvent("KNOWLEDGE_DELETED", null);
+  const [knowledgeStatusChanged] = useEvent("KNOWLEDGE_STATUS_CHANGED", null);
+
+  const getKnowledge = (
+    knowledgeId: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const eventDependencies = [
+      knowledgeUpdated,
+      knowledgeStatusChanged,
+      knowledgeDeleted,
+    ];
+
+    const { data, loading, error, fetch } = Api(
+      () => http.get(`/knowledge/${knowledgeId}`),
+      [knowledgeId, ...eventDependencies, ...fetchState]
     );
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return {
+      knowledge: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const getTeamKnowledges = (
+    teamId: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const eventDependencies = [
+      knowledgeCreated,
+      knowledgeUpdated,
+      knowledgeDeleted,
+      knowledgeStatusChanged,
+    ];
+
+    const { data, loading, error, fetch } = Api(
+      () => (teamId ? http.get(`/knowledge?teamId=${teamId}`) : null),
+      [teamId, ...eventDependencies, ...fetchState]
+    );
+
+    if (data) {
+      publish("KNOWLEDGE_LOADED", { knowledge: data });
+    }
+
+    return {
+      knowledges: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const getColleagueKnowledges = (
+    colleagueId: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const eventDependencies = [
+      knowledgeCreated,
+      knowledgeUpdated,
+      knowledgeDeleted,
+      knowledgeStatusChanged,
+    ];
+
+    const { data, loading, error, fetch } = Api(
+      () =>
+        colleagueId ? http.get(`/knowledge?colleagueId=${colleagueId}`) : null,
+      [colleagueId, ...eventDependencies, ...fetchState]
+    );
+
+    if (data) {
+      publish("KNOWLEDGE_LOADED", { knowledge: data });
+    }
+
+    return {
+      knowledges: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const createKnowledge = async (
+    knowledge: KnowledgeInput,
+    colleagueId: string
+  ) => {
+    const response = await http.post("/knowledge", {
+      url: knowledge.url,
+      text: knowledge.text,
+      question: knowledge.question,
+      answer: knowledge.answer,
+      colleagueId: colleagueId,
+      type: knowledge.type,
+    });
+
+    console.log("createResponse", response);
+
+    if (response && response.data) {
+      publish("KNOWLEDGE_CREATED", { knowledge: response.data });
+    }
+
+    return response.data;
+  };
+
+  const deleteKnowledge = async (knowledge: Knowledge) => {
+    if (!knowledge || !knowledge.id) {
+      console.error("Cannot delete knowledge: Missing ID");
+      return null;
+    }
+
+    const response = await http.delete(`/knowledge/${knowledge.id}`);
+
+    console.log("deleteResponse", response);
+
+    if (response) {
+      publish("KNOWLEDGE_DELETED", { knowledge: knowledge.id });
+    }
+
+    return response.data;
+  };
+
+  const changeKnowledgeStatus = async (knowledgeId: string, status: string) => {
+    const result = await http.patch(`/knowledge/${knowledgeId}/status`, {
+      status,
+    });
+
+    if (result.data) {
+      publish("KNOWLEDGE_STATUS_CHANGED", { knowledge: result.data });
+    }
+
+    return result.data;
+  };
 
   return {
-    loading,
-    error,
-    knowledge,
+    getKnowledge,
+    getTeamKnowledges,
+    getColleagueKnowledges,
+    createKnowledge,
+    deleteKnowledge,
+    changeKnowledgeStatus,
   };
 }
 

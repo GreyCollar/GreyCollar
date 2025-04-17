@@ -5,7 +5,7 @@ import { useState } from "react";
 
 function OrganizationButton() {
   const [open, setOpen] = useState(false);
-
+  console.log("Organization Button");
   return (
     <>
       <IconButton

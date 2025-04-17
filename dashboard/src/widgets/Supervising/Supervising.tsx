@@ -1,25 +1,20 @@
 import Box from "@mui/material/Box";
 import StatusToolbar from "../../components/StatusToolbar/StatusToolbar";
 import SupervisingCard from "../../components/SupervisingCard/SupervisingCard";
-import useSupervisings from "../../hooks/useSupervisings";
+import { useState } from "react";
+import useSupervisings from "../../hooks/useSupervisingsV2";
 
-import { Container, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Container, Skeleton, Stack } from "@mui/material";
 
 const Supervising = ({ colleagueId }) => {
-  const { updateSupervising, supervisings, getColleagueSupervisingByStatus } =
-    useSupervisings(colleagueId);
-
   const [selectedStatus, setSelectedStatus] = useState("All");
 
-  useEffect(() => {
-    getColleagueSupervisingByStatus(colleagueId, selectedStatus);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStatus]);
+  const { updateSupervising, getColleagueSupervisingByStatus } =
+    useSupervisings();
 
-  const supervising = supervisings.filter(
-    (supervise) =>
-      selectedStatus === "All" || supervise.status === selectedStatus
+  const { supervisings, loading } = getColleagueSupervisingByStatus(
+    colleagueId,
+    selectedStatus
   );
 
   const handleChange = (event) => {
@@ -40,8 +35,24 @@ const Supervising = ({ colleagueId }) => {
           handleChange={handleChange}
           selectedStatus={selectedStatus}
         />
-        {supervising.length > 0 ? (
-          supervising.map((supervise) => (
+        {loading ? (
+          <Stack
+            spacing={2}
+            sx={{ textAlign: "center", p: 2, color: "text.secondary" }}
+          >
+            {[1, 2, 3, 4, 5].map((item) => (
+              <Skeleton
+                key={item}
+                variant="rectangular"
+                height={180}
+                sx={{
+                  borderRadius: 2,
+                }}
+              />
+            ))}
+          </Stack>
+        ) : supervisings.length > 0 ? (
+          supervisings.map((supervise) => (
             <SupervisingCard
               key={supervise.id}
               updateSupervising={updateSupervising}
