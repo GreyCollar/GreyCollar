@@ -19,7 +19,9 @@ const ResponsibilityFlowDialog = ({
     <Dialog open={flowDialogOpen} onClose={handleFlowDialogClose}>
       <DialogTitle>Flow Chart</DialogTitle>
       <DialogContent>
-        {selectedItem && <FlowReact aiResponse={aiResponse} />}
+        {selectedItem && (
+          <FlowReact responsibility={selectedItem} aiResponse={aiResponse} />
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleFlowDialogClose} color="primary">

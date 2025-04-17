@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Grid } from "@mui/material";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import Stack from "@mui/material/Stack";
-import useColleague from "../../hooks/useColleague";
+import useColleague from "../../hooks/useColleagueV2";
 
 import { CardHeader, Fab, InputBase, Typography, alpha } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -14,14 +14,16 @@ import { useEffect, useState } from "react";
 // ----------------------------------------------------------------------
 
 function Profile({ colleagueId }) {
-  const { colleague, updateColleague } = useColleague(colleagueId);
+  //TODO - Refactor here
+  const { updateColleague, getColleague } = useColleague();
+  const { colleague, loading } = getColleague(colleagueId);
 
-  const engine = colleague.AIEngine;
+  const engine = colleague?.AIEngine;
 
-  const [character, setCharacter] = useState(colleague.character);
-  const [role, setRole] = useState(colleague.role);
-  const [tempCharacter, setTempCharacter] = useState(colleague.character);
-  const [tempRole, setTempRole] = useState(colleague.role);
+  const [character, setCharacter] = useState(colleague?.character);
+  const [role, setRole] = useState(colleague?.role);
+  const [tempCharacter, setTempCharacter] = useState(colleague?.character);
+  const [tempRole, setTempRole] = useState(colleague?.role);
   const [isUpdated, setIsUpdated] = useState(true);
 
   useEffect(() => {
@@ -41,6 +43,10 @@ function Profile({ colleagueId }) {
     }
     setIsUpdated(!isUpdated);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const renderAbout = (
     <Card>
