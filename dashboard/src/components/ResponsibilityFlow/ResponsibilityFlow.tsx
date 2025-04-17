@@ -5,7 +5,7 @@ import AIResponseNode from "./AIResponseNode";
 import CustomNode from "./CustomNode";
 import ELK from "elkjs/lib/elk.bundled.js";
 import { convertToNodesAndEdges } from "./flowAdapter";
-import http from "../../http/index";
+import useResponsibility from "../../hooks/useResponsibility";
 
 import {
   Background,
@@ -67,101 +67,49 @@ const getLayoutedElements = (nodes, edges, options = {}) => {
     });
 };
 
-const getLayoutedElements = (nodes, edges, options = {}) => {
-  const graph = {
-    id: "root",
-    layoutOptions: options,
-    children: nodes.map((node) => ({
-      ...node,
-      targetPosition: "top",
-      sourcePosition: "bottom",
-      width: 150,
-      height: 50,
-    })),
-    edges: edges,
-  };
-
-  return elk
-    .layout(graph)
-    .then((layoutedGraph) => ({
-      nodes: layoutedGraph.children.map((node) => ({
-        ...node,
-        position: { x: node.x, y: node.y },
-      })),
-      edges: layoutedGraph.edges,
-    }))
-    .catch((error) => {
-      console.error(error);
-      return {
-        nodes: nodes.map((node) => ({
-          ...node,
-          position: node.position || { x: 0, y: 0 },
-        })),
-        edges: edges,
-      };
-    });
-};
-
 function ResponsibilityFlow({ aiResponse, responsibility }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [processedResponses, setProcessedResponses] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { responsibilityNodes } = useResponsibility(responsibility.id);
   const { fitView } = useReactFlow();
 
-  // Fetch data from JSON server
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await http.get(
-          `/responsibilities/${responsibility.id}`
-        );
+    if (responsibilityNodes && responsibilityNodes.Nodes) {
+      const resultWithOriginalIds = convertToNodesAndEdges(
+        responsibilityNodes.Nodes
+      );
 
-        console.log("Fetched responsibility data:", response.data);
+      const formattedNodes = resultWithOriginalIds.nodes.map((node) => ({
+        id: node.id,
+        position: { x: 0, y: 0 },
+        data: {
+          label: node.label,
+          icon: node.icon,
+        },
+        type: "custom",
+      }));
 
-        const resultWithOriginalIds = convertToNodesAndEdges(
-          response.data.Nodes
-        );
-        console.log("Result with original IDs:");
-        console.log(JSON.stringify(resultWithOriginalIds, null, 2));
-        console.log("Nodes:", resultWithOriginalIds.nodes);
+      const formattedEdges = resultWithOriginalIds.edges.map((edge) => ({
+        id: `e${edge.source}-${edge.target}`,
+        source: edge.source.toString(),
+        target: edge.target.toString(),
+        style: { strokeDasharray: "5,5" },
+      }));
 
-        const formattedNodes = resultWithOriginalIds.nodes.map((node) => ({
-          id: node.id,
-          position: { x: 0, y: 0 },
-          data: {
-            label: node.label,
-            icon: node.icon,
-          },
-          type: "custom",
-        }));
-
-        const formattedEdges = resultWithOriginalIds.edges.map((edge) => ({
-          id: `e${edge.source}-${edge.target}`,
-          source: edge.source.toString(),
-          target: edge.target.toString(),
-          style: { strokeDasharray: "5,5" },
-        }));
-
-        getLayoutedElements(formattedNodes, formattedEdges, {
-          "elk.direction": "DOWN",
-          ...elkOptions,
-        }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
-          setNodes(layoutedNodes);
-          setEdges(layoutedEdges);
-          setIsLoading(false);
-          setTimeout(() => fitView(), 50);
-        });
-      } catch (error) {
-        console.error("Error fetching flow data:", error);
+      getLayoutedElements(formattedNodes, formattedEdges, {
+        "elk.direction": "DOWN",
+        ...elkOptions,
+      }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
+        setNodes(layoutedNodes);
+        setEdges(layoutedEdges);
         setIsLoading(false);
-      }
-    };
-
-    fetchData();
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setNodes, setEdges, fitView]);
+        setTimeout(() => fitView(), 50);
+      });
+    }
+  }, [responsibilityNodes, setNodes, setEdges, fitView]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
