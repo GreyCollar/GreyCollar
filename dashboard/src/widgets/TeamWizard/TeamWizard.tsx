@@ -104,7 +104,7 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [teamSelected] = useEvent("PROJECT_SELECTED", { projectId: null });
   const { organizations, loading } = useOrganizations().getOrganizations([]);
   const [activeStep, setActiveStep] = React.useState(0);
-  const { create } = useOrganizations().createOrganization();
+  const { createOrganization } = useOrganizations();
   const { createColleague } = useColleagues();
   const { createTeam } = useTeams();
 
@@ -220,7 +220,7 @@ function TeamWizard({ open, onClose }: { open: boolean; onClose: () => void }) {
           await createTeam(data.team, data.organization.id);
           publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
         } else {
-          const result = await create(data.organization);
+          const result = await createOrganization(data.organization);
           await createTeam(data.team, result.id);
           publish("PLATFORM", "PROJECT_BAR_DIALOG", { open: false });
         }

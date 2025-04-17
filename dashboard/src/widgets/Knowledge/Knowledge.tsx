@@ -27,9 +27,6 @@ function Knowledge({
     getTeamKnowledges,
   } = useKnowledge();
 
-  const { remove } = deleteKnowledge();
-  const { create } = createKnowledge();
-
   const { knowledges } = getColleagueKnowledges(colleagueId);
   const { knowledges: teamKnowledges } = getTeamKnowledges(teamId);
 
@@ -88,7 +85,7 @@ function Knowledge({
 
   const handleDelete = async (item) => {
     if (item) {
-      const deleteResponse = await remove(item);
+      const deleteResponse = await deleteKnowledge(item);
       if (deleteResponse) {
         knowledges.filter((knowledge) => knowledge.id !== item.id);
       }
@@ -167,7 +164,7 @@ function Knowledge({
             setSelectedType={setSelectedType}
             open={open}
             setOpen={setOpen}
-            addItem={create}
+            addItem={createKnowledge}
             colleagueId={colleagueId}
             teamId={teamId}
             teamById={team}
