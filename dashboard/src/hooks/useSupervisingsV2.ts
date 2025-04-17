@@ -15,61 +15,36 @@ function useSupervisings() {
 
   const [supervisingAnswered] = useEvent("SUPERVISING_ANSWERED", null);
 
-  const createSupervising = () => {
-    const { loading, error, fetch } = Api((supervising: SupervisingInput) =>
-      http.post(`/supervisings`, {
-        conversationId: supervising.conversationId,
-        colleagueId: supervising.colleagueId,
-        sessionId: supervising.sessionId,
-      })
-    );
+  const createSupervising = async (supervising: SupervisingInput) => {
+    if (!supervising) {
+      console.error("Cannot create supervising: Missing supervising input");
+      return null;
+    }
 
-    const create = async (supervising: SupervisingInput) => {
-      if (!supervising) {
-        console.error("Cannot create supervising: Missing supervising input");
-        return null;
-      }
+    const response = await http.post(`/supervisings`, {
+      conversationId: supervising.conversationId,
+      colleagueId: supervising.colleagueId,
+      sessionId: supervising.sessionId,
+    });
 
-      const result = await fetch(supervising);
-      return result?.data;
-    };
-
-    return {
-      create,
-      loading,
-      error,
-    };
+    return response?.data;
   };
 
-  const updateSupervising = () => {
-    const { loading, error, fetch } = Api(
-      (params: { supervisingId: string; inputValue: string }) =>
-        http.patch(`/supervisings/${params.supervisingId}`, {
-          status: "ANSWERED",
-          answer: params.inputValue,
-        })
-    );
+  // Refactored: directly return the update function
+  const updateSupervising = async (
+    supervisingId: string,
+    inputValue: string
+  ) => {
+    const response = await http.patch(`/supervisings/${supervisingId}`, {
+      status: "ANSWERED",
+      answer: inputValue,
+    });
 
-    const update = async (supervisingId: string, inputValue: string) => {
-      if (!supervisingId) {
-        console.error("Cannot update supervising: Missing supervisingId");
-        return null;
-      }
+    if (response?.data) {
+      publish("SUPERVISING_ANSWERED", response.data);
+    }
 
-      const result = await fetch({ supervisingId, inputValue });
-
-      if (result?.data) {
-        publish("SUPERVISING_ANSWERED", result.data);
-      }
-
-      return result?.data;
-    };
-
-    return {
-      update,
-      loading,
-      error,
-    };
+    return response?.data;
   };
 
   const getColleagueSupervising = useCallback((colleagueId?: string) => {
@@ -114,8 +89,8 @@ function useSupervisings() {
   );
 
   return {
-    createSupervising: createSupervising(),
-    updateSupervising: updateSupervising(),
+    createSupervising,
+    updateSupervising,
     getColleagueSupervisingByStatus,
     getColleagueSupervising,
   };

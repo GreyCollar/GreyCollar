@@ -61,109 +61,59 @@ function useTeam() {
     };
   };
 
-  const createTeam = () => {
-    type CreateResponse = {
-      success: boolean;
-      message?: string;
-      id?: string;
-      data?: Team;
-    };
+  const createTeam = async (team: TeamInput, organizationId: string) => {
+    try {
+      const response = await http.post("/projects", {
+        name: team.name,
+        icon: team.avatar || team.icon,
+        organizationId,
+      });
 
-    const create = async (
-      team: TeamInput,
-      organizationId: string
-    ): Promise<CreateResponse | null> => {
-      if (!team) {
-        console.error("Cannot create team: Missing team input");
-        return null;
+      if (response && response.data) {
+        publish("PROJECT_CREATED", { project: response.data });
       }
 
-      try {
-        const response = await http.post("/projects", {
-          name: team.name,
-          icon: team.avatar || team.icon,
-          organizationId,
-        });
-
-        if (response && response.data) {
-          publish("PROJECT_CREATED", { project: response.data });
-        }
-      } catch (error) {
-        console.error("Error creating team:", error);
-        return null;
-      }
-    };
-
-    return {
-      create,
-    };
+      return response?.data;
+    } catch (error) {
+      console.error("Error creating team:", error);
+      return null;
+    }
   };
 
-  const updateTeam = () => {
-    type UpdateResponse = {
-      success: boolean;
-      message?: string;
-      id?: string;
-      data?: Team;
-    };
+  const updateTeam = async (team: Team) => {
+    try {
+      const response = await http.put(`/projects/${team.id}`, {
+        name: team.name,
+        icon: team.icon,
+        organizationId: team.organizationId,
+      });
 
-    const update = async (team: Team): Promise<UpdateResponse | null> => {
-      if (!team || !team.id) {
-        console.error("Cannot update team: Missing ID");
-        return null;
+      console.log("updateResponse", response);
+
+      if (response) {
+        publish("TEAM_UPDATED", { teamId: team.id });
       }
 
-      try {
-        const response = await http.put(`/projects/${team.id}`, {
-          name: team.name,
-          icon: team.icon,
-          organizationId: team.organizationId,
-        });
-
-        console.log("updateResponse", response);
-
-        if (response) {
-          publish("TEAM_UPDATED", { teamId: team.id });
-        }
-      } catch (error) {
-        console.error("Error updating team:", error);
-        return null;
-      }
-    };
-
-    return {
-      update,
-    };
+      return response?.data;
+    } catch (error) {
+      console.error("Error updating team:", error);
+      return null;
+    }
   };
 
-  const deleteTeam = () => {
-    type DeleteResponse = {
-      success: boolean;
-      message?: string;
-      id?: string;
-    };
+  const deleteTeam = async (teamId: string) => {
+    try {
+      const response = await http.delete(`/projects/${teamId}`);
 
-    const remove = async (teamId: string): Promise<DeleteResponse | null> => {
-      if (!teamId) {
-        console.error("Cannot delete team: Missing ID");
-        return null;
+      if (response) {
+        publish("TEAM_DELETED", { teamId });
       }
 
-      try {
-        const response = await http.delete(`/projects/${teamId}`);
-
-        if (response) {
-          publish("TEAM_DELETED", { teamId });
-        }
-      } catch (error) {
-        console.error("Error deleting team:", error);
-        return null;
-      }
-    };
-
-    return {
-      remove,
-    };
+      return response?.data;
+    } catch (error) {
+      console.error("Error deleting team:", error);
+      return null;
+    }
   };
 
   return {

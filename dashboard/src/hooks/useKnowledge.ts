@@ -114,110 +114,55 @@ function useKnowledge() {
     };
   };
 
-  const createKnowledge = () => {
-    type CreateResponse = {
-      success: boolean;
-      message?: string;
-      id?: string;
-      data?: Knowledge;
-    };
+  const createKnowledge = async (
+    knowledge: KnowledgeInput,
+    colleagueId: string
+  ) => {
+    const response = await http.post("/knowledge", {
+      url: knowledge.url,
+      text: knowledge.text,
+      question: knowledge.question,
+      answer: knowledge.answer,
+      colleagueId: colleagueId,
+      type: knowledge.type,
+    });
 
-    const create = async (
-      knowledge: KnowledgeInput,
-      colleagueId: string
-    ): Promise<CreateResponse | null> => {
-      if (!knowledge) {
-        console.error("Cannot create knowledge: Missing knowledge input");
-        return null;
-      }
+    console.log("createResponse", response);
 
-      const response = await http.post("/knowledge", {
-        url: knowledge.url,
-        text: knowledge.text,
-        question: knowledge.question,
-        answer: knowledge.answer,
-        colleagueId: colleagueId,
-        type: knowledge.type,
-      });
+    if (response && response.data) {
+      publish("KNOWLEDGE_CREATED", { knowledge: response.data });
+    }
 
-      console.log("createResponse", response);
-
-      if (response && response.data) {
-        publish("KNOWLEDGE_CREATED", { knowledge: response.data });
-      }
-
-      return response.data;
-    };
-
-    return {
-      create,
-    };
+    return response.data;
   };
 
-  const deleteKnowledge = () => {
-    type DeleteResponse = {
-      success: boolean;
-      message?: string;
-      id?: string;
-    };
+  const deleteKnowledge = async (knowledge: Knowledge) => {
+    if (!knowledge || !knowledge.id) {
+      console.error("Cannot delete knowledge: Missing ID");
+      return null;
+    }
 
-    const remove = async (
-      knowledge: Knowledge
-    ): Promise<DeleteResponse | null> => {
-      if (!knowledge || !knowledge.id) {
-        console.error("Cannot delete knowledge: Missing ID");
-        return null;
-      }
+    const response = await http.delete(`/knowledge/${knowledge.id}`);
 
-      const response = await http.delete(`/knowledge/${knowledge.id}`);
+    console.log("deleteResponse", response);
 
-      console.log("deleteResponse", response);
+    if (response) {
+      publish("KNOWLEDGE_DELETED", { knowledge: knowledge.id });
+    }
 
-      if (response) {
-        publish("KNOWLEDGE_DELETED", { knowledge: knowledge.id });
-      }
-
-      return response.data;
-    };
-
-    return {
-      remove,
-    };
+    return response.data;
   };
 
-  const changeKnowledgeStatus = () => {
-    type StatusResponse = {
-      id: string;
-      status: string;
-      success: boolean;
-    };
+  const changeKnowledgeStatus = async (knowledgeId: string, status: string) => {
+    const result = await http.patch(`/knowledge/${knowledgeId}/status`, {
+      status,
+    });
 
-    const {
-      data: statusResponse,
-      loading,
-      error,
-      fetch,
-    } = Api((knowledgeId: string, status: string) =>
-      http.patch(`/knowledge/${knowledgeId}/status`, { status })
-    );
+    if (result.data) {
+      publish("KNOWLEDGE_STATUS_CHANGED", { knowledge: result.data });
+    }
 
-    const changeStatus = async (
-      knowledgeId: string,
-      status: string
-    ): Promise<StatusResponse | null> => {
-      const result = await fetch(knowledgeId, status);
-      if (result) {
-        publish("KNOWLEDGE_STATUS_CHANGED", { knowledge: result });
-      }
-      return result;
-    };
-
-    return {
-      statusResponse,
-      loading,
-      error,
-      changeStatus,
-    };
+    return result.data;
   };
 
   return {

@@ -65,53 +65,22 @@ function useColleague() {
     };
   };
 
-  const updateColleague = (colleague: Colleague) => {
-    type UpdateResponse = {
-      success: boolean;
-      message?: string;
-      data?: Colleague;
-    };
+  const updateColleague = async (colleague: Colleague) => {
+    const response = await http.put(`/colleagues/${colleague.id}`, {
+      title: colleague.title,
+      name: colleague.name,
+      avatar: colleague.avatar,
+      character: colleague.character,
+      role: colleague.role,
+      projectId: colleague.projectId,
+      teamId: colleague.teamId,
+    });
 
-    const {
-      data: updateResponse,
-      loading,
-      error,
-      fetch,
-    } = Api(() =>
-      http.put(`/colleagues/${colleague.id}`, {
-        title: colleague.title,
-        name: colleague.name,
-        avatar: colleague.avatar,
-        character: colleague.character,
-        role: colleague.role,
-        projectId: colleague.projectId,
-        teamId: colleague.teamId,
-      })
-    );
+    if (response && response.data) {
+      publish("COLLEAGUE_UPDATED", { colleagueId: colleague.id });
+    }
 
-    const update = async (
-      colleague: Colleague
-    ): Promise<UpdateResponse | null> => {
-      if (!colleague || !colleague.id) {
-        console.error("Cannot update colleague: Missing ID");
-        return null;
-      }
-
-      const result = await fetch(colleague);
-
-      if (result) {
-        publish("COLLEAGUE_UPDATED", { colleagueId: colleague.id });
-      }
-
-      return result;
-    };
-
-    return {
-      updateResponse,
-      loading,
-      error,
-      update,
-    };
+    return response.data;
   };
 
   return {

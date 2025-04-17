@@ -66,93 +66,40 @@ function useOrganizations() {
     };
   };
 
-  const createOrganization = () => {
-    type CreateResponse = {
-      success: boolean;
-      message?: string;
-      id?: string;
-      data?: Organization;
-    };
+  const createOrganization = async (organization: OrganizationInput) => {
+    if (!organization) {
+      console.error("Cannot create organization: Missing organization input");
+      return null;
+    }
 
-    const {
-      data: createResponse,
-      loading,
-      error,
-      fetch,
-    } = Api((organization: OrganizationInput) =>
-      http.post("/organizations", {
-        name: organization.name,
-        description: organization.description,
-      })
-    );
+    const response = await http.post("/organizations", {
+      name: organization.name,
+      description: organization.description,
+    });
 
-    const create = async (
-      organization: OrganizationInput
-    ): Promise<CreateResponse | null> => {
-      if (!organization) {
-        console.error("Cannot create organization: Missing organization input");
-        return null;
-      }
+    if (response && response.data) {
+      publish("ORGANIZATION_CREATED", { organization: response.data });
+    }
 
-      const result = await fetch(organization);
-
-      if (result && result.data) {
-        publish("ORGANIZATION_CREATED", { organization: result.data });
-      }
-
-      return result;
-    };
-
-    return {
-      createResponse,
-      loading,
-      error,
-      create,
-    };
+    return response.data;
   };
 
-  const updateOrganization = () => {
-    type UpdateResponse = {
-      success: boolean;
-      message?: string;
-      data?: Organization;
-    };
+  const updateOrganization = async (organization: Organization) => {
+    if (!organization || !organization.id) {
+      console.error("Cannot update organization: Missing ID");
+      return null;
+    }
 
-    const {
-      data: updateResponse,
-      loading,
-      error,
-      fetch,
-    } = Api((organization: Organization) =>
-      http.put(`/organizations/${organization.id}`, {
-        name: organization.name,
-        description: organization.description,
-      })
-    );
+    const response = await http.put(`/organizations/${organization.id}`, {
+      name: organization.name,
+      description: organization.description,
+    });
 
-    const update = async (
-      organization: Organization
-    ): Promise<UpdateResponse | null> => {
-      if (!organization || !organization.id) {
-        console.error("Cannot update organization: Missing ID");
-        return null;
-      }
+    if (response && response.data) {
+      publish("ORGANIZATION_UPDATED", { organizationId: organization.id });
+    }
 
-      const result = await fetch(organization);
-
-      if (result) {
-        publish("ORGANIZATION_UPDATED", { organizationId: organization.id });
-      }
-
-      return result;
-    };
-
-    return {
-      updateResponse,
-      loading,
-      error,
-      update,
-    };
+    return response.data;
   };
 
   return {
