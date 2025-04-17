@@ -2,8 +2,8 @@ function convertToNodesAndEdges(data) {
   const nodes = data.map((item) => {
     return {
       id: item.id,
-      label: item.properties.label,
-      icon: item.properties.icon,
+      label: item.properties?.label,
+      icon: item.properties?.icon,
     };
   });
 
