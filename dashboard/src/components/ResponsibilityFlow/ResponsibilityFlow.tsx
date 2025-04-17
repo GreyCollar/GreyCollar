@@ -3,107 +3,130 @@ import "./flow.css";
 
 import AIResponseNode from "./AIResponseNode";
 import CustomNode from "./CustomNode";
+import ELK from "elkjs/lib/elk.bundled.js";
+import { convertToNodesAndEdges } from "./flowAdapter";
+import http from "../../http/index";
 
 import {
   Background,
   ReactFlow,
+  ReactFlowProvider,
   addEdge,
   useEdgesState,
   useNodesState,
+  useReactFlow,
 } from "@xyflow/react";
 import React, { useCallback, useEffect, useState } from "react";
 
-const initialNodes = [
-  {
-    id: "1",
-    position: { x: 0, y: 0 },
-    data: {
-      label: "Integration",
-      icon: "fluent-mdl2:account-management",
-    },
-    type: "custom",
-  },
-  {
-    id: "2",
-    position: { x: -150, y: 150 },
-    data: {
-      label: "Trigger Event",
-      icon: "fluent-mdl2:trigger-approval",
-    },
-    type: "custom",
-  },
-  {
-    id: "3",
-    position: { x: 150, y: 150 },
-    data: {
-      label: "Fetch Data",
-      icon: "fluent-mdl2:data-management-settings",
-    },
-    type: "custom",
-  },
-  {
-    id: "4",
-    position: { x: 0, y: 300 },
-    data: {
-      label: "Process Data",
-      icon: "fluent-mdl2:processing",
-    },
-    type: "custom",
-  },
-  {
-    id: "5",
-    position: { x: 0, y: 450 },
-    data: {
-      label: "Decision Making",
-      icon: "fluent-mdl2:decision-solid",
-    },
-    type: "custom",
-  },
-];
+const elk = new ELK();
 
-const initialEdges = [
-  {
-    id: "e1-2",
-    source: "1",
-    target: "2",
-    style: { strokeDasharray: "5,5" },
-  },
-  {
-    id: "e1-3",
-    source: "1",
-    target: "3",
-    style: { strokeDasharray: "5,5" },
-  },
-  {
-    id: "e2-4",
-    source: "2",
-    target: "4",
-    style: { strokeDasharray: "5,5" },
-  },
-  {
-    source: "3",
-    target: "4",
-    id: "xy-edge__3-4",
-    style: { strokeDasharray: "5,5" },
-  },
-  {
-    id: "e4-5",
-    source: "4",
-    target: "5",
-    style: { strokeDasharray: "5,5" },
-  },
-];
+// ELK layout options
+const elkOptions = {
+  "elk.algorithm": "layered",
+  "elk.layered.spacing.nodeNodeBetweenLayers": "100",
+  "elk.spacing.nodeNode": "80",
+};
 
 const nodeTypes = {
   custom: CustomNode,
   aiResponse: AIResponseNode,
 };
 
-function ResponsibilityFlow({ aiResponse }) {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+const getLayoutedElements = (nodes, edges, options = {}) => {
+  const graph = {
+    id: "root",
+    layoutOptions: options,
+    children: nodes.map((node) => ({
+      ...node,
+      targetPosition: "top",
+      sourcePosition: "bottom",
+      width: 150,
+      height: 50,
+    })),
+    edges: edges,
+  };
+
+  return elk
+    .layout(graph)
+    .then((layoutedGraph) => ({
+      nodes: layoutedGraph.children.map((node) => ({
+        ...node,
+        position: { x: node.x, y: node.y },
+      })),
+      edges: layoutedGraph.edges,
+    }))
+    .catch((error) => {
+      console.error(error);
+      return {
+        nodes: nodes.map((node) => ({
+          ...node,
+          position: node.position || { x: 0, y: 0 },
+        })),
+        edges: edges,
+      };
+    });
+};
+
+function ResponsibilityFlow({ aiResponse, responsibility }) {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [processedResponses, setProcessedResponses] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { fitView } = useReactFlow();
+
+  // Fetch data from JSON server
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await http.get(
+          `/responsibilities/${responsibility.id}`
+        );
+
+        console.log("Fetched responsibility data:", response.data);
+
+        const resultWithOriginalIds = convertToNodesAndEdges(
+          response.data.Nodes
+        );
+        console.log("Result with original IDs:");
+        console.log(JSON.stringify(resultWithOriginalIds, null, 2));
+        console.log("Nodes:", resultWithOriginalIds.nodes);
+
+        const formattedNodes = resultWithOriginalIds.nodes.map((node) => ({
+          id: node.id,
+          position: { x: 0, y: 0 },
+          data: {
+            label: node.label,
+            icon: node.icon,
+          },
+          type: "custom",
+        }));
+
+        const formattedEdges = resultWithOriginalIds.edges.map((edge) => ({
+          id: `e${edge.source}-${edge.target}`,
+          source: edge.source.toString(),
+          target: edge.target.toString(),
+          style: { strokeDasharray: "5,5" },
+        }));
+
+        getLayoutedElements(formattedNodes, formattedEdges, {
+          "elk.direction": "DOWN",
+          ...elkOptions,
+        }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
+          setNodes(layoutedNodes);
+          setEdges(layoutedEdges);
+          setIsLoading(false);
+          setTimeout(() => fitView(), 50);
+        });
+      } catch (error) {
+        console.error("Error fetching flow data:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setNodes, setEdges, fitView]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -123,12 +146,37 @@ function ResponsibilityFlow({ aiResponse }) {
       return sortedNodes[0];
     }
 
-    return nodes.find((n) => n.id === "5");
-  }, [nodes]);
+    // Find terminal nodes (nodes with no outgoing edges)
+    const hasOutgoing = new Set();
+    edges.forEach((edge) => {
+      hasOutgoing.add(edge.source);
+    });
+
+    const terminalNodes = nodes.filter(
+      (node) => !hasOutgoing.has(node.id) && !node.id.startsWith("ai-")
+    );
+
+    if (terminalNodes.length > 0) {
+      // Sort by Y position to find the lowest one
+      return terminalNodes.sort((a, b) => b.position.y - a.position.y)[0];
+    }
+
+    // Fallback: return the node with the highest ID
+    return nodes.sort((a, b) => {
+      const aId = parseInt(a.id);
+      const bId = parseInt(b.id);
+      return isNaN(aId) || isNaN(bId) ? 0 : bId - aId;
+    })[0];
+  }, [nodes, edges]);
 
   const addNodeFromAI = useCallback(
     (response) => {
-      if (isAnimating || processedResponses.includes(response)) return;
+      if (
+        isAnimating ||
+        processedResponses.includes(response) ||
+        nodes.length === 0
+      )
+        return;
 
       setIsAnimating(true);
       setProcessedResponses((prev) => [...prev, response]);
@@ -137,13 +185,15 @@ function ResponsibilityFlow({ aiResponse }) {
       const newId = `ai-${timestamp}`;
 
       const lastNode = findLastNode();
+      if (!lastNode) return;
 
-      const newX = lastNode.position.x;
-      const newY = lastNode.position.y + 150;
-
+      // Position based on the last node, but place it below
       const newNode = {
         id: newId,
-        position: { x: newX, y: newY },
+        position: {
+          x: lastNode.position.x,
+          y: lastNode.position.y + 150,
+        },
         data: {
           label: "Integration Response",
           icon: "https://cdn-icons-png.flaticon.com/512/4712/4712038.png",
@@ -167,19 +217,31 @@ function ResponsibilityFlow({ aiResponse }) {
 
         setEdges((eds) => [...eds, newEdge]);
 
+        // We don't auto-layout after adding AI nodes to maintain a clean appearance
         setTimeout(() => {
           setIsAnimating(false);
         }, 2500);
       }, 1000);
     },
-    [isAnimating, processedResponses, findLastNode, setNodes, setEdges]
+    [
+      isAnimating,
+      processedResponses,
+      findLastNode,
+      setNodes,
+      setEdges,
+      nodes.length,
+    ]
   );
 
   useEffect(() => {
-    if (aiResponse && !isAnimating) {
+    if (aiResponse && !isAnimating && !isLoading) {
       addNodeFromAI(aiResponse);
     }
-  }, [aiResponse, addNodeFromAI, isAnimating]);
+  }, [aiResponse, addNodeFromAI, isAnimating, isLoading]);
+
+  if (isLoading) {
+    return <div>Loading flow diagram...</div>;
+  }
 
   return (
     <div style={{ width: "50vw", height: "90vh", overflow: "hidden" }}>
@@ -203,4 +265,13 @@ function ResponsibilityFlow({ aiResponse }) {
   );
 }
 
-export default ResponsibilityFlow;
+// Wrap with ReactFlowProvider
+function WrappedResponsibilityFlow(props) {
+  return (
+    <ReactFlowProvider>
+      <ResponsibilityFlow {...props} />
+    </ReactFlowProvider>
+  );
+}
+
+export default WrappedResponsibilityFlow;
