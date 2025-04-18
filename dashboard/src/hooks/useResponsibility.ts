@@ -1,7 +1,6 @@
 import http from "../http";
+import { publish } from "@nucleoidai/react-event";
 import useApi from "./useApiV2";
-
-import { publish, useEvent } from "@nucleoidai/react-event";
 
 type DependencyArray = object[];
 
