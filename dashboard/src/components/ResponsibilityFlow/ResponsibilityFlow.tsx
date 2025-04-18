@@ -73,7 +73,9 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
   const [processedResponses, setProcessedResponses] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const { responsibilityNodes } = useResponsibility(responsibility.id);
+  const { getResponsibilityWithNode } = useResponsibility();
+  const { responsibilityNodes } = getResponsibilityWithNode(responsibility.id);
+
   const { fitView } = useReactFlow();
 
   useEffect(() => {

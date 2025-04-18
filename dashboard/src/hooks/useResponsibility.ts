@@ -1,58 +1,57 @@
 import http from "../http";
-import useApi from "./useApi";
+import useApi from "./useApiV2";
 
-import { useCallback, useEffect, useState } from "react";
+import { publish, useEvent } from "@nucleoidai/react-event";
 
-function useResponsibility(id?: string) {
-  const [responsibility, setResponsibility] = useState([]);
-  const [responsibilityNodes, setResponsibilityNodes] = useState({
-    id: "",
-    label: "",
-    icon: "",
-    Nodes: [{}],
-  });
+type DependencyArray = object[];
 
-  const { loading, error, handleResponse } = useApi();
+function useResponsibility() {
+  const { Api } = useApi();
 
-  useEffect(() => {
-    getResponsibility();
-    if (id) {
-      getResponsibilityWithNode(id);
+  const getResponsibility = (fetchState: DependencyArray = []) => {
+    const { data, loading, error, fetch } = Api(
+      () => http.get(`/responsibilities`),
+      [...fetchState]
+    );
+
+    if (data) {
+      publish("RESPONSIBILITY_LOADED", { responsibility: data });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
-  const getResponsibility = useCallback(() => {
-    handleResponse(
-      http.get(`/responsibilities`),
-      (response) => {
-        setResponsibility(response.data);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return {
+      responsibility: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
 
-  const getResponsibilityWithNode = useCallback((id) => {
-    handleResponse(
-      http.get(`/responsibilities/${id}`),
-      (response) => {
-        setResponsibilityNodes(response.data);
-      },
-      (error) => {
-        console.error(error);
-      }
+  const getResponsibilityWithNode = (
+    id: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const { data, loading, error, fetch } = Api(
+      () => http.get(`/responsibilities/${id}`),
+      [...fetchState]
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    if (data) {
+      publish("RESPONSIBILITY_NODES_LOADED", {
+        responsibilityNodes: data,
+      });
+    }
+
+    return {
+      responsibilityNodes: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
 
   return {
-    loading,
-    error,
-    responsibility,
-    responsibilityNodes,
+    getResponsibility,
+    getResponsibilityWithNode,
   };
 }
 
