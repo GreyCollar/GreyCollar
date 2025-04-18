@@ -1,35 +1,56 @@
 import http from "../http";
-import useApi from "./useApi";
+import { publish } from "@nucleoidai/react-event";
+import useApi from "./useApiV2";
 
-import { useCallback, useEffect, useState } from "react";
+type DependencyArray = object[];
 
 function useResponsibility() {
-  const [responsibility, setResponsibility] = useState([]);
+  const { Api } = useApi();
 
-  const { loading, error, handleResponse } = useApi();
-
-  useEffect(() => {
-    getResponsibility();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const getResponsibility = useCallback(() => {
-    handleResponse(
-      http.get(`/responsibilities`),
-      (response) => {
-        setResponsibility(response.data);
-      },
-      (error) => {
-        console.error(error);
-      }
+  const getResponsibility = (fetchState: DependencyArray = []) => {
+    const { data, loading, error, fetch } = Api(
+      () => http.get(`/responsibilities`),
+      [...fetchState]
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    if (data) {
+      publish("RESPONSIBILITY_LOADED", { responsibility: data });
+    }
+
+    return {
+      responsibility: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
+
+  const getResponsibilityWithNode = (
+    id: string,
+    fetchState: DependencyArray = []
+  ) => {
+    const { data, loading, error, fetch } = Api(
+      () => http.get(`/responsibilities/${id}`),
+      [...fetchState]
+    );
+
+    if (data) {
+      publish("RESPONSIBILITY_NODES_LOADED", {
+        responsibilityNodes: data,
+      });
+    }
+
+    return {
+      responsibilityNodes: data,
+      loading,
+      error,
+      fetch,
+    };
+  };
 
   return {
-    loading,
-    error,
-    responsibility,
+    getResponsibility,
+    getResponsibilityWithNode,
   };
 }
 

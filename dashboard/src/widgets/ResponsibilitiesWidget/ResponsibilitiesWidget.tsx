@@ -7,7 +7,9 @@ import { Box, Container } from "@mui/material";
 import React, { useState } from "react";
 
 function ResponsibilitiesWidget() {
-  const { responsibility } = useResponsibility();
+  const { getResponsibility } = useResponsibility();
+  const { responsibility } = getResponsibility();
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [aiResponse, setAiResponse] = useState(null);
@@ -41,7 +43,7 @@ function ResponsibilitiesWidget() {
     <Container>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <Box sx={{ mt: 2 }}>
-          {responsibility.map((item) => (
+          {responsibility?.map((item) => (
             <ResponsibilityCard
               key={item.id}
               item={item}
