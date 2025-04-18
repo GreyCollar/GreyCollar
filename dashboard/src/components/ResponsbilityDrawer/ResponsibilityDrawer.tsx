@@ -66,7 +66,10 @@ const ResponsibilityDrawer = ({
                 }}
               >
                 <Box>
-                  <ResponsibilityFlow aiResponse={aiResponse} />
+                  <ResponsibilityFlow
+                    responsibility={selectedItem}
+                    aiResponse={aiResponse}
+                  />
                 </Box>
               </Box>
             </Grid>

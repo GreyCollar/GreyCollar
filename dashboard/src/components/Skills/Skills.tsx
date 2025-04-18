@@ -35,7 +35,13 @@ const Skills = ({ title, description, logo, onSkillClick, acquired }) => {
       </Box>
       <CardContent>
         <Typography variant="h4" sx={{ mb: 2 }}>
-          {title}
+          {title
+            .split(" ")
+            .map(
+              (word) =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(" ")}
         </Typography>
         <Typography variant="body2">{description}</Typography>
       </CardContent>

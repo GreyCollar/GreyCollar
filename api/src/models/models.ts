@@ -17,6 +17,7 @@ async function init() {
   const Statistics = require("./Statistics");
   const Responsibility = require("./Responsibility");
   const ResponsibilityNode = require("./ResponsibilityNode");
+  const Integration = require("./Integration");
 
   Project.hasMany(Colleague, {
     foreignKey: "teamId",
@@ -28,6 +29,18 @@ async function init() {
 
   Colleague.hasMany(Responsibility, { foreignKey: "colleagueId" });
   Responsibility.belongsTo(Colleague, { foreignKey: "colleagueId" });
+
+  Integration.belongsToMany(Project, {
+    through: "Integration",
+    foreignKey: "id",
+  });
+
+  Project.belongsToMany(Integration, {
+    through: "Integration",
+    foreignKey: "teamId",
+  });
+
+  Integration.belongsTo(Colleague, { foreignKey: "colleagueId" });
 
   Statistics.belongsTo(Project, { foreignKey: "teamId" });
 

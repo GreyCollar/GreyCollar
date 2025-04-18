@@ -44,7 +44,13 @@ const IncomingDrawer = ({
         </Stack>
 
         <Typography variant="h6" sx={{ textAlign: "center", mb: 1 }}>
-          {selectedSkill?.title}
+          {selectedSkill?.title
+            .split(" ")
+            .map(
+              (word) =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            )
+            .join(" ")}
         </Typography>
 
         <Box
