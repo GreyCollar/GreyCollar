@@ -6,13 +6,15 @@ import SkillDialog from "../../components/Skills/SkillDialog";
 import { getProviderLogo } from "../../utils/icon";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagueV2";
-import useIntegrations from "../../hooks/useIntegrations";
+import useIntegrations from "../../hooks/useIntegrationsV2";
 import useTeams from "../../hooks/useTeamsV2";
 
 import { Box, Container, Grid } from "@mui/material";
 
 const ColleagueIntegration = ({ colleague }) => {
-  const { colleagueIntegrations } = useIntegrations(colleague.id);
+  const { getColleagueIntegration } = useIntegrations();
+
+  const { colleagueIntegrations } = getColleagueIntegration(colleague.id);
 
   const instructions = [
     {
@@ -93,8 +95,8 @@ const ColleagueIntegration = ({ colleague }) => {
         {selectedTab === 0 && (
           <Grid container spacing={2}>
             {colleagueIntegrations
-              .filter((skill) => skill.direction === "INCOMING")
-              .map((skill) => (
+              ?.filter((skill) => skill.direction === "INCOMING")
+              ?.map((skill) => (
                 <Integrations
                   key={skill.id}
                   title={skill.provider}
@@ -110,8 +112,8 @@ const ColleagueIntegration = ({ colleague }) => {
         {selectedTab === 1 && (
           <Grid container spacing={2}>
             {colleagueIntegrations
-              .filter((skill) => skill.direction === "OUTGOING")
-              .map((skill) => (
+              ?.filter((skill) => skill.direction === "OUTGOING")
+              ?.map((skill) => (
                 <Integrations
                   key={skill.id}
                   title={skill.provider}

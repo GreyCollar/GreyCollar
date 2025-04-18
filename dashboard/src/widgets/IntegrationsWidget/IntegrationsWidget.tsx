@@ -4,7 +4,7 @@ import Skills from "../../components/Skills/Skills";
 import { getProviderLogo } from "../../utils/icon";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
-import useIntegrations from "../../hooks/useIntegrations";
+import useIntegrations from "../../hooks/useIntegrationsV2";
 import useTeam from "../../hooks/useTeam";
 
 import {
@@ -70,7 +70,9 @@ const mockIntegrations = [
 ];
 
 const IntegrationsWidget = () => {
-  const { integrations } = useIntegrations();
+  const { getIntegrations } = useIntegrations();
+
+  const { integrations } = getIntegrations();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
@@ -110,7 +112,7 @@ const IntegrationsWidget = () => {
     setRelatedSkills([]);
   };
 
-  const filteredData = integrations.filter((skill) =>
+  const filteredData = integrations?.filter((skill) =>
     skill.provider.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -179,7 +181,7 @@ const IntegrationsWidget = () => {
       </Grid>
 
       <Grid container spacing={2}>
-        {filteredData.map((skill) => (
+        {filteredData?.map((skill) => (
           <Grid item xs={12} sm={6} md={3} key={skill.id}>
             <Skills
               title={skill.provider}
