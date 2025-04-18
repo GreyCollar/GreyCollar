@@ -4,10 +4,11 @@ const {
 } = platform.module();
 const { DataTypes } = platform.require("sequelize");
 
-const Responsibilities = sequelize.define("Responsibilities", {
+const Responsibility = sequelize.define("Responsibility", {
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
+    defaultValue: DataTypes.UUIDV4,
     allowNull: false,
   },
   title: {
@@ -18,6 +19,14 @@ const Responsibilities = sequelize.define("Responsibilities", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  colleagueId: {
+    type: DataTypes.UUID,
+    allowNull: false,
+    references: {
+      model: "Colleague",
+      key: "id",
+    },
+  },
 });
 
-module.exports = Responsibilities;
+module.exports = Responsibility;

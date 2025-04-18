@@ -1,12 +1,11 @@
-import React from "react";
 import SourcedAvatar from "../../components/SourcedAvatar/SourcedAvatar";
 import StandardNode from "./common/standard-node";
 import { storage } from "@nucleoidjs/webstorage";
-import useOrganizations from "../../hooks/useOrganization";
+import useOrganizations from "../../hooks/useOrganziationsV2";
 import useTeam from "../../hooks/useTeam";
 import { useTheme } from "@mui/material/styles";
 
-import { Card, Stack, Typography } from "@mui/material";
+import { Card, CircularProgress, Stack, Typography } from "@mui/material";
 import { Tree, TreeNode } from "react-organizational-chart";
 
 function OrganizationalChart({ variant = "simple", sx }) {
@@ -22,13 +21,32 @@ function OrganizationalChart({ variant = "simple", sx }) {
 
   const { teamById } = useTeam(projectId);
 
-  const id = teamById.organizationId;
+  const organizationId = teamById?.organizationId;
 
-  const { organizations } = useOrganizations(id);
+  const { organization, loading, error } =
+    useOrganizations().getOrganizationById(organizationId);
 
-  const filteredOrganizations = organizations.filter(
-    (org) => org.colleagues && org.colleagues.length > 0
-  );
+  const filteredOrganizations = organization
+    ? [organization].filter(
+        (org) => org.colleagues && org.colleagues.length > 0
+      )
+    : [];
+
+  if (loading) {
+    return (
+      <Stack alignItems="center" justifyContent="center" sx={{ height: 200 }}>
+        <CircularProgress />
+      </Stack>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography color="error" align="center">
+        Error loading organization: {error}
+      </Typography>
+    );
+  }
 
   return (
     <Tree
@@ -49,15 +67,16 @@ function OrganizationalChart({ variant = "simple", sx }) {
               variant === "standard" && <StandardNode sx={sx} node={rootNode} />
             }
           >
-            {rootNode.colleagues.map((colleague) => (
-              <List
-                key={colleague.name}
-                depth={1}
-                data={colleague}
-                variant={variant}
-                sx={sx}
-              />
-            ))}
+            {rootNode.colleagues &&
+              rootNode.colleagues.map((colleague) => (
+                <List
+                  key={colleague.name}
+                  depth={1}
+                  data={colleague}
+                  variant={variant}
+                  sx={sx}
+                />
+              ))}
           </TreeNode>
         ))}
       </TreeNode>

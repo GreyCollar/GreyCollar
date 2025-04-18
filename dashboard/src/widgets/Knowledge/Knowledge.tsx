@@ -4,11 +4,11 @@ import DeleteConfirmation from "../../components/DeleteConfirmation/DeleteConfir
 import KnowledgeTable from "../../components/KnowledgeTable/KnowledgeTable";
 import { Theme } from "@mui/material/styles";
 import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
-import useColleagues from "../../hooks/useColleagues";
-import useKnowledges from "../../hooks/useKnowledges";
-import { useOrganizations } from "../../hooks/useOrganizations";
+import useColleague from "../../hooks/useColleagueV2";
+import useKnowledge from "../../hooks/useKnowledge";
+import useOrganizations from "../../hooks/useOrganziationsV2";
 import { useTable } from "@nucleoidai/platform/minimal/components";
-import useTeam from "../../hooks/useTeam";
+import useTeams from "../../hooks/useTeamsV2";
 
 import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -20,18 +20,27 @@ function Knowledge({
   colleagueId?: string;
   teamId?: string;
 }) {
-  const { knowledges, deleteKnowledges, createKnowledge, teamKnowledges } =
-    useKnowledges(colleagueId);
+  const {
+    getColleagueKnowledges,
+    deleteKnowledge,
+    createKnowledge,
+    getTeamKnowledges,
+  } = useKnowledge();
 
-  const { teamById } = useTeam(teamId);
+  const { knowledges } = getColleagueKnowledges(colleagueId);
+  const { knowledges: teamKnowledges } = getTeamKnowledges(teamId);
 
-  const id = teamById.organizationId;
+  const { getTeamById } = useTeams();
 
-  const { organizations } = useOrganizations();
+  const { team } = getTeamById(teamId);
 
-  const filteredOrganizations = organizations.filter((org) => org.id === id);
+  const { getOrganizations } = useOrganizations();
 
-  const { colleagues } = useColleagues();
+  const { organizations: filteredOrganizations, loading: organizationLoading } =
+    getOrganizations();
+
+  const { getColleagues } = useColleague();
+  const { colleagues } = getColleagues();
 
   const table = useTable();
 
@@ -76,7 +85,7 @@ function Knowledge({
 
   const handleDelete = async (item) => {
     if (item) {
-      const deleteResponse = await deleteKnowledges(item);
+      const deleteResponse = await deleteKnowledge(item);
       if (deleteResponse) {
         knowledges.filter((knowledge) => knowledge.id !== item.id);
       }
@@ -107,7 +116,7 @@ function Knowledge({
             position: "relative",
           }}
         >
-          {filteredKnowledges.length > 0 ? (
+          {filteredKnowledges?.length > 0 ? (
             <KnowledgeTable
               table={table}
               selectedType={selectedType}
@@ -148,20 +157,21 @@ function Knowledge({
           handleDelete={handleDelete}
           selectedItem={selectedItem}
         />
-
-        <AddItemDialog
-          types={ADD_ITEM_TYPES}
-          selectedType={selectedType === "ALL" ? "URL" : selectedType}
-          setSelectedType={setSelectedType}
-          open={open}
-          setOpen={setOpen}
-          addItem={createKnowledge}
-          colleagueId={colleagueId}
-          teamId={teamId}
-          teamById={teamById}
-          colleagues={colleagues}
-          organizations={filteredOrganizations}
-        />
+        {!organizationLoading ? (
+          <AddItemDialog
+            types={ADD_ITEM_TYPES}
+            selectedType={selectedType === "ALL" ? "URL" : selectedType}
+            setSelectedType={setSelectedType}
+            open={open}
+            setOpen={setOpen}
+            addItem={createKnowledge}
+            colleagueId={colleagueId}
+            teamId={teamId}
+            teamById={team}
+            colleagues={colleagues}
+            organizations={filteredOrganizations}
+          />
+        ) : null}
       </Container>
     </>
   );

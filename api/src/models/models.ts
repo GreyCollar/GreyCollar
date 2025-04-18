@@ -15,7 +15,8 @@ async function init() {
   const AIEngine = require("./AIEngine");
   const Step = require("./Step");
   const Statistics = require("./Statistics");
-  const Responsibilities = require("./Responsibilities");
+  const Responsibility = require("./Responsibility");
+  const ResponsibilityNode = require("./ResponsibilityNode");
   const Integration = require("./Integration");
 
   Project.hasMany(Colleague, {
@@ -26,7 +27,8 @@ async function init() {
     foreignKey: "teamId",
   });
 
-  Responsibilities.belongsTo(Project, { foreignKey: "teamId" });
+  Colleague.hasMany(Responsibility, { foreignKey: "colleagueId" });
+  Responsibility.belongsTo(Colleague, { foreignKey: "colleagueId" });
 
   Integration.belongsToMany(Project, {
     through: "Integration",
@@ -131,6 +133,23 @@ async function init() {
     } else if (message.role === "ASSISTANT") {
       message.status = null;
     }
+  });
+
+  Responsibility.hasMany(ResponsibilityNode, {
+    foreignKey: "responsibilityId",
+    as: "Nodes",
+  });
+  ResponsibilityNode.belongsTo(Responsibility, {
+    foreignKey: "responsibilityId",
+  });
+
+  ResponsibilityNode.belongsTo(Node, {
+    foreignKey: "dependencyId",
+    as: "Dependency",
+  });
+  ResponsibilityNode.hasMany(Node, {
+    foreignKey: "dependencyId",
+    as: "Dependents",
   });
 }
 

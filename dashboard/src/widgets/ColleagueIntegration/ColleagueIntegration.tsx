@@ -5,9 +5,9 @@ import React from "react";
 import SkillDialog from "../../components/Skills/SkillDialog";
 import { getProviderLogo } from "../../utils/icon";
 import { storage } from "@nucleoidjs/webstorage";
-import useColleagues from "../../hooks/useColleagues";
+import useColleagues from "../../hooks/useColleagueV2";
 import useIntegrations from "../../hooks/useIntegrations";
-import useTeam from "../../hooks/useTeam";
+import useTeams from "../../hooks/useTeamsV2";
 
 import { Box, Container, Grid } from "@mui/material";
 
@@ -40,9 +40,11 @@ const ColleagueIntegration = ({ colleague }) => {
 
   const teamId = storage.get("projectId");
 
-  const { teamById } = useTeam(teamId);
+  const { getTeamById } = useTeams();
+  const { team: teamById } = getTeamById(teamId);
 
-  const { colleagues } = useColleagues();
+  const { getColleagues } = useColleagues();
+  const { colleagues } = getColleagues();
 
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [skillDialogOpen, setSkillDialogOpen] = React.useState(false);

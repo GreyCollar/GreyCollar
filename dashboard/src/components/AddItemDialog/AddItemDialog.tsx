@@ -36,6 +36,7 @@ function AddItemDialog({
   colleagues,
   organizations,
 }) {
+  //TODO - Refactor here
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selectedOptionId, setSelectedOptionId] = useState("");
@@ -152,7 +153,7 @@ function AddItemDialog({
     };
 
     try {
-      await addItem(payload);
+      await addItem(payload, payload.colleagueId);
       setOpen(false);
     } catch (error) {
       setOpen(false);

@@ -4,6 +4,7 @@ import Integration from "./Integration";
 import Knowledge from "./Knowledge";
 import Message from "./Message";
 import Project from "./Project";
+import Responsibility from "./Responsibility";
 import Session from "./Session";
 import Supervising from "./Supervising";
 import Team from "./Team";
@@ -17,5 +18,6 @@ export default {
   Session,
   Supervising,
   Command,
+  Responsibility,
   Integration,
 };

@@ -1,11 +1,11 @@
-import { Op } from "sequelize";
-import Message from "../models/Message";
-import { publish } from "../lib/Event";
-import Supervising from "../models/Supervising";
-import Task from "../models/Task";
-import Knowledge from "../models/Knowledge";
 import Colleague from "../models/Colleague";
 import ColleagueKnowledge from "../models/ColleagueKnowledge";
+import Knowledge from "../models/Knowledge";
+import Message from "../models/Message";
+import { Op } from "sequelize";
+import Supervising from "../models/Supervising";
+import Task from "../models/Task";
+import { publish } from "../lib/Event";
 
 async function create({
   role,
