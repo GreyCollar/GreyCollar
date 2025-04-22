@@ -1,10 +1,10 @@
 let llm;
 
-if (process.env.LLM === "OPENAI") {
+if (process.env.PLATFORM_LLM === "OPENAI") {
   llm = require("./openai").default;
 }
 
-if (process.env.LLM === "AZURE") {
+if (process.env.PLATFORM_LLM === "AZURE") {
   llm = require("./azure").default;
 }
 
