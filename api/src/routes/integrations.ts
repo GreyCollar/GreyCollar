@@ -20,10 +20,8 @@ router.post("/", async (req, res) => {
     ...integrationBody
   } = Joi.attempt(body, schemas.Integration.create);
 
-  if (integrationTeamId) {
-    if (integrationTeamId !== teamId) {
-      throw new AuthenticationError();
-    }
+  if (integrationTeamId && integrationTeamId !== teamId) {
+    throw new AuthenticationError();
   }
 
   const integrations = await integration.create({
@@ -37,10 +35,14 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   const { projectId: teamId } = req.session;
-  const { colleagueId } = req.query as {
+  const { colleagueId, teamId: queryTeamId } = req.query as {
     teamId?: string;
     colleagueId?: string;
   };
+
+  if (queryTeamId && queryTeamId !== teamId) {
+    throw new AuthenticationError();
+  }
 
   if (colleagueId) {
     const colleagueInstance = await colleague.get({ colleagueId });
@@ -64,7 +66,6 @@ router.delete("/:id", async (req, res) => {
 
   const integrationItem = await integration.get({
     integrationId: id,
-    includeColleague: true,
   });
 
   const { Colleague } = integrationItem;
