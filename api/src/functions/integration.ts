@@ -89,15 +89,7 @@ async function list({
 }
 
 async function get({ integrationId }: { integrationId: string }) {
-  const includeOptions: {
-    model: any;
-    attributes: string[];
-    required: boolean;
-  }[] = [];
-
-  const integrationItem = await Integration.findByPk(integrationId, {
-    include: includeOptions,
-  });
+  const integrationItem = await Integration.findByPk(integrationId);
 
   if (!integrationItem) {
     throw new NotFoundError();
