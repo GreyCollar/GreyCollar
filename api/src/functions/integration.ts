@@ -88,26 +88,12 @@ async function list({
     }));
 }
 
-async function get({
-  integrationId,
-  includeColleague = false,
-}: {
-  integrationId: string;
-  includeColleague?: boolean;
-}) {
+async function get({ integrationId }: { integrationId: string }) {
   const includeOptions: {
     model: any;
     attributes: string[];
     required: boolean;
   }[] = [];
-
-  if (includeColleague) {
-    includeOptions.push({
-      model: Colleague,
-      attributes: ["id", "teamId"],
-      required: false,
-    });
-  }
 
   const integrationItem = await Integration.findByPk(integrationId, {
     include: includeOptions,
