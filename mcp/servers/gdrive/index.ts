@@ -9,21 +9,11 @@ import {
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { google } from "googleapis";
+import { tools } from "./tools";
+import { InternalToolResponse } from "./tools/types.js";
+import cli from "../../lib/cli";
 
-const args = process.argv.slice(2);
-if (args.length === 0) {
-  console.error("Missing server arguments");
-  process.exit(1);
-}
-
-let credentials;
-
-try {
-  credentials = JSON.parse(args[0].slice(1, -1)).credentials;
-} catch (error) {
-  console.error("Error parsing server arguments:", error);
-  process.exit(1);
-}
+const { credentials } = cli.args();
 
 const oauth2Client = new google.auth.OAuth2(
   credentials.clientId,
@@ -42,12 +32,16 @@ const drive = google.drive({
 
 const server = new Server(
   {
-    name: "GreyCollar/gdrive",
+    name: "gdrive",
     version: "1.0.0",
   },
   {
     capabilities: {
-      resources: {},
+      resources: {
+        schemes: ["gdrive"],
+        listable: true,
+        readable: true,
+      },
       tools: {},
     },
   },
@@ -79,125 +73,48 @@ server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
 
 server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
   const fileId = request.params.uri.replace("gdrive:///", "");
+  const readFileTool = tools[1]; // gdrive_read_file is the second tool
+  const result = await readFileTool.handler({ fileId });
 
-  // First get file metadata to check mime type
-  const file = await drive.files.get({
-    fileId,
-    fields: "mimeType",
-  });
+  const fileContents = result.content[0].text.split("\n\n")[1]; // Skip the "Contents of file:" prefix
 
-  // For Google Docs/Sheets/etc we need to export
-  if (file.data.mimeType?.startsWith("application/vnd.google-apps")) {
-    let exportMimeType: string;
-    switch (file.data.mimeType) {
-      case "application/vnd.google-apps.document":
-        exportMimeType = "text/markdown";
-        break;
-      case "application/vnd.google-apps.spreadsheet":
-        exportMimeType = "text/csv";
-        break;
-      case "application/vnd.google-apps.presentation":
-        exportMimeType = "text/plain";
-        break;
-      case "application/vnd.google-apps.drawing":
-        exportMimeType = "image/png";
-        break;
-      default:
-        exportMimeType = "text/plain";
-    }
-
-    const res = await drive.files.export(
-      { fileId, mimeType: exportMimeType },
-      { responseType: "text" },
-    );
-
-    return {
-      contents: [
-        {
-          uri: request.params.uri,
-          mimeType: exportMimeType,
-          text: res.data,
-        },
-      ],
-    };
-  }
-
-  // For regular files download content
-  const res = await drive.files.get(
-    { fileId, alt: "media" },
-    { responseType: "arraybuffer" },
-  );
-  const mimeType = file.data.mimeType || "application/octet-stream";
-  if (mimeType.startsWith("text/") || mimeType === "application/json") {
-    return {
-      contents: [
-        {
-          uri: request.params.uri,
-          mimeType: mimeType,
-          text: Buffer.from(res.data as ArrayBuffer).toString("utf-8"),
-        },
-      ],
-    };
-  } else {
-    return {
-      contents: [
-        {
-          uri: request.params.uri,
-          mimeType: mimeType,
-          blob: Buffer.from(res.data as ArrayBuffer).toString("base64"),
-        },
-      ],
-    };
-  }
-});
-
-server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
-    tools: [
+    contents: [
       {
-        name: "search",
-        description: "Search for files in Google Drive",
-        inputSchema: {
-          type: "object",
-          properties: {
-            query: {
-              type: "string",
-              description: "Search query",
-            },
-          },
-          required: ["query"],
-        },
+        uri: request.params.uri,
+        mimeType: "text/plain", // You might want to determine this dynamically
+        text: fileContents,
       },
     ],
   };
 });
 
+server.setRequestHandler(ListToolsRequestSchema, async () => {
+  return {
+    tools: tools.map(({ name, description, inputSchema }) => ({
+      name,
+      description,
+      inputSchema,
+    })),
+  };
+});
+
+function convertToolResponse(response: InternalToolResponse) {
+  return {
+    _meta: {},
+    content: response.content,
+    isError: response.isError,
+  };
+}
+
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  if (request.params.name === "search") {
-    const userQuery = request.params.arguments?.query as string;
-    const escapedQuery = userQuery.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-    const formattedQuery = `fullText contains '${escapedQuery}'`;
-
-    const res = await drive.files.list({
-      q: formattedQuery,
-      pageSize: 10,
-      fields: "files(id, name, mimeType, modifiedTime, size)",
-    });
-
-    const fileList = res.data.files
-      ?.map((file: any) => `${file.name} (${file.mimeType})`)
-      .join("\n");
-    return {
-      content: [
-        {
-          type: "text",
-          text: `Found ${res.data.files?.length ?? 0} files:\n${fileList}`,
-        },
-      ],
-      isError: false,
-    };
+  const tool = tools.find((t) => t.name === request.params.name);
+  if (!tool) {
+    throw new Error("Tool not found");
   }
-  throw new Error("Tool not found");
+
+  const result = await tool.handler(request.params.arguments as any);
+  return convertToolResponse(result);
 });
 
 async function startServer() {
