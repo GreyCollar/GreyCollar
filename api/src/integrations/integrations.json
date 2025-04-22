@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "action": "GDRIVE:search",
+    "lib": "mcp",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "The search query to find files in Google Drive."
+        }
+      },
+      "required": ["query"]
+    }
+  }
+]

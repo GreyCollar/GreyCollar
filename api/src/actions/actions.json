@@ -1,19 +1,33 @@
 [
   {
-    "action": "LLM",
+    "action": "PLATFORM:llm",
     "lib": "llm",
-    "parameters": {
-      "message": "<MESSAGE>"
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The message to be sent to the LLM."
+        }
+      },
+      "required": ["message"]
     }
   },
   {
-    "action": "SCRAPE_WEBSITE",
+    "action": "PLATFORM:scrape_website",
     "lib": "scrapper",
-    "parameters": {
-      "url": "<URL>"
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The URL of the website to scrape."
+        }
+      },
+      "required": ["url"]
     }
   },
   {
-    "action": "COMPLETE"
+    "action": "PLATFORM:complete"
   }
 ]
