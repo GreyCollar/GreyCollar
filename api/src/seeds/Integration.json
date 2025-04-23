@@ -1,0 +1,294 @@
+{
+  "seed": [
+    {
+      "id": "0bc94d99-467d-467e-a49c-87ce7dc92386",
+      "provider": "SLACK",
+      "scope": "chat:write",
+      "description": "Send messages and automate workflows in Slack",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "INCOMING",
+      "acquired": true
+    },
+    {
+      "id": "cc829b89-0a01-45dd-887b-b1abf98c402a",
+      "provider": "SLACK",
+      "scope": "chat:write",
+      "description": "Receive messages and notifications from Slack",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "OUTGOING"
+    },
+    {
+      "id": "9862d8f5-f8b6-46eb-bb94-67b5d7cac1e7",
+      "provider": "DISCORD",
+      "scope": "chat:write",
+      "description": "Receive messages from Discord bots and users",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "4fd941db-fd85-4ecb-b533-a504732d4a6f",
+      "provider": "DISCORD",
+      "scope": "chat:write",
+      "description": "Receive messages from Discord bots and users",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "INCOMING"
+    },
+    {
+      "id": "629b1bd2-3025-4a6c-a0a0-3853fe17fa23",
+      "provider": "NOTION",
+      "scope": "user:read",
+      "description": "Create and update pages in Notion",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "INCOMING",
+      "acquired": true
+    },
+    {
+      "id": "1adf4673-4d7d-4dba-a88a-65bded5f571a",
+      "provider": "NOTION",
+      "scope": "user:read",
+      "description": "Sync data and fetch notes from Notion",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "OUTGOING"
+    },
+    {
+      "id": "f5c6bd8f-7cb6-4dcb-9d74-5a55209d02d3",
+      "provider": "GOOGLE DRIVE",
+      "description": "Upload and manage files on Google Drive",
+      "scope": "drive.readonly",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "INCOMING"
+    },
+    {
+      "id": "d7d1b81d-c95f-451d-adb6-35be92729742",
+      "provider": "GOOGLE DRIVE",
+      "description": "Fetch documents and files from Google Drive",
+      "scope": "drive.readonly",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "ac2b324b-cfd4-483b-ab53-8916653f2278",
+      "provider": "TRELLO",
+      "description": "Monitor board updates and task changes",
+      "scope": "read:write",
+      "direction": "INCOMING",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f"
+    },
+    {
+      "id": "84d292eb-5bfb-480c-8a34-632174e09c8d",
+      "provider": "GITHUB",
+      "scope": "read:write",
+      "description": "Create issues, merge PRs, and trigger workflows",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "2935c5b5-4a11-4ebb-a8f5-f36e851e384f",
+      "provider": "DISCORD",
+      "scope": "read:write",
+      "description": "Discord integration for team communication",
+      "direction": "OUTGOING",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "acquired": true
+    },
+    {
+      "id": "daf80b7f-09b0-4cf0-b62a-cf47e001567e",
+      "provider": "DISCORD",
+      "scope": "read:write",
+      "description": "Discord integration for team communication",
+      "direction": "INCOMING",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "acquired": true
+    },
+    {
+      "id": "a1c9e688-4284-4283-a0a8-a0ed331fb4aa",
+      "provider": "JIRA",
+      "scope": "read:write",
+      "description": "Jira integration for project management",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "direction": "INCOMING",
+      "acquired": true
+    },
+    {
+      "id": "30e32a4c-b1bf-4f31-9082-61dff21270f1",
+      "provider": "JIRA",
+      "scope": "read:write",
+      "description": "Jira integration for project management",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "fd9ffb9e-d010-4c65-b380-b87dfe0aa017",
+      "provider": "HUBSPOT",
+      "scope": "file:read",
+      "description": "HubSpot integration for marketing and sales",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "88896a5c-8f30-4fe4-a2d6-e42411c6e20f",
+      "provider": "HUBSPOT",
+      "scope": "file:read",
+      "description": "HubSpot integration for marketing and sales",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "direction": "INCOMING",
+      "acquired": true
+    },
+    {
+      "id": "3286768f-536d-4e7e-bfb3-805d62a8bba3",
+      "provider": "GOOGLE DRIVE",
+      "scope": "read:write",
+      "description": "Google Drive integration for file storage and sharing",
+      "direction": "OUTGOING",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "acquired": true
+    },
+    {
+      "id": "41f67571-cb06-410b-9787-6c5e1ebf34bf",
+      "provider": "GOOGLE DRIVE",
+      "scope": "read:write",
+      "description": "Google Drive integration for file storage and sharing",
+      "direction": "INCOMING",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "acquired": true
+    },
+    {
+      "id": "53a0d36d-8d5f-4861-8404-9c23a9bb3a11",
+      "provider": "SLACK",
+      "scope": "chat:write",
+      "description": "Slack integration for team communication",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "bf54b78d-a3f0-467b-9b64-caafc75eaacc",
+      "provider": "SLACK",
+      "scope": "chat:write",
+      "description": "Slack integration for team communication",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "direction": "INCOMING",
+      "acquired": true
+    },
+    {
+      "id": "98ec0c80-8dfa-4ca6-96ed-6631e855fa0e",
+      "provider": "JIRA",
+      "scope": "read:write",
+      "description": "Jira integration for project management",
+      "colleagueId": "72ef5b08-b4a9-42b7-bb0a-22d40e56798b",
+      "direction": "INCOMING",
+      "acquired": true
+    },
+    {
+      "id": "c27938cb-3ffd-48b5-93c7-8747ab84b214",
+      "provider": "HUBSPOT",
+      "scope": "read:write",
+      "description": "HubSpot integration for marketing and sales",
+      "colleagueId": "72ef5b08-b4a9-42b7-bb0a-22d40e56798b",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "b19fa693-ec82-49a2-9be4-07ab2c10712f",
+      "provider": "DISCORD",
+      "scope": "read:write",
+      "description": "Discord integration for team communication",
+      "direction": "INCOMING",
+      "colleagueId": "ef906c5d-cafe-4518-9edc-b80c605df58e",
+      "acquired": true
+    },
+    {
+      "id": "cfded097-7321-4974-9e2f-4a460c9ac926",
+      "provider": "SLACK",
+      "scope": "read:write",
+      "description": "Send messages and automate workflows in Slack",
+      "direction": "INCOMING",
+      "colleagueId": "ef906c5d-cafe-4518-9edc-b80c605df58e",
+      "acquired": true
+    },
+    {
+      "id": "eb9a9c7a-b612-4167-acf6-11dc648d6a2a",
+      "provider": "SLACK",
+      "scope": "read:write",
+      "description": "Send messages and automate workflows in Slack",
+      "direction": "OUTGOING",
+      "colleagueId": "ef906c5d-cafe-4518-9edc-b80c605df58e",
+      "acquired": true
+    },
+    {
+      "id": "19334034-47ec-4ca6-b3ad-392abd91b43a",
+      "provider": "GOOGLE DRIVE",
+      "scope": "read:write",
+      "description": "Fetch documents and files from Google Drive",
+      "direction": "OUTGOING",
+      "colleagueId": "ef906c5d-cafe-4518-9edc-b80c605df58e",
+      "acquired": true
+    },
+    {
+      "id": "c26f2d99-a575-4f96-a5f9-8d0b4f3eb3ab",
+      "provider": "GOOGLE DRIVE",
+      "scope": "read:write",
+      "description": "Fetch documents and files from Google Drive",
+      "direction": "INCOMING",
+      "colleagueId": "ef906c5d-cafe-4518-9edc-b80c605df58e",
+      "acquired": true
+    },
+    {
+      "id": "97f257aa-4411-4c19-a963-d94430d85e52",
+      "provider": "TRELLO",
+      "scope": "file:read",
+      "description": "Trello integration for project management",
+      "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "df9defa7-d196-4318-a6c4-38b24429e8ea",
+      "provider": "SLACK",
+      "scope": "chat:write",
+      "description": "Slack integration for team communication",
+      "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "d61e961a-617b-4aa6-9612-128b18dca0d6",
+      "provider": "GOOGLE DRIVE",
+      "scope": "read:write",
+      "description": "Upload and manage files on Google Drive",
+      "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
+      "direction": "INCOMING"
+    },
+    {
+      "id": "06cc4656-f593-4710-8cff-cf3b98128fb1",
+      "provider": "GOOGLE DRIVE",
+      "scope": "read:write",
+      "description": "Fetch documents and files from Google Drive",
+      "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
+      "direction": "OUTGOING",
+      "acquired": true
+    },
+    {
+      "id": "e642510f-d75f-4cf5-9329-edcf8cb0f0d0",
+      "provider": "HUBSPOT",
+      "scope": "file:read",
+      "description": "Update leads and contacts in HubSpot",
+      "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
+      "direction": "INCOMING"
+    },
+    {
+      "id": "8ecd56e6-e64c-4d5a-b846-bc792085233e",
+      "provider": "HUBSPOT",
+      "scope": "file:read",
+      "description": "Receive CRM updates and lead notifications",
+      "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
+      "direction": "OUTGOING",
+      "acquired": true
+    }
+  ]
+}
