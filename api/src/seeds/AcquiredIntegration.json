@@ -1,0 +1,14 @@
+{
+  "seed": [
+    {
+      "id": "92b41f97-edca-47e6-af07-e1e43b825aa0",
+      "integrationId": "0bc94d99-467d-467e-a49c-87ce7dc92386",
+      "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f"
+    },
+    {
+      "id": "7748539e-eec8-4b98-b15c-b53ab15c4658",
+      "integrationId": "2935c5b5-4a11-4ebb-a8f5-f36e851e384f",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+    }
+  ]
+}
