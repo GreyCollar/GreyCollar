@@ -1,6 +1,13 @@
 [
   {
+    "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
     "action": "GDRIVE:search",
+    "description": "Search for files in Google Drive",
+    "oauth": {
+      "scope": "https://www.googleapis.com/auth/drive.metadata.readonly",
+      "tokenUrl": "https://oauth2.googleapis.com/token"
+    },
+    "direction": "outbound",
     "lib": "mcp",
     "inputSchema": {
       "type": "object",
