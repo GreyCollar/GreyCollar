@@ -108,6 +108,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         setTimeout(() => fitView(), 50);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, setNodes, setEdges, fitView]);
 
   const onConnect = useCallback(
