@@ -4,7 +4,6 @@ import "./flow.css";
 import AIResponseNode from "./AIResponseNode";
 import CustomNode from "./CustomNode";
 import ELK from "elkjs/lib/elk.bundled.js";
-import { convertToNodesAndEdges } from "./flowAdapter";
 import useResponsibility from "../../hooks/useResponsibility";
 
 import {
@@ -74,17 +73,15 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { getResponsibilityWithNode } = useResponsibility();
-  const { responsibilityNodes } = getResponsibilityWithNode(responsibility.id);
+  const { responsibilityNodes, loading } = getResponsibilityWithNode(
+    responsibility.id
+  );
 
   const { fitView } = useReactFlow();
 
   useEffect(() => {
-    if (responsibilityNodes && responsibilityNodes.Nodes) {
-      const resultWithOriginalIds = convertToNodesAndEdges(
-        responsibilityNodes.Nodes
-      );
-
-      const formattedNodes = resultWithOriginalIds.nodes.map((node) => ({
+    if (!loading) {
+      const formattedNodes = responsibilityNodes.nodes.map((node) => ({
         id: node.id,
         position: { x: 0, y: 0 },
         data: {
@@ -94,7 +91,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         type: "custom",
       }));
 
-      const formattedEdges = resultWithOriginalIds.edges.map((edge) => ({
+      const formattedEdges = responsibilityNodes.edges.map((edge) => ({
         id: `e${edge.source}-${edge.target}`,
         source: edge.source.toString(),
         target: edge.target.toString(),
@@ -111,7 +108,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         setTimeout(() => fitView(), 50);
       });
     }
-  }, [responsibilityNodes, setNodes, setEdges, fitView]);
+  }, [loading, setNodes, setEdges, fitView]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),

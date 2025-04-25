@@ -1,7 +1,7 @@
+import { convertToNodesAndEdges } from "../components/ResponsibilityFlow/flowAdapter";
 import http from "../http";
 import { publish } from "@nucleoidai/react-event";
 import useApi from "./useApiV2";
-
 type DependencyArray = object[];
 
 function useResponsibility() {
@@ -33,15 +33,19 @@ function useResponsibility() {
       () => http.get(`/responsibilities/${id}`),
       [...fetchState]
     );
+    let result;
 
     if (data) {
+      console.log("Responsibility data:", data);
+      result = convertToNodesAndEdges(data.Nodes);
+
       publish("RESPONSIBILITY_NODES_LOADED", {
-        responsibilityNodes: data,
+        responsibilityNodes: result,
       });
     }
 
     return {
-      responsibilityNodes: data,
+      responsibilityNodes: result,
       loading,
       error,
       fetch,
