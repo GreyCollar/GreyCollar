@@ -6,51 +6,6 @@ import {
 import Colleague from "../models/Colleague";
 import Integration from "../models/Integration";
 
-async function create({
-  teamId,
-  colleagueId,
-  integration,
-}: {
-  teamId?: string;
-  colleagueId?: string;
-  integration: {
-    provider: string;
-    scope: string;
-    description: string;
-    direction: string;
-    acquired?: boolean;
-    colleagueId?: string;
-    teamId?: string;
-  };
-}) {
-  if (!teamId && !colleagueId) {
-    throw new ValidationError();
-  }
-
-  if (colleagueId) {
-    const colleagueInstance = await Colleague.findByPk(colleagueId);
-    if (!colleagueInstance) {
-      throw new NotFoundError();
-    }
-
-    integration.colleagueId = colleagueId;
-  }
-
-  if (teamId) {
-    integration.teamId = teamId;
-  }
-
-  const integrationInstance = await Integration.create(integration);
-
-  const integrationData = integrationInstance.toJSON();
-
-  return {
-    ...integrationData,
-    colleagueId: colleagueId || null,
-    teamId: teamId || null,
-  };
-}
-
 async function list({
   colleagueId,
   teamId,
@@ -98,4 +53,4 @@ async function get({ integrationId }: { integrationId: string }) {
   return integrationItem.toJSON();
 }
 
-export default { create, list, get };
+export default { list, get };
