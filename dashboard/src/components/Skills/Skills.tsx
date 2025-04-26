@@ -3,7 +3,7 @@ import React from "react";
 
 import { Box, Card, CardContent, Typography } from "@mui/material";
 
-const Skills = ({ title, description, logo, onSkillClick, acquired }) => {
+const Skills = ({ title, description, logo, onSkillClick, id, oauth }) => {
   return (
     <Card
       sx={{
@@ -12,17 +12,8 @@ const Skills = ({ title, description, logo, onSkillClick, acquired }) => {
         transition: "transform 0.3s",
         "&:hover": { transform: "scale(1.05)", cursor: "pointer" },
       }}
-      onClick={() => onSkillClick({ title, description, logo, acquired })}
+      onClick={() => onSkillClick({ title, description, logo, id, oauth })}
     >
-      {acquired && (
-        <Icon
-          icon="mdi:check-circle"
-          color="green"
-          width={30}
-          height={30}
-          style={{ position: "absolute", top: 8, right: 8 }}
-        />
-      )}
       <Box
         sx={{
           display: "flex",

@@ -3,8 +3,7 @@ import SkillDialog from "../../components/Skills/SkillDialog";
 import Skills from "../../components/Skills/Skills";
 import { getProviderLogo } from "../../utils/icon";
 import { storage } from "@nucleoidjs/webstorage";
-import useColleagues from "../../hooks/useColleagues";
-import useIntegrations from "../../hooks/useIntegrationsV2";
+import useAcquiredIntegrations from "../../hooks/useAcquiredIntegrations";
 import useTeam from "../../hooks/useTeam";
 
 import {
@@ -70,28 +69,31 @@ const mockIntegrations = [
 ];
 
 const IntegrationsWidget = () => {
-  const { getIntegrations } = useIntegrations();
+  const teamId = storage.get("projectId");
 
+  const { getIntegrations, getAcquiredIntegrations, updateIntegration } =
+    useAcquiredIntegrations();
   const { integrations } = getIntegrations();
+  const { acquiredIntegrations } = getAcquiredIntegrations(teamId);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedIntegration, setSelectedIntegration] = useState(null);
   const [relatedSkills, setRelatedSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState<{
+    id: string;
     name: string;
     logo: string;
     title: string;
     description: string;
-    acquired: boolean;
+    oauth: {
+      scope: string;
+      tokenUrl: string;
+    };
   } | null>(null);
   const [skillDialogOpen, setSkillDialogOpen] = useState(false);
 
-  const teamId = storage.get("projectId");
-
   const { teamById } = useTeam(teamId);
-
-  const { colleagues } = useColleagues();
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -184,11 +186,12 @@ const IntegrationsWidget = () => {
         {filteredData?.map((skill) => (
           <Grid item xs={12} sm={6} md={3} key={skill.id}>
             <Skills
+              id={skill.id}
               title={skill.provider}
               description={skill.description}
               logo={getProviderLogo(skill.provider)}
+              oauth={skill.oauth}
               onSkillClick={handleSkillClick}
-              acquired={skill.acquired}
             />
           </Grid>
         ))}
@@ -199,7 +202,8 @@ const IntegrationsWidget = () => {
         handleClose={handleSkillDialogClose}
         skill={selectedSkill}
         team={teamById}
-        colleagues={colleagues}
+        acquiredIntegrations={acquiredIntegrations}
+        updateIntegration={updateIntegration}
       />
 
       <Modal open={open} onClose={handleClose}>
@@ -242,11 +246,12 @@ const IntegrationsWidget = () => {
                 {relatedSkills.map((skill, index) => (
                   <Grid item xs={6} key={index}>
                     <Skills
+                      id={skill.id}
                       title={skill.title}
                       description={skill.description}
                       logo={skill.logo}
+                      oauth={skill.oauth}
                       onSkillClick={handleSkillClick}
-                      acquired={skill.acquired}
                     />
                   </Grid>
                 ))}

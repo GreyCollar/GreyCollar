@@ -5,7 +5,7 @@ import ClosableDialogTitle from "./ClosableDialogTitle";
 import { Icon } from "@iconify/react";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
-import { getProviderLogo } from "../../utils/icon";
+import axios from "axios";
 
 import {
   Avatar,
@@ -32,38 +32,133 @@ const SkillDialog = ({
   skill,
   team,
   colleagues,
+  acquiredIntegrations,
+  updateIntegration,
 }: {
+  updateIntegration?: (integration: {
+    id: string;
+    mcpId: string;
+    refreshToken: string;
+  }) => void;
+  acquiredIntegrations?: Array<{
+    id: string;
+    mcpId: string;
+    refreshToken: string;
+  }>;
   open: boolean;
   handleClose: () => void;
   skill?: {
+    id: string;
     name: string;
     logo: string;
     title: string;
     description: string;
-    acquired: boolean;
+    oauth: {
+      scope: string;
+      tokenUrl: string;
+    };
   } | null;
-  team: { name: string; icon: string };
-  colleagues: Array<{ id: string; name: string; avatar: string }>;
+  team?: { name: string; icon: string };
+  colleagues?: Array<{ id: string; name: string; avatar: string }>;
 }) => {
+  const matchingIntegration = acquiredIntegrations?.find(
+    (integration) => integration.mcpId === skill?.id
+  );
+
   const [selectedOption, setSelectedOption] = useState("");
-  const [isSwitchChecked, setIsSwitchChecked] = useState(false);
+  const [isSwitchChecked, setIsSwitchChecked] = useState(
+    matchingIntegration?.refreshToken !== undefined &&
+      matchingIntegration?.refreshToken !== null &&
+      matchingIntegration?.refreshToken !== ""
+  );
   const NumberOne = "/media/number-one.png";
   const NumberTwo = "/media/number-two.png";
   const NumberThree = "/media/number-three.png";
 
   useEffect(() => {
-    if (skill?.acquired) {
+    if (!open) return;
+
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    document.body.appendChild(script);
+  }, [open]);
+
+  useEffect(() => {
+    if (team) {
       setSelectedOption(team.name);
-      setIsSwitchChecked(true);
+    } else if (colleagues && colleagues.length > 0) {
+      setSelectedOption(colleagues[0].name);
     }
-  }, [skill, team]);
+  }, [team, colleagues]);
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
+  useEffect(() => {
+    setIsSwitchChecked(
+      matchingIntegration?.refreshToken !== undefined &&
+        matchingIntegration?.refreshToken !== null &&
+        matchingIntegration?.refreshToken !== ""
+    );
+  }, [matchingIntegration]);
+
   const handleSwitchChange = (event) => {
+    if (matchingIntegration) {
+      if (!isSwitchChecked) {
+        handleGoogleLogin();
+      }
+      return;
+    }
     setIsSwitchChecked(event.target.checked);
+  };
+
+  const handleGoogleLogin = () => {
+    const tokenClient = window.google.accounts.oauth2.initCodeClient({
+      client_id: import.meta.env.VITE_CLIENT_ID,
+      scope: skill.oauth.scope,
+      redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
+      prompt: "consent",
+      callback: (response) => {
+        if (response.error) {
+          console.error("Error during authentication:", response.error);
+          return;
+        }
+        exchangeCodeForTokens(response.code)
+          .then((tokens) => {
+            if (matchingIntegration) {
+              updateIntegration({
+                ...matchingIntegration,
+                refreshToken: tokens.refresh_token,
+              });
+            }
+
+            setIsSwitchChecked(true);
+          })
+          .catch((error) => {
+            console.error("Error exchanging code for tokens:", error);
+          });
+      },
+    });
+    tokenClient.requestCode();
+  };
+
+  const exchangeCodeForTokens = async (authorizationCode) => {
+    try {
+      const response = await axios.post(`${skill.oauth.tokenUrl}`, {
+        code: authorizationCode,
+        client_id: import.meta.env.VITE_CLIENT_ID,
+        client_secret: import.meta.env.VITE_CLIENT_SECRET,
+        redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
+        grant_type: "authorization_code",
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("Error exchanging code for tokens:", error);
+      throw error;
+    }
   };
 
   if (!skill) return null;
@@ -80,15 +175,9 @@ const SkillDialog = ({
       <ClosableDialogTitle handleClose={handleClose} />
       <DialogContent>
         <Box sx={{ textAlign: "center" }}>
-          <Icon icon={getProviderLogo(skill.title)} width="20" height="20" />
+          <Icon icon={skill.logo} width="20" height="20" />
           <Typography variant="h4" sx={{ mt: 1 }}>
-            {skill.title
-              .split(" ")
-              .map(
-                (word) =>
-                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-              )
-              .join(" ")}
+            {skill.title}
           </Typography>
         </Box>
         <Box sx={{ mt: 3 }}>{skill.description}</Box>
@@ -120,47 +209,53 @@ const SkillDialog = ({
         </Box>
         <Divider sx={{ mt: 3 }} />
 
-        <Box sx={{ mt: 3, display: "flex", alignItems: "center" }}>
-          <FormControl fullWidth sx={{ mr: 2 }}>
-            <InputLabel id="select-label">Select Option</InputLabel>
-            <Select
-              labelId="select-label"
-              value={selectedOption}
-              onChange={handleChange}
-              label="Select Option"
-            >
-              <MenuItem value={team.name}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Iconify
-                    icon={team.icon.replace(/^:|:$/g, "")}
-                    sx={{ width: 40, height: 40 }}
-                  />
-                  <Box sx={{ ml: 1 }}>{team.name}</Box>
-                </Box>
-              </MenuItem>
+        <Box sx={{ mt: 3, display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FormControl fullWidth sx={{ mr: 2 }}>
+              <InputLabel id="select-label">Select Option</InputLabel>
+              <Select
+                labelId="select-label"
+                value={selectedOption}
+                onChange={handleChange}
+                label="Select Option"
+              >
+                {team && (
+                  <MenuItem value={team.name}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Iconify
+                        icon={team.icon.replace(/^:|:$/g, "")}
+                        sx={{ width: 40, height: 40 }}
+                      />
+                      <Box sx={{ ml: 1 }}>{team.name}</Box>
+                    </Box>
+                  </MenuItem>
+                )}
 
-              {colleagues.map((colleague) => (
-                <MenuItem key={colleague.id} value={colleague.name}>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <SourcedAvatar
-                      source={"MINIMAL"}
-                      avatarUrl={colleague.avatar}
-                      name={colleague.name}
-                    />
-                    <Box sx={{ ml: 1 }}>{colleague.name}</Box>
-                  </Box>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isSwitchChecked}
-              onChange={handleSwitchChange}
-            />
-            <span></span>
-          </label>
+                {colleagues &&
+                  colleagues.map((colleague) => (
+                    <MenuItem key={colleague.id} value={colleague.name}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <SourcedAvatar
+                          source={"MINIMAL"}
+                          avatarUrl={colleague.avatar}
+                          name={colleague.name}
+                        />
+                        <Box sx={{ ml: 1 }}>{colleague.name}</Box>
+                      </Box>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+
+            <label className="switch" style={{ cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={isSwitchChecked}
+                onChange={handleSwitchChange}
+              />
+              <span></span>
+            </label>
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions></DialogActions>
