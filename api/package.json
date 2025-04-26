@@ -14,6 +14,7 @@
     "@anthropic-ai/sdk": "^0.35.0",
     "@nucleoidai/platform": "^1.0.44",
     "@nucleoidai/platform-express": "^1.5.48",
+    "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.79.4",
     "puppeteer": "^24.1.0",
