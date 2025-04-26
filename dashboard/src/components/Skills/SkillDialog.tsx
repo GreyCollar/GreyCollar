@@ -115,7 +115,14 @@ const SkillDialog = ({
   };
 
   const handleGoogleLogin = () => {
-    const tokenClient = window.google.accounts.oauth2.initCodeClient({
+    if (!(window as CustomWindow).google) {
+      console.error("Google API not loaded yet.");
+      return;
+    }
+
+    const tokenClient = (
+      window as CustomWindow
+    ).google.accounts.oauth2.initCodeClient({
       client_id: import.meta.env.VITE_CLIENT_ID,
       scope: skill.oauth.scope,
       redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
