@@ -18,7 +18,6 @@ async function init() {
   const Responsibility = require("./Responsibility");
   const ResponsibilityNode = require("./ResponsibilityNode");
   const Integration = require("./Integration");
-  const AcquiredIntegration = require("./AcquiredIntegration");
   Project.hasMany(Colleague, {
     foreignKey: "teamId",
   });
@@ -150,14 +149,6 @@ async function init() {
   ResponsibilityNode.hasMany(Node, {
     foreignKey: "dependencyId",
     as: "Dependents",
-  });
-
-  Integration.hasMany(AcquiredIntegration, {
-    foreignKey: "integrationId",
-  });
-
-  AcquiredIntegration.belongsTo(Integration, {
-    foreignKey: "integrationId",
   });
 }
 
