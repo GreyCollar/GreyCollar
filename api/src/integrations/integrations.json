@@ -1,7 +1,6 @@
 [
   {
     "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
-    "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
     "action": "GDRIVE:search",
     "provider": "GOOGLE DRIVE",
     "description": "Search for files in Google Drive",
