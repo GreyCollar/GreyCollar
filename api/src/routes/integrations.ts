@@ -6,32 +6,9 @@ import Joi from "joi";
 import colleague from "../functions/colleague";
 import express from "express";
 import integration from "../functions/integration";
-import schemas from "../schemas";
+import integrations from "../functions/integrations";
 
 const router = express.Router();
-
-router.post("/", async (req, res) => {
-  const { body } = req;
-  const { projectId: teamId } = req.session;
-
-  const {
-    colleagueId,
-    teamId: integrationTeamId,
-    ...integrationBody
-  } = Joi.attempt(body, schemas.Integration.create);
-
-  if (integrationTeamId && integrationTeamId !== teamId) {
-    throw new AuthenticationError();
-  }
-
-  const integrations = await integration.create({
-    teamId,
-    colleagueId,
-    integration: integrationBody,
-  });
-
-  res.status(201).json(integrations);
-});
 
 router.get("/", async (req, res) => {
   const { projectId: teamId } = req.session;
@@ -44,20 +21,43 @@ router.get("/", async (req, res) => {
     throw new AuthenticationError();
   }
 
-  if (colleagueId) {
-    const colleagueInstance = await colleague.get({ colleagueId });
+  if (colleagueId || queryTeamId) {
+    if (colleagueId) {
+      const colleagueInstance = await colleague.get({ colleagueId });
 
-    if (colleagueInstance.teamId !== teamId) {
-      throw new AuthenticationError();
+      if (colleagueInstance.teamId !== teamId) {
+        throw new AuthenticationError();
+      }
     }
+
+    const integrationList = await integration.list({
+      colleagueId: colleagueId || undefined,
+      teamId,
+    });
+
+    res.json(integrationList);
+  } else {
+    // TODO - split endpoint for all integrations
+    const allIntegrations = await integrations.list();
+    res.json(allIntegrations);
+  }
+});
+
+router.patch("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  const integrationInstance = await Integration.findByPk(id);
+
+  if (!integrationInstance) {
+    throw new Error("INVALID_INTEGRATION");
   }
 
-  const integrationList = await integration.list({
-    colleagueId: colleagueId || undefined,
-    teamId,
+  await integrationInstance.update({
+    accessToken: req.body.accessToken,
+    refreshToken: req.body.refreshToken,
   });
 
-  res.json(integrationList);
+  res.json(integrationInstance);
 });
 
 router.delete("/:id", async (req, res) => {
