@@ -5,7 +5,6 @@ import ClosableDialogTitle from "./ClosableDialogTitle";
 import { Icon } from "@iconify/react";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
-import axios from "axios";
 
 import {
   Avatar,
