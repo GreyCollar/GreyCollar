@@ -11,6 +11,16 @@ export type Integration = {
 function useIntegrations() {
   const { Api } = useApi();
 
+  const getTokens = async (code: string, integration) => {
+    const response = await http.post(`/integrations/${integration.id}`, {
+      code: code,
+    });
+
+    publish("AUTHORIZED", {});
+
+    return response.data;
+  };
+
   const getIntegrations = useCallback(() => {
     const { data, loading, error } = Api(() => http.get(`/integrations`), []);
 
@@ -97,6 +107,7 @@ function useIntegrations() {
     updateIntegration,
     getAcquiredIntegrations,
     getColleagueAcquiredIntegrations,
+    getTokens,
   };
 }
 
