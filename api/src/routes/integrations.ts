@@ -2,6 +2,7 @@ import * as platform from "@nucleoidai/platform-express";
 
 import { AuthenticationError } from "@nucleoidai/platform-express/error";
 import Integration from "../models/Integration";
+import Integrations from "../integrations/integrations";
 import Joi from "joi";
 import colleague from "../functions/colleague";
 import express from "express";
@@ -9,6 +10,33 @@ import integration from "../functions/integration";
 import integrations from "../functions/integrations";
 
 const router = express.Router();
+
+router.post("/:id", async (req, res) => {
+  const { code } = req.body;
+
+  const { id } = req.params;
+
+  const integrationAuth = Integrations.find(
+    (integration) => integration.id === id
+  );
+
+  if (!integrationAuth) {
+    throw new platform.NotFoundError();
+  }
+
+  const { clientId, clientSecret, redirectUri, tokenUrl } =
+    integrationAuth.oauth;
+
+  const tokens = await integrations.exchangeCodeForTokens({
+    code,
+    clientId: clientId ?? "",
+    clientSecret: clientSecret ?? "",
+    redirectUri: redirectUri ?? "",
+    tokenUrl: tokenUrl,
+  });
+
+  res.json(tokens);
+});
 
 router.get("/", async (req, res) => {
   const { projectId: teamId } = req.session;
@@ -45,19 +73,24 @@ router.get("/", async (req, res) => {
 
 router.patch("/:id", async (req, res) => {
   const { id } = req.params;
+  const { refreshToken } = req.body;
 
-  const integrationInstance = await Integration.findByPk(id);
-
-  if (!integrationInstance) {
-    throw new Error("INVALID_INTEGRATION");
-  }
-
-  await integrationInstance.update({
-    accessToken: req.body.accessToken,
-    refreshToken: req.body.refreshToken,
+  const schema = Joi.object({
+    refreshToken: Joi.string().required(),
   });
 
-  res.json(integrationInstance);
+  const { error } = schema.validate({ refreshToken });
+
+  if (error) {
+    throw new platform.BadRequestError(error.message);
+  }
+
+  const updatedIntegration = await integrations.updateIntegration({
+    id,
+    refreshToken,
+  });
+
+  res.json(updatedIntegration);
 });
 
 router.delete("/:id", async (req, res) => {
