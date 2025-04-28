@@ -34,12 +34,10 @@ const SkillDialog = ({
   colleagues,
   acquiredIntegrations,
   updateIntegration,
+  getTokens,
 }: {
-  updateIntegration?: (integration: {
-    id: string;
-    mcpId: string;
-    refreshToken: string;
-  }) => void;
+  getTokens?: (integration, code) => Promise<{ refresh_token: string }>;
+  updateIntegration?: (integration) => void;
   acquiredIntegrations?: Array<{
     id: string;
     mcpId: string;
@@ -56,6 +54,8 @@ const SkillDialog = ({
     oauth: {
       scope: string;
       tokenUrl: string;
+      clientId: string;
+      redirectUri: string;
     };
   } | null;
   team?: { name: string; icon: string };
@@ -123,49 +123,28 @@ const SkillDialog = ({
     const tokenClient = (
       window as CustomWindow
     ).google.accounts.oauth2.initCodeClient({
-      client_id: import.meta.env.VITE_CLIENT_ID,
+      client_id: skill.oauth.clientId,
       scope: skill.oauth.scope,
-      redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
+      redirect_uri: skill.oauth.redirectUri,
       prompt: "consent",
-      callback: (response) => {
+      callback: async (response) => {
         if (response.error) {
           console.error("Error during authentication:", response.error);
           return;
         }
-        exchangeCodeForTokens(response.code)
-          .then((tokens) => {
-            if (matchingIntegration) {
-              updateIntegration({
-                ...matchingIntegration,
-                refreshToken: tokens.refresh_token,
-              });
-            }
+        const tokens = await getTokens(response.code, skill);
 
-            setIsSwitchChecked(true);
-          })
-          .catch((error) => {
-            console.error("Error exchanging code for tokens:", error);
+        if (matchingIntegration) {
+          updateIntegration({
+            ...matchingIntegration,
+            refreshToken: tokens.refresh_token,
           });
+        }
+
+        setIsSwitchChecked(true);
       },
     });
     tokenClient.requestCode();
-  };
-
-  const exchangeCodeForTokens = async (authorizationCode) => {
-    try {
-      const response = await axios.post(`${skill.oauth.tokenUrl}`, {
-        code: authorizationCode,
-        client_id: import.meta.env.VITE_CLIENT_ID,
-        client_secret: import.meta.env.VITE_CLIENT_SECRET,
-        redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
-        grant_type: "authorization_code",
-      });
-
-      return response.data;
-    } catch (error) {
-      console.error("Error exchanging code for tokens:", error);
-      throw error;
-    }
   };
 
   if (!skill) return null;

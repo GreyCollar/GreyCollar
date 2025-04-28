@@ -71,8 +71,12 @@ const mockIntegrations = [
 const IntegrationsWidget = () => {
   const teamId = storage.get("projectId");
 
-  const { getIntegrations, getAcquiredIntegrations, updateIntegration } =
-    useAcquiredIntegrations();
+  const {
+    getIntegrations,
+    getAcquiredIntegrations,
+    getTokens,
+    updateIntegration,
+  } = useAcquiredIntegrations();
   const { integrations } = getIntegrations();
   const { acquiredIntegrations } = getAcquiredIntegrations(teamId);
 
@@ -89,6 +93,8 @@ const IntegrationsWidget = () => {
     oauth: {
       scope: string;
       tokenUrl: string;
+      clientId: string;
+      redirectUri: string;
     };
   } | null>(null);
   const [skillDialogOpen, setSkillDialogOpen] = useState(false);
@@ -204,6 +210,7 @@ const IntegrationsWidget = () => {
         team={teamById}
         acquiredIntegrations={acquiredIntegrations}
         updateIntegration={updateIntegration}
+        getTokens={getTokens}
       />
 
       <Modal open={open} onClose={handleClose}>

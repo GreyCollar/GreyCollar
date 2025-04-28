@@ -60,6 +60,8 @@ const ColleagueIntegration = ({ colleague }) => {
     oauth: {
       scope: string;
       tokenUrl: string;
+      clientId: string;
+      redirectUri: string;
     };
   } | null>(null);
 
