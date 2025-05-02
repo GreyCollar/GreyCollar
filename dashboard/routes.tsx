@@ -6,6 +6,7 @@ import Container from "./src/Container";
 import Dashboard from "./src/pages/dashboard";
 import Integrations from "./src/pages/integrations";
 import KnowledgeBase from "./src/pages/knowledgeBase";
+import Login from "./src/pages/login";
 import Settings from "./src/pages/settings";
 
 import {
@@ -39,6 +40,7 @@ const routes = [
           { path: "/colleagues/:colleagueId", element: <Colleague /> },
           { path: "/settings", element: <Settings /> },
           { path: "/teams/add", element: <AddTeam /> },
+          { path: "/integrations/callback", element: <Login /> },
         ],
       },
       {
