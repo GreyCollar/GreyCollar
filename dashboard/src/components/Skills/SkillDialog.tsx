@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import "../../styles/connectButton.css";
 
+import AuthHandler from "../LoginHandler/AuthHandler";
 import ClosableDialogTitle from "./ClosableDialogTitle";
 import { Icon } from "@iconify/react";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
@@ -74,14 +75,13 @@ const SkillDialog = ({
   const NumberTwo = "/media/number-two.png";
   const NumberThree = "/media/number-three.png";
 
-  useEffect(() => {
-    if (!open) return;
-
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    document.body.appendChild(script);
-  }, [open]);
+  const { handleLogin } = AuthHandler({
+    skill,
+    matchingIntegration,
+    updateIntegration,
+    getTokens,
+    onAuthSuccess: () => setIsSwitchChecked(true),
+  });
 
   useEffect(() => {
     if (team) {
@@ -106,44 +106,11 @@ const SkillDialog = ({
   const handleSwitchChange = (event) => {
     if (matchingIntegration) {
       if (!isSwitchChecked) {
-        handleGoogleLogin();
+        handleLogin();
       }
       return;
     }
     setIsSwitchChecked(event.target.checked);
-  };
-
-  const handleGoogleLogin = () => {
-    if (!(window as CustomWindow).google) {
-      console.error("Google API not loaded yet.");
-      return;
-    }
-
-    const tokenClient = (
-      window as CustomWindow
-    ).google.accounts.oauth2.initCodeClient({
-      client_id: skill.oauth.clientId,
-      scope: skill.oauth.scope,
-      redirect_uri: skill.oauth.redirectUri,
-      prompt: "consent",
-      callback: async (response) => {
-        if (response.error) {
-          console.error("Error during authentication:", response.error);
-          return;
-        }
-        const tokens = await getTokens(response.code, skill);
-
-        if (matchingIntegration) {
-          updateIntegration({
-            ...matchingIntegration,
-            refreshToken: tokens.refresh_token,
-          });
-        }
-
-        setIsSwitchChecked(true);
-      },
-    });
-    tokenClient.requestCode();
   };
 
   if (!skill) return null;
