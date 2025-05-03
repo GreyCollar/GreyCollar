@@ -33,11 +33,9 @@ const SkillDialog = ({
   team,
   colleagues,
   acquiredIntegrations,
-  updateIntegration,
   getTokens,
 }: {
-  getTokens?: (integration, code) => Promise<{ refresh_token: string }>;
-  updateIntegration?: (integration) => void;
+  getTokens: (integration, code) => Promise<{ refresh_token: string }>;
   acquiredIntegrations?: Array<{
     id: string;
     mcpId: string;
@@ -77,8 +75,6 @@ const SkillDialog = ({
 
   const { handleLogin } = AuthHandler({
     skill,
-    matchingIntegration,
-    updateIntegration,
     getTokens,
     onAuthSuccess: () => setIsSwitchChecked(true),
   });

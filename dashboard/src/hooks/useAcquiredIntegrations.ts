@@ -1,7 +1,8 @@
 import http from "../http";
-import { publish } from "@nucleoidai/react-event";
 import useApi from "./useApiV2";
 import { useCallback } from "react";
+
+import { publish, useEvent } from "@nucleoidai/react-event";
 
 export type Integration = {
   id: string;
@@ -11,9 +12,12 @@ export type Integration = {
 function useIntegrations() {
   const { Api } = useApi();
 
+  const [authorized] = useEvent("INTEGRATION_UPDATED", null);
+
   const getTokens = async (code: string, integration) => {
-    const response = await http.post(`/integrations/${integration.id}`, {
+    const response = await http.post(`/integrations`, {
       code: code,
+      integrationId: integration.id,
     });
 
     publish("AUTHORIZED", {});
@@ -42,7 +46,7 @@ function useIntegrations() {
     (teamId: string) => {
       const { data, loading, error } = Api(
         () => http.get(`/integrations?teamId=${teamId}`),
-        []
+        [authorized]
       );
 
       if (data) {
@@ -84,27 +88,8 @@ function useIntegrations() {
     []
   );
 
-  const updateIntegration = useCallback(
-    async (integration: Integration) => {
-      const response = await http.patch(`/integrations/${integration.id}`, {
-        refreshToken: integration.refreshToken,
-      });
-
-      if (response && response.data) {
-        publish("INTEGRATION_ACQUIRED", {
-          integration: integration,
-        });
-      }
-
-      return response.data;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
   return {
     getIntegrations,
-    updateIntegration,
     getAcquiredIntegrations,
     getColleagueAcquiredIntegrations,
     getTokens,

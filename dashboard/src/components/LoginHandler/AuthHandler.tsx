@@ -1,12 +1,6 @@
 import { useEffect } from "react";
 
-const AuthHandler = ({
-  skill,
-  matchingIntegration,
-  updateIntegration,
-  getTokens,
-  onAuthSuccess,
-}) => {
+const AuthHandler = ({ skill, getTokens, onAuthSuccess }) => {
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
@@ -39,14 +33,7 @@ const AuthHandler = ({
       const { code } = event.data || {};
       if (code) {
         try {
-          const tokens = await getTokens(code, skill);
-
-          if (matchingIntegration) {
-            updateIntegration({
-              ...matchingIntegration,
-              refreshToken: tokens.refresh_token,
-            });
-          }
+          await getTokens(code, skill);
 
           if (onAuthSuccess) {
             onAuthSuccess();

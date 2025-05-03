@@ -10,11 +10,8 @@ import useColleagues from "../../hooks/useColleagueV2";
 import { Box, Container, Grid } from "@mui/material";
 
 const ColleagueIntegration = ({ colleague }) => {
-  const {
-    getIntegrations,
-    getColleagueAcquiredIntegrations,
-    updateIntegration,
-  } = useAcquiredIntegrations();
+  const { getIntegrations, getColleagueAcquiredIntegrations, getTokens } =
+    useAcquiredIntegrations();
 
   const { integrations } = getIntegrations();
 
@@ -141,7 +138,7 @@ const ColleagueIntegration = ({ colleague }) => {
           skill={selectedSkill}
           colleagues={colleagues}
           acquiredIntegrations={acquiredIntegrations}
-          updateIntegration={updateIntegration}
+          getTokens={getTokens}
         />
 
         <IncomingDrawer
