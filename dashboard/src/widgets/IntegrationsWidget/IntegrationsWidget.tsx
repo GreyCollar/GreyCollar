@@ -71,12 +71,8 @@ const mockIntegrations = [
 const IntegrationsWidget = () => {
   const teamId = storage.get("projectId");
 
-  const {
-    getIntegrations,
-    getAcquiredIntegrations,
-    getTokens,
-    updateIntegration,
-  } = useAcquiredIntegrations();
+  const { getIntegrations, getAcquiredIntegrations, getTokens } =
+    useAcquiredIntegrations();
   const { integrations } = getIntegrations();
   const { acquiredIntegrations } = getAcquiredIntegrations(teamId);
 
@@ -209,7 +205,6 @@ const IntegrationsWidget = () => {
         skill={selectedSkill}
         team={teamById}
         acquiredIntegrations={acquiredIntegrations}
-        updateIntegration={updateIntegration}
         getTokens={getTokens}
       />
 
