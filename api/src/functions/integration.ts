@@ -8,7 +8,7 @@ import Integration from "../models/Integration";
 import Integrations from "../integrations/integrations";
 import axios from "axios";
 
-async function show({
+async function read({
   colleagueId,
   teamId,
 }: {
@@ -108,4 +108,4 @@ async function get({ integrationId }: { integrationId: string }) {
   return integrationItem.toJSON();
 }
 
-export default { show, get, create, list };
+export default { read, get, create, list };

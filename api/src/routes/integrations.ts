@@ -75,7 +75,7 @@ router.get("/", async (req, res) => {
       }
     }
 
-    const integrationList = await integration.show({
+    const integrationList = await integration.read({
       colleagueId: colleagueId || undefined,
       teamId,
     });
