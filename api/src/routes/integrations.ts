@@ -3,21 +3,23 @@ import * as platform from "@nucleoidai/platform-express";
 import { AuthenticationError } from "@nucleoidai/platform-express/error";
 import Integration from "../models/Integration";
 import Integrations from "../integrations/integrations";
-import Joi from "joi";
 import colleague from "../functions/colleague";
 import express from "express";
 import integration from "../functions/integration";
-import integrations from "../functions/integrations";
 
 const router = express.Router();
 
-router.post("/:id", async (req, res) => {
-  const { code } = req.body;
-
-  const { id } = req.params;
+router.post("/", async (req, res) => {
+  const {
+    code,
+    integrationId,
+  }: {
+    code: string;
+    integrationId: string;
+  } = req.body;
 
   const integrationAuth = Integrations.find(
-    (integration) => integration.id === id
+    (integration) => integration.id === integrationId
   );
 
   if (!integrationAuth) {
@@ -27,7 +29,7 @@ router.post("/:id", async (req, res) => {
   const { clientId, clientSecret, redirectUri, tokenUrl } =
     integrationAuth.oauth;
 
-  const tokens = await integrations.exchangeCodeForTokens({
+  const tokens = await integration.create({
     code,
     clientId: clientId ?? "",
     clientSecret: clientSecret ?? "",
@@ -35,7 +37,22 @@ router.post("/:id", async (req, res) => {
     tokenUrl: tokenUrl,
   });
 
-  res.json(tokens);
+  const { refresh_token: refreshToken } = tokens;
+
+  await Integration.update(
+    { refreshToken: refreshToken },
+    {
+      where: {
+        mcpId: integrationId,
+      },
+    }
+  );
+
+  const updatedIntegration = await Integration.findOne({
+    where: { mcpId: integrationId },
+  });
+
+  res.json({ integration: updatedIntegration });
 });
 
 router.get("/", async (req, res) => {
@@ -58,7 +75,7 @@ router.get("/", async (req, res) => {
       }
     }
 
-    const integrationList = await integration.list({
+    const integrationList = await integration.show({
       colleagueId: colleagueId || undefined,
       teamId,
     });
@@ -66,31 +83,9 @@ router.get("/", async (req, res) => {
     res.json(integrationList);
   } else {
     // TODO - split endpoint for all integrations
-    const allIntegrations = await integrations.list();
+    const allIntegrations = await integration.list();
     res.json(allIntegrations);
   }
-});
-
-router.patch("/:id", async (req, res) => {
-  const { id } = req.params;
-  const { refreshToken } = req.body;
-
-  const schema = Joi.object({
-    refreshToken: Joi.string().required(),
-  });
-
-  const { error } = schema.validate({ refreshToken });
-
-  if (error) {
-    throw new platform.BadRequestError(error.message);
-  }
-
-  const updatedIntegration = await integrations.updateIntegration({
-    id,
-    refreshToken,
-  });
-
-  res.json(updatedIntegration);
 });
 
 router.delete("/:id", async (req, res) => {
