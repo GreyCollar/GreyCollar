@@ -8,7 +8,7 @@ const AuthHandler = ({ skill, getTokens, onAuthSuccess }) => {
     document.body.appendChild(script);
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = (id, isTeam) => {
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(
       skill.oauth.clientId
     )}&redirect_uri=${encodeURIComponent(
@@ -33,7 +33,7 @@ const AuthHandler = ({ skill, getTokens, onAuthSuccess }) => {
       const { code } = event.data || {};
       if (code) {
         try {
-          await getTokens(code, skill);
+          await getTokens(code, skill, id, isTeam);
 
           if (onAuthSuccess) {
             onAuthSuccess();

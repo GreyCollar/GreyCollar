@@ -1,4 +1,3 @@
-// eslint-disable-next-line
 import "../../styles/connectButton.css";
 
 import AuthHandler from "../LoginHandler/AuthHandler";
@@ -35,7 +34,7 @@ const SkillDialog = ({
   acquiredIntegrations,
   getTokens,
 }: {
-  getTokens: (integration, code) => Promise<{ refresh_token: string }>;
+  getTokens: (integration, code, id) => Promise<{ refresh_token: string }>;
   acquiredIntegrations?: Array<{
     id: string;
     mcpId: string;
@@ -56,7 +55,7 @@ const SkillDialog = ({
       redirectUri: string;
     };
   } | null;
-  team?: { name: string; icon: string };
+  team?: { name: string; icon: string; id: string };
   colleagues?: Array<{ id: string; name: string; avatar: string }>;
 }) => {
   const matchingIntegration = acquiredIntegrations?.find(
@@ -64,6 +63,7 @@ const SkillDialog = ({
   );
 
   const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOptionId, setSelectedOptionId] = useState("");
   const [isSwitchChecked, setIsSwitchChecked] = useState(
     matchingIntegration?.refreshToken !== undefined &&
       matchingIntegration?.refreshToken !== null &&
@@ -82,13 +82,25 @@ const SkillDialog = ({
   useEffect(() => {
     if (team) {
       setSelectedOption(team.name);
+      setSelectedOptionId(team.id);
     } else if (colleagues && colleagues.length > 0) {
       setSelectedOption(colleagues[0].name);
+      setSelectedOptionId(colleagues[0].id);
     }
   }, [team, colleagues]);
 
   const handleChange = (event) => {
-    setSelectedOption(event.target.value);
+    const selectedName = event.target.value;
+    setSelectedOption(selectedName);
+
+    if (team && selectedName === team.name) {
+      setSelectedOptionId(team.id);
+    } else if (colleagues) {
+      const selectedColleague = colleagues.find(
+        (colleague) => colleague.name === selectedName
+      );
+      setSelectedOptionId(selectedColleague?.id || "");
+    }
   };
 
   useEffect(() => {
@@ -99,14 +111,14 @@ const SkillDialog = ({
     );
   }, [matchingIntegration]);
 
-  const handleSwitchChange = (event) => {
+  const handleSwitchChange = () => {
     if (matchingIntegration) {
       if (!isSwitchChecked) {
-        handleLogin();
+        handleLogin(selectedOptionId, team && selectedOptionId === team.id);
       }
       return;
     }
-    setIsSwitchChecked(event.target.checked);
+    setIsSwitchChecked(!isSwitchChecked);
   };
 
   if (!skill) return null;

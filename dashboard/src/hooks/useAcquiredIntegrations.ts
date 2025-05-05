@@ -14,11 +14,21 @@ function useIntegrations() {
 
   const [authorized] = useEvent("INTEGRATION_UPDATED", null);
 
-  const getTokens = async (code: string, integration) => {
-    const response = await http.post(`/integrations`, {
-      code: code,
-      integrationId: integration.id,
-    });
+  const getTokens = async (code: string, integration, id, isTeam: boolean) => {
+    const payload = {
+      authorizationCode: code,
+      mcpId: integration.id,
+      teamId: isTeam ? id : undefined,
+      colleagueId: isTeam ? undefined : id,
+    };
+
+    if (isTeam) {
+      payload.teamId = id;
+    } else {
+      payload.colleagueId = id;
+    }
+
+    const response = await http.post(`/integrations`, payload);
 
     publish("AUTHORIZED", {});
 
