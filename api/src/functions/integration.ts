@@ -46,24 +46,36 @@ async function read({
 }
 
 async function create({
-  code,
-  clientId,
-  clientSecret,
-  redirectUri,
-  tokenUrl,
+  authorizationCode,
+  mcpId,
+  teamId,
+  colleagueId,
 }: {
-  code: string;
-  clientId: string;
-  clientSecret: string;
-  redirectUri: string;
-  tokenUrl: string;
+  authorizationCode: string;
+  mcpId: string;
+  teamId?: string;
+  colleagueId?: string;
 }) {
   const params = new URLSearchParams();
-  params.append("code", code);
-  params.append("client_id", clientId);
-  params.append("client_secret", clientSecret);
-  params.append("redirect_uri", redirectUri);
-  params.append("grant_type", "authorization_code");
+
+  const integrationAuth = Integrations.find(
+    (integration) => integration.id === mcpId
+  );
+
+  if (!integrationAuth) {
+    throw new NotFoundError();
+  }
+
+  const { clientId, clientSecret, redirectUri, tokenUrl } =
+    integrationAuth.oauth;
+
+  if (clientId && clientSecret && redirectUri && tokenUrl) {
+    params.append("code", authorizationCode);
+    params.append("client_id", clientId);
+    params.append("client_secret", clientSecret);
+    params.append("redirect_uri", redirectUri);
+    params.append("grant_type", "authorization_code");
+  }
 
   const response = await axios.post(tokenUrl, params, {
     headers: {
@@ -73,7 +85,14 @@ async function create({
 
   const tokens = response.data;
 
-  return tokens;
+  const { refresh_token } = tokens;
+
+  await Integration.create({
+    refreshToken: refresh_token,
+    mcpId,
+    teamId,
+    colleagueId,
+  });
 }
 
 async function list() {

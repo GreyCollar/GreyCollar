@@ -11,50 +11,32 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   const {
-    code,
-    integrationId,
+    authorizationCode,
+    mcpId,
+    teamId,
+    colleagueId,
   }: {
-    code: string;
-    integrationId: string;
+    authorizationCode: string;
+    mcpId: string;
+    teamId?: string;
+    colleagueId?: string;
   } = req.body;
 
-  const integrationAuth = Integrations.find(
-    (integration) => integration.id === integrationId
-  );
+  const createData: any = {
+    authorizationCode,
+    mcpId,
+  };
 
-  if (!integrationAuth) {
-    throw new platform.NotFoundError();
+  if (teamId) {
+    createData.teamId = teamId;
+  } else if (colleagueId) {
+    createData.colleagueId = colleagueId;
   }
 
-  const { clientId, clientSecret, redirectUri, tokenUrl } =
-    integrationAuth.oauth;
+  const tokens = await integration.create(createData);
 
-  const tokens = await integration.create({
-    code,
-    clientId: clientId ?? "",
-    clientSecret: clientSecret ?? "",
-    redirectUri: redirectUri ?? "",
-    tokenUrl: tokenUrl,
-  });
-
-  const { refresh_token: refreshToken } = tokens;
-
-  await Integration.update(
-    { refreshToken: refreshToken },
-    {
-      where: {
-        mcpId: integrationId,
-      },
-    }
-  );
-
-  const updatedIntegration = await Integration.findOne({
-    where: { mcpId: integrationId },
-  });
-
-  res.json({ integration: updatedIntegration });
+  res.json({ tokens });
 });
-
 router.get("/", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { colleagueId, teamId: queryTeamId } = req.query as {
