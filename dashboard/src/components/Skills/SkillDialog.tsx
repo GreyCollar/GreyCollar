@@ -34,7 +34,12 @@ const SkillDialog = ({
   acquiredIntegrations,
   getTokens,
 }: {
-  getTokens: (integration, code, id) => Promise<{ refresh_token: string }>;
+  getTokens: (
+    integration,
+    code,
+    id,
+    isTeam
+  ) => Promise<{ refresh_token: string }>;
   acquiredIntegrations?: Array<{
     id: string;
     mcpId: string;

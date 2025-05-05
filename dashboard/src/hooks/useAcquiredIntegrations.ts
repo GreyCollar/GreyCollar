@@ -14,7 +14,12 @@ function useIntegrations() {
 
   const [authorized] = useEvent("INTEGRATION_UPDATED", null);
 
-  const getTokens = async (code: string, integration, id, isTeam: boolean) => {
+  const getTokens = async (
+    code: string,
+    integration,
+    id: string,
+    isTeam: boolean
+  ) => {
     const payload = {
       authorizationCode: code,
       mcpId: integration.id,
