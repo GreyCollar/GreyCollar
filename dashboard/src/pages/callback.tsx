@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const Login = () => {
+const Callback = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
@@ -15,4 +15,4 @@ const Login = () => {
   return null;
 };
 
-export default Login;
+export default Callback;
