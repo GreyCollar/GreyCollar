@@ -1,12 +1,16 @@
 import { useEffect } from "react";
 
 const AuthHandler = ({ skill, getTokens, onAuthSuccess }) => {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = skill?.oauth.clientScript;
-    script.async = true;
-    document.body.appendChild(script);
-  }, []);
+  useEffect(
+    () => {
+      const script = document.createElement("script");
+      script.src = skill?.oauth.clientScript;
+      script.async = true;
+      document.body.appendChild(script);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   const handleLogin = (id, isTeam) => {
     const { authUrl, clientId, redirectUri, scope } = skill.oauth;
