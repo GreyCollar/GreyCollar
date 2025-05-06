@@ -245,8 +245,8 @@ const IntegrationsWidget = () => {
                 Related Skills
               </Typography>
               <Grid container spacing={2}>
-                {relatedSkills.map((skill, index) => (
-                  <Grid item xs={6} key={index}>
+                {relatedSkills.map((skill) => (
+                  <Grid item xs={6} key={skill.id}>
                     <Skills
                       id={skill.id}
                       title={skill.title}
