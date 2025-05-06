@@ -2,7 +2,6 @@ import * as platform from "@nucleoidai/platform-express";
 
 import { AuthenticationError } from "@nucleoidai/platform-express/error";
 import Integration from "../models/Integration";
-import Integrations from "../integrations/integrations";
 import colleague from "../functions/colleague";
 import express from "express";
 import integration from "../functions/integration";
@@ -10,10 +9,11 @@ import integration from "../functions/integration";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
+  const { projectId: teamId } = req.session;
   const {
     authorizationCode,
     mcpId,
-    teamId,
+    teamId: integrationTeamId,
     colleagueId,
   }: {
     authorizationCode: string;
@@ -22,13 +22,17 @@ router.post("/", async (req, res) => {
     colleagueId?: string;
   } = req.body;
 
+  if (integrationTeamId && integrationTeamId !== teamId) {
+    throw new AuthenticationError();
+  }
+
   const createData: any = {
     authorizationCode,
     mcpId,
   };
 
-  if (teamId) {
-    createData.teamId = teamId;
+  if (integrationTeamId) {
+    createData.teamId = integrationTeamId;
   } else if (colleagueId) {
     createData.colleagueId = colleagueId;
   }
