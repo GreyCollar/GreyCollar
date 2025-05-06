@@ -1,11 +1,7 @@
-import {
-  NotFoundError,
-  ValidationError,
-} from "@nucleoidai/platform-express/error";
-
 import Colleague from "../models/Colleague";
 import Integration from "../models/Integration";
 import Integrations from "../integrations/integrations";
+import { NotFoundError } from "@nucleoidai/platform-express/error";
 import axios from "axios";
 
 async function read({
@@ -112,6 +108,8 @@ async function list() {
           tokenUrl: provider.oauth.tokenUrl,
           clientId: provider.oauth.clientId,
           redirectUri: provider.oauth.redirectUri,
+          authUrl: provider.oauth.authUrl,
+          clientScript: provider.oauth.clientScript,
         }
       : null,
   }));
