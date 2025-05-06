@@ -1,9 +1,11 @@
 import * as platform from "@nucleoidai/platform-express";
-import express from "express";
-import Joi from "joi";
+
 import Colleague from "../models/Colleague";
+import Joi from "joi";
 import Session from "../models/Session";
 import Supervising from "../models/Supervising";
+import agent from "../functions/agent";
+import express from "express";
 import schemas from "../schemas";
 
 const router = express.Router();
@@ -101,7 +103,10 @@ router.delete("/:id", async (req, res) => {
 
 router.get("/:colleagueId/sessions", async (req, res) => {
   const { projectId: teamId } = req.session;
-  const { colleagueId } = Joi.attempt(req.params, Joi.object({ colleagueId: Joi.string().guid().required() }));
+  const { colleagueId } = Joi.attempt(
+    req.params,
+    Joi.object({ colleagueId: Joi.string().guid().required() })
+  );
 
   const colleague = await Colleague.findByPk(colleagueId);
 
@@ -153,4 +158,15 @@ router.get("/:colleagueId/supervisings", async (req, res) => {
   res.json(supervisings);
 });
 
+router.post("/responsibility", async (req, res) => {
+  const { body } = req;
+
+  const response = await agent.responsibility({
+    content: body.content,
+  });
+
+  console.log(response);
+});
+
 export default router;
+

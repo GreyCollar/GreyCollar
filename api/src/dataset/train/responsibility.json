@@ -1,0 +1,192 @@
+[
+  {
+    "content": "{ integrationId: 8f828016-dd2e-4f76-bad5-2a0ca9b71d6f } find accounting related documents and send email to test@bla.com",
+    "integrations": [
+      {
+        "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
+        "action": "GDRIVE:search",
+        "provider": "GOOGLE DRIVE",
+        "description": "Search for files in Google Drive",
+        "oauth": {
+          "scope": "https://www.googleapis.com/auth/drive.metadata.readonly",
+          "tokenUrl": "https://oauth2.googleapis.com/token",
+          "clientId": "${GOOGLE_CLIENT_ID}",
+          "clientSecret": "${GOOGLE_CLIENT_SECRET}",
+          "redirectUri": "${GOOGLE_REDIRECT_URI}"
+        },
+        "direction": "OUTGOING",
+        "lib": "mcp",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The search query to find files in Google Drive."
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "id": "1d49fadb-93e3-43cc-88e4-f3bfc2ea4f0e",
+        "action": "SLACK:search",
+        "provider": "SLACK",
+        "description": "Search for messages in Slack",
+        "oauth": {
+          "scope": "search:read",
+          "tokenUrl": "https://slack.com/api/oauth.v2.access"
+        },
+        "direction": "INCOMING",
+        "lib": "mcp",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search term to look for messages or files in Slack."
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "id": "9e35c8d5-df44-44d9-8f9e-b4f4f3b1043d",
+        "action": "DISCORD:search",
+        "provider": "DISCORD",
+        "description": "Search for messages in Discord",
+        "oauth": {
+          "scope": "messages.read",
+          "tokenUrl": "https://discord.com/api/oauth2/token"
+        },
+        "direction": "INCOMING",
+        "lib": "mcp",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Keyword to search within Discord messages."
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "id": "a0e40e76-1b2a-4a13-947f-939a9ad354b4",
+        "action": "JIRA:search",
+        "provider": "JIRA",
+        "description": "Search for issues in JIRA",
+        "oauth": {
+          "scope": "read:jira-work",
+          "tokenUrl": "https://auth.atlassian.com/oauth/token"
+        },
+        "direction": "OUTGOING",
+        "lib": "mcp",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "JQL or text to search for issues in JIRA."
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "id": "f5e5c6fa-4f1c-4652-98a4-ef3c14467ea2",
+        "action": "GMAIL:send",
+        "provider": "GMAIL",
+        "description": "Send email using Gmail",
+        "oauth": {
+          "scope": "https://www.googleapis.com/auth/gmail.send",
+          "tokenUrl": "https://oauth2.googleapis.com/token",
+          "clientId": "${GOOGLE_CLIENT_ID}",
+          "clientSecret": "${GOOGLE_CLIENT_SECRET}",
+          "redirectUri": "${GOOGLE_REDIRECT_URI}"
+        },
+        "direction": "OUTGOING",
+        "lib": "mcp",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "to": {
+              "type": "string",
+              "description": "Recipient email address."
+            },
+            "subject": {
+              "type": "string",
+              "description": "Subject of the email."
+            },
+            "body": {
+              "type": "string",
+              "description": "Body of the email."
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "id": "fa1eec4e-35c0-4e0c-8b1b-36c0a4ea95ee",
+        "action": "GITHUB:search",
+        "provider": "GITHUB",
+        "description": "Search for repositories on GitHub",
+        "oauth": {
+          "scope": "repo",
+          "tokenUrl": "https://github.com/login/oauth/access_token"
+        },
+        "direction": "OUTGOING",
+        "lib": "mcp",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search term to look for repositories on GitHub."
+            }
+          },
+          "required": ["query"]
+        }
+      }
+    ],
+    "flow": [
+      {
+        "id": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
+        "type": "normal",
+        "properties": {
+          "label": "Google Drive Search",
+          "icon": "mdi:search",
+          "integrationId": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f"
+        },
+        "dependencyId": null,
+        "createdAt": "2023-08-05T10:00:00Z",
+        "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
+      },
+      {
+        "id": "a4530c59-a909-4318-8c9b-2dd8a4bd10c0",
+        "type": "normal",
+        "properties": {
+          "label": "Summarize Documents",
+          "icon": "mdi:pen"
+        },
+
+        "dependencyId": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
+        "createdAt": "2023-08-05T10:10:00Z",
+        "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
+      },
+      {
+        "id": "1a2a1880-4333-4d79-9042-1d043bb869c0",
+        "type": "normal",
+        "properties": {
+          "label": "Send Mail with Gmail",
+          "icon": "mdi:mail",
+          "integrationId": "f5e5c6fa-4f1c-4652-98a4-ef3c14467ea2"
+        },
+        "dependencyId": "a4530c59-a909-4318-8c9b-2dd8a4bd10c0",
+        "createdAt": "2023-08-05T10:20:00Z",
+        "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
+      }
+    ]
+  }
+]
+

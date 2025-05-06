@@ -67,4 +67,50 @@ async function generate({
   });
 }
 
-export { generate };
+async function generateNode({
+  dataset,
+  content,
+  json_format,
+}: {
+  dataset?: { role: string; content: string };
+  content: string | object;
+  json_format: string;
+}) {
+  const messages: { role: string; content: string }[] = [];
+
+  if (dataset) {
+    messages.push({ role: dataset.role, content: dataset.content });
+  }
+
+  messages.push({
+    role: "system",
+    content: `json_format: ${json_format}`,
+  });
+
+  messages.push({
+    role: "user",
+    content: typeof content === "object" ? JSON.stringify(content) : content,
+  });
+
+  const response = await llm.generateNode({ messages });
+
+  const text = Array.isArray(response.choices)
+    ? response.choices[0].message.content
+    : typeof response === "string"
+    ? response
+    : JSON.stringify(response);
+
+  try {
+    const parsed = JSON.parse(text);
+    if (!Array.isArray(parsed)) {
+      throw new Error("Expected a JSON array but got: " + typeof parsed);
+    }
+    return parsed;
+  } catch (err) {
+    console.error("Failed to parse JSON:\n", text);
+    throw err;
+  }
+}
+
+export { generate, generateNode };
+
