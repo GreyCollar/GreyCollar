@@ -52,6 +52,10 @@ async function create({
   teamId?: string;
   colleagueId?: string;
 }) {
+  if ((colleagueId && teamId) || (!colleagueId && !teamId)) {
+    throw new Error("EITHER_COLLEAGUE_ID_OR_TEAM_ID_REQUIRED");
+  }
+
   const params = new URLSearchParams();
 
   const integrationAuth = Integrations.find(
