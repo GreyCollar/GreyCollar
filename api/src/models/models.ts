@@ -18,7 +18,6 @@ async function init() {
   const Responsibility = require("./Responsibility");
   const ResponsibilityNode = require("./ResponsibilityNode");
   const Integration = require("./Integration");
-
   Project.hasMany(Colleague, {
     foreignKey: "teamId",
   });

@@ -8,7 +8,8 @@ const Integrations = ({
   description,
   logo,
   onSkillClick,
-  acquired,
+  id,
+  oauth,
 }) => {
   return (
     <Grid item xs={12} sm={6} md={3} key={key}>
@@ -17,7 +18,8 @@ const Integrations = ({
         description={description}
         logo={logo}
         onSkillClick={onSkillClick}
-        acquired={acquired}
+        id={id}
+        oauth={oauth}
       />
     </Grid>
   );

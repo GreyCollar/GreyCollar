@@ -1,57 +1,10 @@
-import {
-  NotFoundError,
-  ValidationError,
-} from "@nucleoidai/platform-express/error";
-
 import Colleague from "../models/Colleague";
 import Integration from "../models/Integration";
+import Integrations from "../integrations/integrations";
+import { NotFoundError } from "@nucleoidai/platform-express/error";
+import axios from "axios";
 
-async function create({
-  teamId,
-  colleagueId,
-  integration,
-}: {
-  teamId?: string;
-  colleagueId?: string;
-  integration: {
-    provider: string;
-    scope: string;
-    description: string;
-    direction: string;
-    acquired?: boolean;
-    colleagueId?: string;
-    teamId?: string;
-  };
-}) {
-  if (!teamId && !colleagueId) {
-    throw new ValidationError();
-  }
-
-  if (colleagueId) {
-    const colleagueInstance = await Colleague.findByPk(colleagueId);
-    if (!colleagueInstance) {
-      throw new NotFoundError();
-    }
-
-    integration.colleagueId = colleagueId;
-  }
-
-  if (teamId) {
-    integration.teamId = teamId;
-  }
-
-  const integrationInstance = await Integration.create(integration);
-
-  const integrationData = integrationInstance.toJSON();
-
-  return {
-    ...integrationData,
-    colleagueId: colleagueId || null,
-    teamId: teamId || null,
-  };
-}
-
-async function list({
+async function read({
   colleagueId,
   teamId,
 }: {
@@ -88,6 +41,84 @@ async function list({
     }));
 }
 
+async function create({
+  authorizationCode,
+  mcpId,
+  teamId,
+  colleagueId,
+}: {
+  authorizationCode: string;
+  mcpId: string;
+  teamId?: string;
+  colleagueId?: string;
+}) {
+  if ((colleagueId && teamId) || (!colleagueId && !teamId)) {
+    throw new Error("EITHER_COLLEAGUE_ID_OR_TEAM_ID_REQUIRED");
+  }
+
+  const params = new URLSearchParams();
+
+  const integrationAuth = Integrations.find(
+    (integration) => integration.id === mcpId
+  );
+
+  if (!integrationAuth) {
+    throw new NotFoundError();
+  }
+
+  const { clientId, clientSecret, redirectUri, tokenUrl } =
+    integrationAuth.oauth;
+
+  if (clientId && clientSecret && redirectUri && tokenUrl) {
+    params.append("code", authorizationCode);
+    params.append("client_id", clientId);
+    params.append("client_secret", clientSecret);
+    params.append("redirect_uri", redirectUri);
+    params.append("grant_type", "authorization_code");
+  }
+
+  const response = await axios.post(tokenUrl, params, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+
+  const tokens = response.data;
+
+  const { refresh_token } = tokens;
+
+  await Integration.create({
+    refreshToken: refresh_token,
+    mcpId,
+    teamId,
+    colleagueId,
+  });
+}
+
+async function list() {
+  if (!Integrations || Integrations.length === 0) {
+    throw new NotFoundError();
+  }
+
+  return Integrations.map((provider) => ({
+    id: provider.id,
+    provider: provider.provider,
+    description: provider.description,
+    action: provider.action,
+    direction: provider.direction,
+    oauth: provider.oauth
+      ? {
+          scope: provider.oauth.scope,
+          tokenUrl: provider.oauth.tokenUrl,
+          clientId: provider.oauth.clientId,
+          redirectUri: provider.oauth.redirectUri,
+          authUrl: provider.oauth.authUrl,
+          clientScript: provider.oauth.clientScript,
+        }
+      : null,
+  }));
+}
+
 async function get({ integrationId }: { integrationId: string }) {
   const integrationItem = await Integration.findByPk(integrationId);
 
@@ -98,4 +129,4 @@ async function get({ integrationId }: { integrationId: string }) {
   return integrationItem.toJSON();
 }
 
-export default { create, list, get };
+export default { read, get, create, list };

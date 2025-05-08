@@ -2,37 +2,45 @@ import * as platform from "@nucleoidai/platform-express";
 
 import { AuthenticationError } from "@nucleoidai/platform-express/error";
 import Integration from "../models/Integration";
-import Joi from "joi";
 import colleague from "../functions/colleague";
 import express from "express";
 import integration from "../functions/integration";
-import schemas from "../schemas";
 
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  const { body } = req;
   const { projectId: teamId } = req.session;
-
   const {
-    colleagueId,
+    authorizationCode,
+    mcpId,
     teamId: integrationTeamId,
-    ...integrationBody
-  } = Joi.attempt(body, schemas.Integration.create);
+    colleagueId,
+  }: {
+    authorizationCode: string;
+    mcpId: string;
+    teamId?: string;
+    colleagueId?: string;
+  } = req.body;
 
   if (integrationTeamId && integrationTeamId !== teamId) {
     throw new AuthenticationError();
   }
 
-  const integrations = await integration.create({
-    teamId,
-    colleagueId,
-    integration: integrationBody,
-  });
+  const createData: any = {
+    authorizationCode,
+    mcpId,
+  };
 
-  res.status(201).json(integrations);
+  if (integrationTeamId) {
+    createData.teamId = integrationTeamId;
+  } else if (colleagueId) {
+    createData.colleagueId = colleagueId;
+  }
+
+  const tokens = await integration.create(createData);
+
+  res.json({ tokens });
 });
-
 router.get("/", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { colleagueId, teamId: queryTeamId } = req.query as {
@@ -44,20 +52,26 @@ router.get("/", async (req, res) => {
     throw new AuthenticationError();
   }
 
-  if (colleagueId) {
-    const colleagueInstance = await colleague.get({ colleagueId });
+  if (colleagueId || queryTeamId) {
+    if (colleagueId) {
+      const colleagueInstance = await colleague.get({ colleagueId });
 
-    if (colleagueInstance.teamId !== teamId) {
-      throw new AuthenticationError();
+      if (colleagueInstance.teamId !== teamId) {
+        throw new AuthenticationError();
+      }
     }
+
+    const integrationList = await integration.read({
+      colleagueId: colleagueId || undefined,
+      teamId,
+    });
+
+    res.json(integrationList);
+  } else {
+    // TODO - split endpoint for all integrations
+    const allIntegrations = await integration.list();
+    res.json(allIntegrations);
   }
-
-  const integrationList = await integration.list({
-    colleagueId: colleagueId || undefined,
-    teamId,
-  });
-
-  res.json(integrationList);
 });
 
 router.delete("/:id", async (req, res) => {

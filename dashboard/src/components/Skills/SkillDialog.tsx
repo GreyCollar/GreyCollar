@@ -1,11 +1,10 @@
-// eslint-disable-next-line
 import "../../styles/connectButton.css";
 
+import AuthHandler from "../LoginHandler/AuthHandler";
 import ClosableDialogTitle from "./ClosableDialogTitle";
 import { Icon } from "@iconify/react";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
-import { getProviderLogo } from "../../utils/icon";
 
 import {
   Avatar,
@@ -32,38 +31,99 @@ const SkillDialog = ({
   skill,
   team,
   colleagues,
+  acquiredIntegrations,
+  getTokens,
 }: {
+  getTokens: (
+    integration,
+    code,
+    id,
+    isTeam
+  ) => Promise<{ refresh_token: string }>;
+  acquiredIntegrations?: Array<{
+    id: string;
+    mcpId: string;
+    refreshToken: string;
+  }>;
   open: boolean;
   handleClose: () => void;
   skill?: {
+    id: string;
     name: string;
     logo: string;
     title: string;
     description: string;
-    acquired: boolean;
+    oauth: {
+      scope: string;
+      tokenUrl: string;
+      clientId: string;
+      redirectUri: string;
+    };
   } | null;
-  team: { name: string; icon: string };
-  colleagues: Array<{ id: string; name: string; avatar: string }>;
+  team?: { name: string; icon: string; id: string };
+  colleagues?: Array<{ id: string; name: string; avatar: string }>;
 }) => {
+  const matchingIntegration = acquiredIntegrations?.find(
+    (integration) => integration.mcpId === skill?.id
+  );
+
   const [selectedOption, setSelectedOption] = useState("");
-  const [isSwitchChecked, setIsSwitchChecked] = useState(false);
+  const [selectedOptionId, setSelectedOptionId] = useState("");
+  const [isSwitchChecked, setIsSwitchChecked] = useState(
+    matchingIntegration?.refreshToken !== undefined &&
+      matchingIntegration?.refreshToken !== null &&
+      matchingIntegration?.refreshToken !== ""
+  );
   const NumberOne = "/media/number-one.png";
   const NumberTwo = "/media/number-two.png";
   const NumberThree = "/media/number-three.png";
 
+  const { handleLogin } = AuthHandler({
+    skill,
+    getTokens,
+    onAuthSuccess: () => setIsSwitchChecked(true),
+  });
+
   useEffect(() => {
-    if (skill?.acquired) {
+    if (team) {
       setSelectedOption(team.name);
-      setIsSwitchChecked(true);
+      setSelectedOptionId(team.id);
+    } else if (colleagues && colleagues.length > 0) {
+      setSelectedOption(colleagues[0].name);
+      setSelectedOptionId(colleagues[0].id);
     }
-  }, [skill, team]);
+  }, [team, colleagues]);
 
   const handleChange = (event) => {
-    setSelectedOption(event.target.value);
+    const selectedName = event.target.value;
+    setSelectedOption(selectedName);
+
+    if (team && selectedName === team.name) {
+      setSelectedOptionId(team.id);
+    } else if (colleagues) {
+      const selectedColleague = colleagues.find(
+        (colleague) => colleague.name === selectedName
+      );
+      setSelectedOptionId(selectedColleague?.id || "");
+    }
   };
 
-  const handleSwitchChange = (event) => {
-    setIsSwitchChecked(event.target.checked);
+  useEffect(() => {
+    setIsSwitchChecked(
+      matchingIntegration?.refreshToken !== undefined &&
+        matchingIntegration?.refreshToken !== null &&
+        matchingIntegration?.refreshToken !== ""
+    );
+  }, [matchingIntegration]);
+
+  const handleSwitchChange = () => {
+    if (matchingIntegration) {
+      if (!isSwitchChecked) {
+        handleLogin(selectedOptionId, team && selectedOptionId === team.id);
+      }
+      return;
+    }
+    setIsSwitchChecked(!isSwitchChecked);
   };
 
   if (!skill) return null;
@@ -80,15 +140,9 @@ const SkillDialog = ({
       <ClosableDialogTitle handleClose={handleClose} />
       <DialogContent>
         <Box sx={{ textAlign: "center" }}>
-          <Icon icon={getProviderLogo(skill.title)} width="20" height="20" />
+          <Icon icon={skill.logo} width="20" height="20" />
           <Typography variant="h4" sx={{ mt: 1 }}>
-            {skill.title
-              .split(" ")
-              .map(
-                (word) =>
-                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-              )
-              .join(" ")}
+            {skill.title}
           </Typography>
         </Box>
         <Box sx={{ mt: 3 }}>{skill.description}</Box>
@@ -120,47 +174,53 @@ const SkillDialog = ({
         </Box>
         <Divider sx={{ mt: 3 }} />
 
-        <Box sx={{ mt: 3, display: "flex", alignItems: "center" }}>
-          <FormControl fullWidth sx={{ mr: 2 }}>
-            <InputLabel id="select-label">Select Option</InputLabel>
-            <Select
-              labelId="select-label"
-              value={selectedOption}
-              onChange={handleChange}
-              label="Select Option"
-            >
-              <MenuItem value={team.name}>
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  <Iconify
-                    icon={team.icon.replace(/^:|:$/g, "")}
-                    sx={{ width: 40, height: 40 }}
-                  />
-                  <Box sx={{ ml: 1 }}>{team.name}</Box>
-                </Box>
-              </MenuItem>
+        <Box sx={{ mt: 3, display: "flex", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FormControl fullWidth sx={{ mr: 2 }}>
+              <InputLabel id="select-label">Select Option</InputLabel>
+              <Select
+                labelId="select-label"
+                value={selectedOption}
+                onChange={handleChange}
+                label="Select Option"
+              >
+                {team && (
+                  <MenuItem value={team.name}>
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Iconify
+                        icon={team.icon.replace(/^:|:$/g, "")}
+                        sx={{ width: 40, height: 40 }}
+                      />
+                      <Box sx={{ ml: 1 }}>{team.name}</Box>
+                    </Box>
+                  </MenuItem>
+                )}
 
-              {colleagues.map((colleague) => (
-                <MenuItem key={colleague.id} value={colleague.name}>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <SourcedAvatar
-                      source={"MINIMAL"}
-                      avatarUrl={colleague.avatar}
-                      name={colleague.name}
-                    />
-                    <Box sx={{ ml: 1 }}>{colleague.name}</Box>
-                  </Box>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <label className="switch">
-            <input
-              type="checkbox"
-              checked={isSwitchChecked}
-              onChange={handleSwitchChange}
-            />
-            <span></span>
-          </label>
+                {colleagues &&
+                  colleagues.map((colleague) => (
+                    <MenuItem key={colleague.id} value={colleague.name}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <SourcedAvatar
+                          source={"MINIMAL"}
+                          avatarUrl={colleague.avatar}
+                          name={colleague.name}
+                        />
+                        <Box sx={{ ml: 1 }}>{colleague.name}</Box>
+                      </Box>
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+
+            <label className="switch" style={{ cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={isSwitchChecked}
+                onChange={handleSwitchChange}
+              />
+              <span></span>
+            </label>
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions></DialogActions>
