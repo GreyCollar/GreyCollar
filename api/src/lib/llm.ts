@@ -95,7 +95,10 @@ async function generateNode({
     content: typeof content === "object" ? JSON.stringify(content) : content,
   });
 
-  const response = await llm.generateNode({ messages });
+  console.log("messages", messages);
+  console.log("llm", llm);
+
+  const response = await llm.generate({ messages });
 
   const text = Array.isArray(response.choices)
     ? response.choices[0].message.content

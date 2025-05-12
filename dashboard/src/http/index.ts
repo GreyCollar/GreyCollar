@@ -13,7 +13,7 @@ const instance = axios.create({
   },
 });
 
-axiosRetry(instance, { retries: 3 });
+//axiosRetry(instance, { retries: 3 });
 
 instance.interceptors.request.use((request) => {
   const accessToken = storage.get(config.name, "accessToken");
