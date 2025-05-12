@@ -159,7 +159,6 @@ router.get("/:colleagueId/supervisings", async (req, res) => {
 });
 
 router.post("/responsibility", async (req, res) => {
-  req.setTimeout(500000);
   const { body } = req;
 
   const response = await agent.responsibility({
@@ -175,4 +174,3 @@ router.post("/responsibility", async (req, res) => {
 });
 
 export default router;
-
