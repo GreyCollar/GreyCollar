@@ -18,10 +18,12 @@ function useStatistics() {
 
   const [teamSelected] = useEvent("PROJECT_SELECTED", null);
 
+  const [configInitialized] = useEvent("CONFIG_INITIALIZED", null);
+
   useEffect(() => {
     getStatistics();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teamSelected]);
+  }, [teamSelected, configInitialized]);
 
   const getStatistics = useCallback(() => {
     handleResponse(
