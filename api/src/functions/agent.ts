@@ -344,14 +344,17 @@ async function step({ stepId, action, parameters }) {
 }
 
 async function responsibility({ content }: { content: string }) {
-  const response = await generateNode({
-    dataset: dataset.train.responsibility,
-    content,
-    json_format: "{ response: <RESPONSE> ,flow: [<FLOW>] }",
-  });
-
-  return response;
+  try {
+    const response = await generateNode({
+      dataset: dataset.train.responsibility,
+      content,
+      json_format: "{ response: <RESPONSE> ,flow: [<FLOW>] }",
+    });
+    return response;
+  } catch (error) {
+    console.error("Error in responsibility function:", error);
+    throw error;
+  }
 }
 
 export default { teamChat, chat, task, step, responsibility };
-

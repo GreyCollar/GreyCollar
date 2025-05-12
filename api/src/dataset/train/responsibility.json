@@ -24,7 +24,9 @@
               "description": "The search query to find files in Google Drive."
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       },
       {
@@ -46,7 +48,9 @@
               "description": "Search term to look for messages or files in Slack."
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       },
       {
@@ -68,7 +72,9 @@
               "description": "Keyword to search within Discord messages."
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       },
       {
@@ -90,7 +96,9 @@
               "description": "JQL or text to search for issues in JIRA."
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       },
       {
@@ -123,7 +131,9 @@
               "description": "Body of the email."
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       },
       {
@@ -145,10 +155,13 @@
               "description": "Search term to look for repositories on GitHub."
             }
           },
-          "required": ["query"]
+          "required": [
+            "query"
+          ]
         }
       }
     ],
+    "response": "Here’s the flow for your request to find accounting-related documents and send an email to test@bla.com:\n\n1. Google Drive Search\n   • Integration: 8f828016-dd2e-4f76-bad5-2a0ca9b71d6f (GDRIVE:search)\n   • Action: Search for files in Google Drive matching your query (“accounting related documents”).\n\n2. Summarize Documents\n   • Step: Once the files are retrieved, automatically generate concise summaries of each document’s contents.\n\n3. Send Mail with Gmail\n   • Integration: f5e5c6fa-4f1c-4652-98a4-ef3c14467ea2 (GMAIL:send)\n   • Action: Compose and send an email to test@bla.com, attaching or embedding the generated summaries.\n\nLet me know if you’d like to tweak any of these steps—such as adding filters to your Drive search, adjusting the summary format, or customizing the email subject and body!\"",
     "flow": [
       {
         "id": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
@@ -169,7 +182,6 @@
           "label": "Summarize Documents",
           "icon": "mdi:pen"
         },
-
         "dependencyId": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
         "createdAt": "2023-08-05T10:10:00Z",
         "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
@@ -189,4 +201,3 @@
     ]
   }
 ]
-

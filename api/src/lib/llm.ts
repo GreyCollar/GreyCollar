@@ -59,6 +59,9 @@ async function generate({
     messages.unshift(policy);
   }
 
+  console.log("messages", messages);
+  console.log("llm", llm);
+
   return await llm.generate({
     model,
     messages,
@@ -102,9 +105,9 @@ async function generateNode({
 
   try {
     const parsed = JSON.parse(text);
-    if (!Array.isArray(parsed)) {
-      throw new Error("Expected a JSON array but got: " + typeof parsed);
-    }
+    console.log("flow", parsed?.flow);
+    console.log("response", parsed?.response);
+
     return parsed;
   } catch (err) {
     console.error("Failed to parse JSON:\n", text);
