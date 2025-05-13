@@ -161,7 +161,7 @@
         }
       }
     ],
-    "response": "Here’s the flow for your request to find accounting-related documents and send an email to test@bla.com:\n\n1. Google Drive Search\n   • Integration: 8f828016-dd2e-4f76-bad5-2a0ca9b71d6f (GDRIVE:search)\n   • Action: Search for files in Google Drive matching your query (“accounting related documents”).\n\n2. Summarize Documents\n   • Step: Once the files are retrieved, automatically generate concise summaries of each document’s contents.\n\n3. Send Mail with Gmail\n   • Integration: f5e5c6fa-4f1c-4652-98a4-ef3c14467ea2 (GMAIL:send)\n   • Action: Compose and send an email to test@bla.com, attaching or embedding the generated summaries.\n\nLet me know if you’d like to tweak any of these steps—such as adding filters to your Drive search, adjusting the summary format, or customizing the email subject and body!\"",
+    "response": "Here’s the flow for your request to find accounting-related documents and send an email to test@bla.com",
     "flow": [
       {
         "id": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
