@@ -1,11 +1,14 @@
+import azure from "./azure";
+import openai from "./openai";
+
 let llm;
 
 if (process.env.PLATFORM_LLM === "OPENAI") {
-  llm = require("./openai").default;
+  llm = openai;
 }
 
 if (process.env.PLATFORM_LLM === "AZURE") {
-  llm = require("./azure").default;
+  llm = azure;
 }
 
 async function generate({
@@ -74,29 +77,52 @@ async function generateNode({
   dataset,
   content,
   json_format,
+  flow,
 }: {
   dataset?: { role: string; content: string };
-  content: string | object;
   json_format: string;
+  content: { role: string; content: string; text?: string }[];
+  flow: [];
 }) {
-  const messages: { role: string; content: string }[] = [];
+  const messages: {
+    role: string;
+    content?: string;
+    text?: string;
+    flow?: [];
+  }[] = [];
+
+  console.log(content);
+  console.log(flow);
 
   if (dataset) {
     messages.push({ role: dataset.role, content: dataset.content });
   }
 
-  messages.push({
-    role: "system",
-    content: `json_format: ${json_format}`,
-  });
+  if (content.length > 1) {
+    content.forEach((message) => {
+      messages.push({
+        role: message.role === "ai" ? "assistant" : message.role,
+        content: message?.content || message?.text,
+      });
+    });
+  }
+
+  if (flow) {
+    messages.push({
+      role: "system",
+      content: JSON.stringify(flow),
+    });
+  }
 
   messages.push({
     role: "user",
     content: typeof content === "object" ? JSON.stringify(content) : content,
   });
 
-  console.log("messages", messages);
-  console.log("llm", llm);
+  messages.push({
+    role: "system",
+    content: `json_format: ${json_format}`,
+  });
 
   const response = await llm.generate({ messages });
 

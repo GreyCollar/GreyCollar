@@ -53,6 +53,7 @@ const ResponsibilityDrawer = ({
                   <ResponsibilityChat
                     selectedItem={selectedItem}
                     setAiResponse={setAiResponse}
+                    aiResponse={aiResponse}
                   />
                 </Box>
               </Box>

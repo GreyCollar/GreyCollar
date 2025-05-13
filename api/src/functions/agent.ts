@@ -343,11 +343,18 @@ async function step({ stepId, action, parameters }) {
   }
 }
 
-async function responsibility({ content }: { content: string }) {
+async function responsibility({
+  flow,
+  content,
+}: {
+  flow: [];
+  content: { role: string; content: string }[];
+}) {
   try {
     const response = await generateNode({
       dataset: dataset.train.responsibility,
       content,
+      flow,
       json_format: "{ response: <RESPONSE> ,flow: [<FLOW>] }",
     });
     return response;

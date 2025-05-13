@@ -3,12 +3,13 @@ import ChatInput from "../../widgets/ChatInput/ChatInput";
 import ResponsibilityChatContent from "./ResponsibilityChatContent";
 import { createEditor } from "slate";
 import http from "../../http";
+import { publish } from "@nucleoidai/react-event";
 import { withHistory } from "slate-history";
 import { withReact } from "slate-react";
 
 import React, { useMemo, useState } from "react";
 
-function ResponsibilityChat({ setAiResponse, selectedItem }) {
+function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
@@ -19,32 +20,50 @@ function ResponsibilityChat({ setAiResponse, selectedItem }) {
   );
 
   const addMessage = async (message, role = "user") => {
-    setMessages((prevMessages) => [...prevMessages, { text: message, role }]);
+    try {
+      setMessages((prevMessages) => [...prevMessages, { text: message, role }]);
 
-    if (role === "user") {
-      setLoading(true);
-      setError(null);
+      if (role === "user") {
+        setLoading(true);
+        setError(null);
 
-      try {
+        const history =
+          messages.length > 0
+            ? [...messages, { text: message, role: "user" }]
+            : [{ role: "user", content: message }];
+
+        const flow = aiResponse?.flow ? JSON.stringify(aiResponse.flow) : null;
+
         const response = await http.post("/colleagues/responsibility", {
-          content: message,
+          content: JSON.stringify(history),
+          flow,
         });
 
         if (response.status >= 200 && response.status < 300) {
           const aiMessage = response?.data?.response;
+          if (!aiMessage) {
+            throw new Error("No response received from AI");
+          }
+
           setAiResponse(response.data);
           setMessages((prevMessages) => [
             ...prevMessages,
             { text: aiMessage, role: "ai" },
           ]);
+          publish("MESSAGES_LOADED", true);
         } else {
-          setError("Failed to fetch AI response");
+          throw new Error(`Server responded with status: ${response.status}`);
         }
-      } catch (err) {
-        setError("Failed to fetch AI response");
-      } finally {
-        setLoading(false);
       }
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to fetch AI response";
+      setError(errorMessage);
+      console.error("Error in addMessage:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,7 +85,16 @@ function ResponsibilityChat({ setAiResponse, selectedItem }) {
         selectedItem={selectedItem}
       />
       {error && (
-        <Box sx={{ color: "error.main", my: 1, fontSize: "0.875rem" }}>
+        <Box
+          sx={{
+            color: "error.main",
+            my: 1,
+            fontSize: "0.875rem",
+            padding: "8px",
+            backgroundColor: "error.light",
+            borderRadius: "4px",
+          }}
+        >
           {error}
         </Box>
       )}
