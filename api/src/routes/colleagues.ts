@@ -161,16 +161,10 @@ router.get("/:colleagueId/supervisings", async (req, res) => {
 router.post("/responsibility", async (req, res) => {
   const { body } = req;
 
-  const flow =
-    typeof body.flow === "string" ? JSON.parse(body.flow) : body.flow || [];
-  const content =
-    typeof body.content === "string"
-      ? JSON.parse(body.content)
-      : body.content || [];
+  const context = body.context;
 
   const response = await agent.responsibility({
-    content,
-    flow,
+    context,
   });
 
   res.json({
@@ -180,4 +174,3 @@ router.post("/responsibility", async (req, res) => {
 });
 
 export default router;
-

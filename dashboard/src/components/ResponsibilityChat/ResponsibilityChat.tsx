@@ -21,22 +21,30 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
 
   const addMessage = async (message, role = "user") => {
     try {
-      setMessages((prevMessages) => [...prevMessages, { text: message, role }]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { content: message, role },
+      ]);
 
       if (role === "user") {
         setLoading(true);
         setError(null);
 
-        const history =
-          messages.length > 0
-            ? [...messages, { text: message, role: "user" }]
-            : [{ role: "user", content: message }];
-
-        const flow = aiResponse?.flow ? JSON.stringify(aiResponse.flow) : null;
+        const history = [
+          ...messages,
+          ...(aiResponse?.flow
+            ? [
+                {
+                  content: JSON.stringify(aiResponse.flow),
+                  role: "assistant",
+                },
+              ]
+            : []),
+          { content: message, role: "user" },
+        ];
 
         const response = await http.post("/colleagues/responsibility", {
-          content: JSON.stringify(history),
-          flow,
+          context: history,
         });
 
         if (response.status >= 200 && response.status < 300) {
@@ -48,7 +56,7 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
           setAiResponse(response.data);
           setMessages((prevMessages) => [
             ...prevMessages,
-            { text: aiMessage, role: "ai" },
+            { content: aiMessage, role: "assistant" },
           ]);
           publish("MESSAGES_LOADED", true);
         } else {
