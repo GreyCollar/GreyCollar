@@ -1,4 +1,5 @@
 import ColleagueIntegration from "../widgets/ColleagueIntegration/ColleagueIntegration";
+import Communication from "../widgets/Communication/Communication";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import Knowledge from "../widgets/Knowledge/Knowledge";
 import PopupChatWidget from "../widgets/PopupChatWidget";
@@ -50,6 +51,11 @@ const TABS = [
     value: "integrations",
     label: "Integrations",
     icon: <Iconify icon="carbon:ibm-cloud-pak-integration" width={24} />,
+  },
+  {
+    value: "communication",
+    label: "Communication",
+    icon: <Iconify icon="material-symbols:chat" width={24} />,
   },
 ];
 
@@ -135,6 +141,7 @@ function ColleagueLayout({ colleague, loading }) {
       {currentTab === "integrations" && (
         <ColleagueIntegration colleague={colleague} />
       )}
+      {currentTab === "communication" && <Communication />}
     </>
   );
 }
