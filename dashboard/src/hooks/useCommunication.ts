@@ -19,7 +19,7 @@ function useCommunication() {
     const eventDependencies = [communicationCreated, communicationDeleted];
 
     const { data, loading, error, fetch } = Api(
-      () => http.get("/connections"),
+      () => http.get("/communications"),
       [...eventDependencies]
     );
 
@@ -36,13 +36,13 @@ function useCommunication() {
   };
 
   const createCommunication = async (communication: CommunicationPayload) => {
-    const response = await http.post("/connections", communication);
+    const response = await http.post("/communications", communication);
     publish("COMMUNICATION_CREATED", { communication: response.data });
     return response.data;
   };
 
   const deleteCommunication = async (id: string) => {
-    await http.delete(`/connections/${id}`);
+    await http.delete(`/communications/${id}`);
     publish("COMMUNICATION_DELETED", { id });
   };
 
