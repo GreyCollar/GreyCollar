@@ -18,44 +18,95 @@ import {
   Tabs,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 
-const ChannelConnectionDialog = ({
-  dialogOpen,
-  handleDialogClose,
-  tabIndex,
-  setTabIndex,
-  handleTabChange,
-  leftSelection,
-  setLeftSelection,
+const CommunicationWizard = ({
+  open,
+  onClose,
   channels,
-  theme,
-  handleChannelDelete,
-  handleAddChannelClick,
-  selectedRights,
-  setSelectedRights,
-  responsibilityIcon,
   responsibilities,
-  anchorEl,
-  handleAddChannelClose,
   availableChannels,
-  handleChannelAdd,
-  inputDialogOpen,
-  pendingChannelOption,
-  inputValue,
-  setInputValue,
-  handleInputDialogClose,
-  handleInputSubmit,
-  handleConnect,
+  onAddChannel,
+  onDeleteChannel,
+  onConnect,
+  responsibilityIcon,
 }) => {
+  const theme = useTheme();
+  const [tabIndex, setTabIndex] = React.useState(0);
+  const [leftSelection, setLeftSelection] = React.useState(null);
+  const [selectedRights, setSelectedRights] = React.useState([]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [inputDialogOpen, setInputDialogOpen] = React.useState(false);
+  const [pendingChannelOption, setPendingChannelOption] = React.useState(null);
+  const [inputValue, setInputValue] = React.useState("");
+
+  const handleDialogClose = () => {
+    onClose();
+    setTabIndex(0);
+    setLeftSelection(null);
+    setSelectedRights([]);
+  };
+
+  const handleTabChange = (_event, newValue) => setTabIndex(newValue);
+
+  const handleAddChannelClick = (event) => setAnchorEl(event.currentTarget);
+  const handleAddChannelClose = () => setAnchorEl(null);
+
+  const handleChannelAdd = (optionId) => {
+    const option = (availableChannels || []).find((c) => c.id === optionId);
+    if (!option) return;
+    if (option.requiresInput) {
+      setPendingChannelOption(option);
+      setInputValue("");
+      setInputDialogOpen(true);
+    } else {
+      onAddChannel &&
+        onAddChannel({
+          type: option.id,
+          id: option.id,
+          label: option.label,
+          icon: option.icon,
+          code: option.id,
+        });
+    }
+    handleAddChannelClose();
+  };
+
+  const handleInputDialogClose = () => {
+    setInputDialogOpen(false);
+    setPendingChannelOption(null);
+    setInputValue("");
+  };
+
+  const handleInputSubmit = () => {
+    if (pendingChannelOption) {
+      onAddChannel &&
+        onAddChannel({
+          type: pendingChannelOption.id,
+          id: pendingChannelOption.id,
+          label: `${pendingChannelOption.label} (${inputValue})`,
+          icon: pendingChannelOption.icon,
+          code: inputValue,
+        });
+    }
+    handleInputDialogClose();
+  };
+
+  const handleConnect = async () => {
+    if (!leftSelection) return;
+    if (onConnect) await onConnect(leftSelection, selectedRights);
+    handleDialogClose();
+  };
+
+  const handleChannelDelete = async (channelId) => {
+    if (onDeleteChannel) await onDeleteChannel(channelId);
+    if (leftSelection === channelId) handleDialogClose();
+  };
+
   return (
     <>
-      <Dialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        fullWidth
-        maxWidth="sm"
-      >
+      <Dialog open={open} onClose={handleDialogClose} fullWidth maxWidth="sm">
         <DialogTitle>Connect Channel to Responsibility</DialogTitle>
         <DialogContent dividers>
           <Tabs value={tabIndex} onChange={handleTabChange}>
@@ -227,4 +278,4 @@ const ChannelConnectionDialog = ({
   );
 };
 
-export default ChannelConnectionDialog;
+export default CommunicationWizard;
