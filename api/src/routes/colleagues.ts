@@ -161,10 +161,12 @@ router.get("/:colleagueId/supervisings", async (req, res) => {
 router.post("/responsibility", async (req, res) => {
   const { body } = req;
 
-  const context = body.context;
+  const history = body?.history;
+  const content = body.content;
 
   const response = await agent.responsibility({
-    context,
+    history: history ? history : [],
+    content,
   });
 
   res.json({

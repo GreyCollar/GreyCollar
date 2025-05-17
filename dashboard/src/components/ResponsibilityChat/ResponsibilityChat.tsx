@@ -40,11 +40,11 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
                 },
               ]
             : []),
-          { content: message, role: "user" },
         ];
 
         const response = await http.post("/colleagues/responsibility", {
-          context: history,
+          history,
+          content: message,
         });
 
         if (response.status >= 200 && response.status < 300) {
