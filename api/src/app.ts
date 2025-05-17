@@ -53,7 +53,7 @@ app.use("/organizations", organizations);
 app.use("/statistics", statistics);
 app.use("/responsibilities", responsibilities);
 app.use("/integrations", integrations);
-app.use("/connections", communications);
+app.use("/communications", communications);
 subscribe("MESSAGE", "USER_MESSAGED", ({ teamId, content }) =>
   agent.teamChat({ teamId, content })
 );
