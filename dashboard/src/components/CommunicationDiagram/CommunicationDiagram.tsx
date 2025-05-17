@@ -1,22 +1,16 @@
-import AddIcon from "@mui/icons-material/Add";
-import ChannelConnectionDialog from "./ChannelConnectionDialog";
 import { Icon } from "@iconify/react";
 
-import { Box, Card, Container, Fab, Typography, useTheme } from "@mui/material";
-import React, { useMemo, useRef, useState } from "react";
+import { Box, Card, Container, Typography, useTheme } from "@mui/material";
+import React, { useMemo } from "react";
 
 const DEFAULT_RESPONSIBILITY_ICON =
   "healthicons:crisis-response-center-person-outline";
 
-function CommunicationChannel(props) {
+function CommunicationDiagram(props) {
   const {
     channels,
     responsibilities,
     connections,
-    availableChannels,
-    onAddChannel,
-    onDeleteChannel,
-    onConnect,
     nodeWidth = 200,
     nodeHeight = 100,
     leftX = 0,
@@ -24,7 +18,6 @@ function CommunicationChannel(props) {
     initialTop = 20,
     verticalGap = 20,
     colorMap,
-    addFab,
     containerProps,
     showRightIcons = true,
     showLeftIcons = true,
@@ -34,17 +27,6 @@ function CommunicationChannel(props) {
   } = props;
 
   const theme = useTheme();
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [tabIndex, setTabIndex] = useState(0);
-  const [leftSelection, setLeftSelection] = useState(null);
-  const [selectedRights, setSelectedRights] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [inputDialogOpen, setInputDialogOpen] = useState(false);
-  const [pendingChannelOption, setPendingChannelOption] = useState(null);
-  const [inputValue, setInputValue] = useState("");
-
-  const idCounter = useRef(0);
 
   const positionsLeft = useMemo(
     () =>
@@ -89,71 +71,6 @@ function CommunicationChannel(props) {
     [theme, colorMap]
   );
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
-    setTabIndex(0);
-    setLeftSelection(null);
-    setSelectedRights([]);
-  };
-  const handleTabChange = (_event, newValue) => setTabIndex(newValue);
-
-  const handleAddChannelClick = (event) => setAnchorEl(event.currentTarget);
-  const handleAddChannelClose = () => setAnchorEl(null);
-
-  const handleChannelAdd = (optionId) => {
-    const option = (availableChannels || []).find((c) => c.id === optionId);
-    if (!option) return;
-    if (option.requiresInput) {
-      setPendingChannelOption(option);
-      setInputValue("");
-      setInputDialogOpen(true);
-    } else {
-      idCounter.current += 1;
-      const instanceId = `${optionId}-${idCounter.current}`;
-      onAddChannel &&
-        onAddChannel({
-          type: option.id,
-          id: instanceId,
-          label: option.label,
-          icon: option.icon,
-          code: option.id,
-        });
-    }
-    handleAddChannelClose();
-  };
-
-  const handleInputDialogClose = () => {
-    setInputDialogOpen(false);
-    setPendingChannelOption(null);
-    setInputValue("");
-  };
-  const handleInputSubmit = () => {
-    if (pendingChannelOption) {
-      idCounter.current += 1;
-      const instanceId = `${pendingChannelOption.id}-${idCounter.current}`;
-      onAddChannel &&
-        onAddChannel({
-          type: pendingChannelOption.id,
-          id: instanceId,
-          label: `${pendingChannelOption.label} (${inputValue})`,
-          icon: pendingChannelOption.icon,
-          code: inputValue,
-        });
-    }
-    handleInputDialogClose();
-  };
-
-  const handleConnect = async () => {
-    if (!leftSelection) return;
-    if (onConnect) await onConnect(leftSelection, selectedRights);
-    handleDialogClose();
-  };
-
-  const handleChannelDelete = async (channelId) => {
-    if (onDeleteChannel) await onDeleteChannel(channelId);
-    if (leftSelection === channelId) handleDialogClose();
-  };
-
   const renderEdges = () =>
     (connections || []).map(({ left, right }) => {
       const leftNode = positionsLeft.find((n) => n.id === left);
@@ -187,19 +104,6 @@ function CommunicationChannel(props) {
         />
       );
     });
-
-  const addConnectionFab = addFab || (
-    <Fab
-      variant="button"
-      color="default"
-      size="medium"
-      sx={{ position: "fixed", bottom: 16, right: 16 }}
-      onClick={() => setDialogOpen(true)}
-      aria-label="Connect channel to responsibility"
-    >
-      <AddIcon />
-    </Fab>
-  );
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }} {...containerProps}>
@@ -311,40 +215,9 @@ function CommunicationChannel(props) {
           </defs>
           {renderEdges()}
         </svg>
-
-        {addConnectionFab}
-
-        <ChannelConnectionDialog
-          dialogOpen={dialogOpen}
-          handleDialogClose={handleDialogClose}
-          tabIndex={tabIndex}
-          setTabIndex={setTabIndex}
-          handleTabChange={handleTabChange}
-          leftSelection={leftSelection}
-          setLeftSelection={setLeftSelection}
-          channels={positionsLeft}
-          theme={theme}
-          handleChannelDelete={handleChannelDelete}
-          handleAddChannelClick={handleAddChannelClick}
-          selectedRights={selectedRights}
-          setSelectedRights={setSelectedRights}
-          responsibilityIcon={responsibilityIcon}
-          responsibilities={rightNodes}
-          anchorEl={anchorEl}
-          handleAddChannelClose={handleAddChannelClose}
-          availableChannels={availableChannels}
-          handleChannelAdd={handleChannelAdd}
-          inputDialogOpen={inputDialogOpen}
-          pendingChannelOption={pendingChannelOption}
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          handleInputDialogClose={handleInputDialogClose}
-          handleInputSubmit={handleInputSubmit}
-          handleConnect={handleConnect}
-        />
       </Box>
     </Container>
   );
 }
 
-export default CommunicationChannel;
+export default CommunicationDiagram;
