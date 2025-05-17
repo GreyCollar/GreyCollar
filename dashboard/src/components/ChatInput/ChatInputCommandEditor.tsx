@@ -113,6 +113,7 @@ const ChatInputCommandEditor = ({
   };
 
   const handleCommandSelect = (command) => {
+    console.log(command, "command");
     setSelectedCommand(command);
     insertCommand(command.name);
   };
@@ -124,6 +125,7 @@ const ChatInputCommandEditor = ({
         type: "input",
         options: currentInput.list,
         onSelect: (selectedOption) => {
+          console.log(selectedOption, "selectedOption");
           if (!selectedOption || !selectedOption.name) return;
 
           const selectedInput = currentInput.action(selectedOption.name);
@@ -351,6 +353,16 @@ const ChatInputCommandEditor = ({
               setCurrentInput(firstInput.next);
             },
             children: [{ text: "Select a Colleague" }],
+          });
+        } else if (firstInput.type === "INTEGRATION") {
+          Transforms.insertNodes(editor, {
+            type: "input",
+            options: firstInput.list,
+            onSelect: (option) => {
+              console.log(option, "option");
+              handleInputSubmit(firstInput.action(option.name), option.name);
+            },
+            children: [{ text: firstInput.label }],
           });
         }
         Transforms.insertText(editor, " ", { at: Editor.end(editor, []) });

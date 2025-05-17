@@ -1,29 +1,37 @@
 import Box from "@mui/material/Box";
-import ChatInput from "../../widgets/ChatInput/ChatInput";
+import InlineChatInput from "../../widgets/ChatInput/InlineChatInput";
 import ResponsibilityChatContent from "./ResponsibilityChatContent";
-import { createEditor } from "slate";
 import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
-import { withHistory } from "slate-history";
-import { withReact } from "slate-react";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
 
-  const editor = useMemo(
-    () => withMentions(withInlines(withHistory(withReact(createEditor())))),
-    []
-  );
-
   const addMessage = async (message, role = "user") => {
     try {
+      const parsedMessage = message
+        .split(/(\{.*?\})/)
+        .map((part) => {
+          if (part.startsWith("{") && part.endsWith("}")) {
+            try {
+              const parsed = JSON.parse(part);
+              return JSON.stringify(parsed);
+            } catch {
+              return part;
+            }
+          }
+          return part;
+        })
+        .filter((part) => part !== "")
+        .join("");
+
       setMessages((prevMessages) => [
         ...prevMessages,
-        { content: message, role },
+        { content: parsedMessage, role },
       ]);
 
       if (role === "user") {
@@ -40,7 +48,7 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
                 },
               ]
             : []),
-          { content: message, role: "user" },
+          { content: parsedMessage, role: "user" },
         ];
 
         const response = await http.post("/colleagues/responsibility", {
@@ -106,57 +114,9 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
           {error}
         </Box>
       )}
-      <ChatInput
-        onSendMessage={addMessage}
-        editor={editor}
-        responsibilityChat={true}
-      />
+      <InlineChatInput onSend={(message) => addMessage(message)} />
     </Box>
   );
 }
 
 export default ResponsibilityChat;
-
-const withInlines = (editor) => {
-  const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =
-    editor;
-
-  editor.isInline = (element) =>
-    ["commandText", "input", "optional"].includes(element.type) ||
-    isInline(element);
-
-  editor.isElementReadOnly = (element) =>
-    element.type === "input" ||
-    element.type === "commandText" ||
-    element.type === "optional" ||
-    isElementReadOnly(element);
-
-  editor.isSelectable = (element) =>
-    element.type !== "input" ||
-    element.type !== "optional" ||
-    (element.type !== "commandText" && isSelectable(element));
-
-  editor.insertText = (text) => {
-    insertText(text);
-  };
-
-  editor.insertData = (data) => {
-    insertData(data);
-  };
-
-  return editor;
-};
-
-const withMentions = (editor) => {
-  const { isInline, isVoid, markableVoid } = editor;
-  editor.isInline = (element) => {
-    return element.type === "mention" ? true : isInline(element);
-  };
-  editor.isVoid = (element) => {
-    return element.type === "mention" ? true : isVoid(element);
-  };
-  editor.markableVoid = (element) => {
-    return element.type === "mention" || markableVoid(element);
-  };
-  return editor;
-};
