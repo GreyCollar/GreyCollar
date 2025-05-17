@@ -23,7 +23,7 @@ async function init() {
   Responsibility.hasMany(Communication, {
     foreignKey: "responsibilityId",
   });
-  Communication.hasMany(Responsibility, {
+  Communication.belongsTo(Responsibility, {
     foreignKey: "responsibilityId",
   });
 
