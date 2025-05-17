@@ -1,0 +1,40 @@
+import Communication from "../models/Communication";
+import { NotFoundError } from "@nucleoidai/platform-express/error";
+
+async function read() {
+  const communications = await Communication.findAll();
+
+  return communications.map((communication) => communication.toJSON());
+}
+
+async function create({ data }: { data: any }) {
+  const communication = await Communication.create({
+    ...data,
+  });
+
+  return communication.toJSON();
+}
+
+async function get({ communicationId }: { communicationId: string }) {
+  const communication = await Communication.findByPk(communicationId);
+
+  if (!communication) {
+    throw new NotFoundError();
+  }
+
+  return communication.toJSON();
+}
+
+async function remove({ communicationId }: { communicationId: string }) {
+  const deleted = await Communication.destroy({
+    where: { id: communicationId },
+  });
+
+  if (!deleted) {
+    throw new NotFoundError();
+  }
+
+  return true;
+}
+
+export default { read, create, get, remove };
