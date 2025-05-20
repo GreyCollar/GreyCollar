@@ -1,5 +1,7 @@
+import Joi from "joi";
 import communication from "../functions/communication";
 import express from "express";
+import schemas from "../schemas";
 
 const router = express.Router();
 
@@ -14,9 +16,15 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { ...data } = req.body;
+  const { channelCode, channelType, responsibilityId } = Joi.attempt(
+    req.body,
+    schemas.Communication.create
+  );
+
   const comm = await communication.create({
-    data,
+    channelCode,
+    channelType,
+    responsibilityId,
   });
   res.status(201).json(comm);
 });

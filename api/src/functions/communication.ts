@@ -7,9 +7,19 @@ async function read() {
   return communications.map((communication) => communication.toJSON());
 }
 
-async function create({ data }: { data: any }) {
+async function create({
+  channelType,
+  channelCode,
+  responsibilityId,
+}: {
+  channelType: string;
+  channelCode: string;
+  responsibilityId: string;
+}) {
   const communication = await Communication.create({
-    ...data,
+    channelType,
+    channelCode,
+    responsibilityId,
   });
 
   return communication.toJSON();
