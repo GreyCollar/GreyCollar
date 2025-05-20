@@ -8,6 +8,15 @@ const CommunicationResponsibilitySelection = ({
   selectedRights,
   onRightsChange,
   responsibilityIcon,
+}: {
+  responsibilities: Array<{
+    id: string;
+    title: string;
+    icon?: string;
+  }>;
+  selectedRights: string[];
+  onRightsChange: (rights: string[]) => void;
+  responsibilityIcon?: string;
 }) => {
   const theme = useTheme();
 

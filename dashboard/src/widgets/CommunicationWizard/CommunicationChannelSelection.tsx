@@ -21,6 +21,22 @@ const CommunicationChannelSelection = ({
   onChannelSelect,
   onChannelDelete,
   onChannelAddRequest,
+}: {
+  channels: Array<{
+    id: string;
+    label: string;
+    icon: string;
+  }>;
+  availableChannels?: Array<{
+    id: string;
+    label: string;
+    icon: string;
+    requiresInput?: boolean;
+  }>;
+  leftSelection?: string | null;
+  onChannelSelect: (channelId: string) => void;
+  onChannelDelete: (channelId: string) => void;
+  onChannelAddRequest: (optionId: string) => void;
 }) => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState(null);
