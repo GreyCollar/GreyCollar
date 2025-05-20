@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import CommunicationDiagram from "../../components/CommunicationDiagram/CommunicationDiagram";
 import CommunicationWizard from "../CommunicationWizard/CommunicationWizard";
-import useCommunication from "../../hooks/useCommunication";
+import useCommunications from "../../hooks/useCommunications";
 import useResponsibility from "../../hooks/useResponsibility";
 
 import { Box, Container, Fab } from "@mui/material";
@@ -24,7 +24,7 @@ const Communication = () => {
   const { responsibility: respList, loading, error } = getResponsibility();
 
   const { getCommunications, createCommunication, deleteCommunication } =
-    useCommunication();
+    useCommunications();
   const { communications } = getCommunications();
 
   const [channels, setChannels] = useState([]);

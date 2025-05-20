@@ -9,7 +9,7 @@ export type CommunicationPayload = {
   responsibilityId: string;
 };
 
-function useCommunication() {
+function useCommunications() {
   const { Api } = useApi();
 
   const [communicationCreated] = useEvent("COMMUNICATION_CREATED", null);
@@ -49,4 +49,4 @@ function useCommunication() {
   return { getCommunications, createCommunication, deleteCommunication };
 }
 
-export default useCommunication;
+export default useCommunications;
