@@ -1,7 +1,7 @@
 import Communication from "../models/Communication";
 import { NotFoundError } from "@nucleoidai/platform-express/error";
 
-async function read() {
+async function list() {
   const communications = await Communication.findAll();
 
   return communications.map((communication) => communication.toJSON());
@@ -47,4 +47,4 @@ async function remove({ communicationId }: { communicationId: string }) {
   return true;
 }
 
-export default { read, create, get, remove };
+export default { list, create, get, remove };

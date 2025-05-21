@@ -6,7 +6,7 @@ import schemas from "../schemas";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const comms = await communication.read();
+  const comms = await communication.list();
   res.status(200).json(comms);
 });
 
