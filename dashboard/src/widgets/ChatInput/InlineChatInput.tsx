@@ -14,7 +14,7 @@ import { withHistory } from "slate-history";
 
 import { BaseEditor, Element as SlateElement, createEditor } from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 const ELEMENT_TYPES = {
   INTEGRATION: "integration",
@@ -152,6 +152,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showCommands, setShowCommands] = useState(false);
   const [showIntegrations, setShowIntegrations] = useState(false);
+  s;
   const [showMentions, setShowMentions] = useState(false);
   const [selectedCommand, setSelectedCommand] = useState<
     (typeof ResponsibilityCommands)[number] | null
@@ -176,18 +177,25 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
                 SlateElement.isElement(child) &&
                 child.type === ELEMENT_TYPES.INTEGRATION
               ) {
-                return JSON.stringify({
-                  id: child.selectedIntegration?.id || child.command?.id,
-                });
+                return (
+                  JSON.stringify({
+                    type: "INTEGRATION",
+                    id: child.selectedIntegration?.id || child.command?.id,
+                    icon:
+                      child.selectedIntegration?.icon || child.command?.icon,
+                  }) + " "
+                );
               }
               if (
                 SlateElement.isElement(child) &&
                 child.type === ELEMENT_TYPES.MENTION
               ) {
-                return JSON.stringify({
-                  type: "mention",
-                  id: child.colleague?.id,
-                });
+                return (
+                  JSON.stringify({
+                    type: "COLLEAGUE",
+                    id: child.colleague?.id,
+                  }) + " "
+                );
               }
               return child.text;
             })
@@ -237,6 +245,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         );
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [showCommands, showMentions, handleSend, selectedOptionIndex]
   );
 

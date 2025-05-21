@@ -198,12 +198,6 @@ const ResponsibilityCommands = [
     type: "handoff",
     icon: "carbon:ibm-cloud-pak-business-automation",
   },
-  {
-    id: "mention",
-    label: "Mention",
-    type: "mention",
-    icon: "mdi:at",
-  },
 ];
 
 const Types = [
@@ -237,4 +231,11 @@ const Types = [
   },
 ];
 
-export { Commands, Types, ResponsibilityCommands };
+const findIntegrationById = (id: string) => {
+  const integration = ResponsibilityCommands[0].next.list.find(
+    (integration) => integration.id === id
+  );
+  return integration || null;
+};
+
+export { Commands, Types, ResponsibilityCommands, findIntegrationById };
