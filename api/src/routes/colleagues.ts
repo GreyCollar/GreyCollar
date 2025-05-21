@@ -158,7 +158,7 @@ router.get("/:colleagueId/supervisings", async (req, res) => {
   res.json(supervisings);
 });
 
-router.post("/responsibility", async (req, res) => {
+router.post("/responsibilities", async (req, res) => {
   const { body } = req;
 
   const history = body?.history;

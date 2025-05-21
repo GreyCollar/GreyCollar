@@ -42,7 +42,7 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
             : []),
         ];
 
-        const response = await http.post("/colleagues/responsibility", {
+        const response = await http.post("/colleagues/responsibilities", {
           history,
           content: message,
         });
