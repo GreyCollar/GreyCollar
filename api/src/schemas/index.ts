@@ -1,5 +1,6 @@
 import Colleague from "./Colleague";
 import Command from "./Command";
+import Communication from "./Communication";
 import Integration from "./Integration";
 import Knowledge from "./Knowledge";
 import Message from "./Message";
@@ -20,4 +21,5 @@ export default {
   Command,
   Responsibility,
   Integration,
+  Communication,
 };
