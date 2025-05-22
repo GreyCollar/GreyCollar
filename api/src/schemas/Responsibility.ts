@@ -1,29 +1,34 @@
-import Joi from "joi";
+import { z } from "zod";
 
 const Responsibility = {
-  upsert: Joi.object({
-    title: Joi.string().required(),
-    description: Joi.string().required(),
-    colleagueId: Joi.string()
-      .guid({ version: ["uuidv4"] })
-      .required(),
-    nodes: Joi.array().items(
-      Joi.object({
-        id: Joi.string()
-          .guid({ version: ["uuidv4"] })
-          .required(),
-        properties: Joi.object({
-          label: Joi.string().required(),
-          icon: Joi.string().required(),
-        }).optional(),
-        dependencyId: Joi.string()
-          .guid({ version: ["uuidv4"] })
+  upsert: z.object({
+    title: z.string(),
+    description: z.string(),
+    colleagueId: z.string().uuid(),
+    nodes: z.array(
+      z.object({
+        id: z.string().uuid(),
+        properties: z
+          .object({
+            label: z.string(),
+            icon: z.string(),
+          })
           .optional(),
-        responsibilityId: Joi.string()
-          .guid({ version: ["uuidv4"] })
-          .optional(),
+        dependencyId: z.string().uuid().optional(),
+        responsibilityId: z.string().uuid().optional(),
       })
     ),
+  }),
+  create: z.object({
+    history: z
+      .array(
+        z.object({
+          role: z.enum(["user", "system", "assistant"]),
+          content: z.string(),
+        })
+      )
+      .optional(),
+    content: z.string(),
   }),
 };
 

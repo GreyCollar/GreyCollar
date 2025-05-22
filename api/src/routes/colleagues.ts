@@ -2,6 +2,7 @@ import * as platform from "@nucleoidai/platform-express";
 
 import Colleague from "../models/Colleague";
 import Joi from "joi";
+import Responsibility from "../schemas/Responsibility";
 import Session from "../models/Session";
 import Supervising from "../models/Supervising";
 import agent from "../functions/agent";
@@ -161,11 +162,10 @@ router.get("/:colleagueId/supervisings", async (req, res) => {
 router.post("/responsibilities", async (req, res) => {
   const { body } = req;
 
-  const history = body?.history;
-  const content = body.content;
+  const { history, content } = Responsibility.create.parse(body);
 
   const response = await agent.responsibility({
-    history: history ? history : [],
+    history,
     content,
   });
 

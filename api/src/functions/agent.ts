@@ -346,7 +346,7 @@ async function responsibility({
   history,
   content,
 }: {
-  history: {
+  history?: {
     role: "system" | "user" | "assistant";
     content: string;
   }[];
