@@ -8,11 +8,11 @@ const ResponsibilityDrawer = ({
   drawerOpen,
   handleDrawerClose,
   selectedItem,
-  handleAiResponse,
+  setAiResponse,
   aiResponse,
 }) => {
   const theme = useTheme();
-
+  console.log("ResponsibilityDrawer", aiResponse);
   return (
     <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
       <Box
@@ -51,8 +51,9 @@ const ResponsibilityDrawer = ({
                   }}
                 >
                   <ResponsibilityChat
-                    onAiResponse={handleAiResponse}
                     selectedItem={selectedItem}
+                    setAiResponse={setAiResponse}
+                    aiResponse={aiResponse}
                   />
                 </Box>
               </Box>

@@ -342,4 +342,27 @@ async function step({ stepId, action, parameters }) {
   }
 }
 
-export default { teamChat, chat, task, step };
+async function responsibility({
+  context,
+}: {
+  context: {
+    role: "system" | "user" | "assistant";
+    content: string;
+  }[];
+}) {
+  const userMessage = context.pop();
+  const lastMessage = context[context.length - 1];
+  const content = userMessage?.content || lastMessage?.content || "";
+
+  const response = await generate({
+    dataset: dataset.train.responsibility,
+    context,
+    content,
+    json_format: "{ response: <RESPONSE>, flow: [<FLOW>] }",
+  });
+
+  return response;
+}
+
+export default { teamChat, chat, task, step, responsibility };
+

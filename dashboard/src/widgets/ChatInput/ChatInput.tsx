@@ -41,7 +41,10 @@ const ChatInput = memo(function ChatMessageInput({
   const messageRef = useRef("");
 
   const handleChangeMessage = useCallback((event) => {
+    console.log(event, "event");
     messageRef.current = event[0].children[0].text;
+
+    console.log(messageRef.current, "messageRef");
   }, []);
 
   const handleSendMessage = useCallback(

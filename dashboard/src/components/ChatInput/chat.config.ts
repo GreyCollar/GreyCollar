@@ -178,19 +178,25 @@ const Commands = [
 
 const ResponsibilityCommands = [
   {
-    name: "/integrations",
+    id: "integration",
+    label: "Integration",
+    type: "integration",
     icon: "carbon:ibm-cloud-pak-integration",
     description: "Integrate with other tools",
+    next: {
+      label: "Select an Integration",
+      list: [
+        { id: "g-drive-id", name: "Google Drive", icon: "mdi:google-drive" },
+        { id: "slack-id", name: "Slack", icon: "mdi:slack" },
+        { id: "github-id", name: "Github", icon: "mdi:github" },
+      ],
+    },
   },
   {
-    name: "/handoff",
+    id: "handoff",
+    label: "Handoff",
+    type: "handoff",
     icon: "carbon:ibm-cloud-pak-business-automation",
-    description: "Handoff to another colleague",
-  },
-  {
-    name: "/colleague",
-    icon: "material-symbols:person",
-    description: "Find a colleague",
   },
 ];
 
@@ -225,4 +231,11 @@ const Types = [
   },
 ];
 
-export { Commands, Types, ResponsibilityCommands };
+const findIntegrationById = (id: string) => {
+  const integration = ResponsibilityCommands[0].next.list.find(
+    (integration) => integration.id === id
+  );
+  return integration || null;
+};
+
+export { Commands, Types, ResponsibilityCommands, findIntegrationById };
