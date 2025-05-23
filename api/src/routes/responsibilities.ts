@@ -35,10 +35,9 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { projectId: teamId } = req.session;
-  const { title, description, colleagueId, id, nodes } = Joi.attempt(
-    req.body,
-    schemas.Responsibility.upsert
-  );
+
+  const { title, description, colleagueId, nodes } =
+    Responsibility.upsert.parse(req.body);
 
   if (colleagueId) {
     const { teamId: colleagueTeamId } = await colleague.get({
@@ -62,10 +61,8 @@ router.post("/", async (req, res) => {
 router.put("/:responsibilityId", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { responsibilityId } = req.params;
-  const { title, description, colleagueId, nodes } = Joi.attempt(
-    req.body,
-    schemas.Responsibility.upsert
-  );
+  const { title, description, colleagueId, nodes } =
+    Responsibility.upsert.parse(req.body);
 
   if (colleagueId) {
     const { teamId: colleagueTeamId } = await colleague.get({

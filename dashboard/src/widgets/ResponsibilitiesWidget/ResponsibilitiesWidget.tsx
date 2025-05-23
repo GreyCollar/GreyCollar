@@ -1,9 +1,11 @@
+import AddIcon from "@mui/icons-material/Add";
 import ResponsibilityCard from "../../components/ResponsibilityCard/ResponsibilityCard";
 import ResponsibilityDrawer from "../../components/ResponsbilityDrawer/ResponsibilityDrawer";
 import ResponsibilityFlowDialog from "../../components/ResponsibilityFlow/ResponsibilityFlowDialog";
+import { Theme } from "@mui/material/styles";
 import useResponsibility from "../../hooks/useResponsibility";
 
-import { Box, Container } from "@mui/material";
+import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 
 function ResponsibilitiesWidget() {
@@ -16,17 +18,15 @@ function ResponsibilitiesWidget() {
   const [flowDialogOpen, setFlowDialogOpen] = useState(false);
 
   const handleDrawerOpen = (item) => {
-    setSelectedItem(item);
+    item === null
+      ? setSelectedItem({ id: "test", title: "", description: "" })
+      : setSelectedItem(item);
     setDrawerOpen(true);
   };
 
   const handleDrawerClose = () => {
     setDrawerOpen(false);
     setSelectedItem(null);
-  };
-
-  const handleAiResponse = (response) => {
-    setAiResponse(response);
   };
 
   const handleFlowDialogOpen = (item) => {
@@ -38,6 +38,12 @@ function ResponsibilitiesWidget() {
     setFlowDialogOpen(false);
     setSelectedItem(null);
   };
+
+  const lgScreen = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("lg")
+  );
+
+  console.log("Responsibility AI response:", aiResponse);
 
   return (
     <Container>
@@ -57,7 +63,7 @@ function ResponsibilitiesWidget() {
         drawerOpen={drawerOpen}
         handleDrawerClose={handleDrawerClose}
         selectedItem={selectedItem}
-        handleAiResponse={handleAiResponse}
+        setAiResponse={setAiResponse}
         aiResponse={aiResponse}
       />
       <ResponsibilityFlowDialog
@@ -66,6 +72,23 @@ function ResponsibilitiesWidget() {
         selectedItem={selectedItem}
         aiResponse={aiResponse}
       />
+
+      <Stack
+        sx={{
+          position: lgScreen ? "absolute" : "fixed",
+          bottom: lgScreen ? -60 : 10,
+          right: lgScreen ? 0 : 5,
+        }}
+      >
+        <Fab
+          color="default"
+          size="medium"
+          sx={{ mt: 2, zIndex: 0 }}
+          onClick={() => handleDrawerOpen(null)}
+        >
+          <AddIcon />
+        </Fab>
+      </Stack>
     </Container>
   );
 }
