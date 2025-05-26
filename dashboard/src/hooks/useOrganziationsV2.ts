@@ -22,6 +22,7 @@ function useOrganizations() {
   const { Api } = useApi();
 
   const [organizationCreated] = useEvent("ORGANIZATION_CREATED", null);
+  const [colleagueAdded] = useEvent("COLLEAGUE_ADDED", null);
 
   const getOrganizations = (fetchState: DependencyArray = []) => {
     const eventDependencies = [organizationCreated];
@@ -47,7 +48,7 @@ function useOrganizations() {
     id: string,
     fetchState: DependencyArray = []
   ) => {
-    const eventDependencies = [organizationCreated];
+    const eventDependencies = [organizationCreated, colleagueAdded];
 
     const { data, loading, error, fetch } = Api(
       () => (id ? http.get(`/organizations/${id}`) : null),
