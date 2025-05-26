@@ -1,11 +1,17 @@
 import { IconButton } from "@mui/material";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
-import OrganizationChart from "../OrganizationChart/OrganizationChart";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function OrganizationButton() {
   const [open, setOpen] = useState(false);
-  console.log("Organization Button");
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    setOpen(!open);
+    navigate("/organizations");
+  };
+
   return (
     <>
       <IconButton
@@ -14,11 +20,10 @@ function OrganizationButton() {
           bgcolor: (theme) => theme.palette.primary.main,
           color: (theme) => theme.palette.text.primary,
         }}
-        onClick={() => setOpen(!open)}
+        onClick={handleClick}
       >
         <Iconify icon={"ri:node-tree"} width={24} />
       </IconButton>
-      <OrganizationChart open={open} setOpen={setOpen} />
     </>
   );
 }
