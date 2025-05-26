@@ -176,3 +176,4 @@ router.post("/responsibilities", async (req, res) => {
 });
 
 export default router;
+
