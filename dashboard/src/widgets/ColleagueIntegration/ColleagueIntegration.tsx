@@ -4,17 +4,20 @@ import Integrations from "../../components/Integrations/Integrations";
 import React from "react";
 import SkillDialog from "../../components/Skills/SkillDialog";
 import { getProviderLogo } from "../../utils/icon";
-import { storage } from "@nucleoidjs/webstorage";
+import useAcquiredIntegrations from "../../hooks/useAcquiredIntegrations";
 import useColleagues from "../../hooks/useColleagueV2";
-import useIntegrations from "../../hooks/useIntegrationsV2";
-import useTeams from "../../hooks/useTeamsV2";
 
 import { Box, Container, Grid } from "@mui/material";
 
 const ColleagueIntegration = ({ colleague }) => {
-  const { getColleagueIntegration } = useIntegrations();
+  const { getIntegrations, getColleagueAcquiredIntegrations, getTokens } =
+    useAcquiredIntegrations();
 
-  const { colleagueIntegrations } = getColleagueIntegration(colleague.id);
+  const { integrations } = getIntegrations();
+
+  const { acquiredIntegrations } = getColleagueAcquiredIntegrations(
+    colleague.id
+  );
 
   const instructions = [
     {
@@ -40,22 +43,23 @@ const ColleagueIntegration = ({ colleague }) => {
     { id: "7a8b9c0d-1e2f-3g4h-5i6j-7k8l9m0n1o2p", title: "Outgoing" },
   ];
 
-  const teamId = storage.get("projectId");
-
-  const { getTeamById } = useTeams();
-  const { team: teamById } = getTeamById(teamId);
-
   const { getColleagues } = useColleagues();
   const { colleagues } = getColleagues();
 
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [skillDialogOpen, setSkillDialogOpen] = React.useState(false);
   const [selectedSkill, setSelectedSkill] = React.useState<{
+    id: string;
     name: string;
     logo: string;
     title: string;
     description: string;
-    acquired: boolean;
+    oauth: {
+      scope: string;
+      tokenUrl: string;
+      clientId: string;
+      redirectUri: string;
+    };
   } | null>(null);
 
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -94,7 +98,7 @@ const ColleagueIntegration = ({ colleague }) => {
 
         {selectedTab === 0 && (
           <Grid container spacing={2}>
-            {colleagueIntegrations
+            {integrations
               ?.filter((skill) => skill.direction === "INCOMING")
               ?.map((skill) => (
                 <Integrations
@@ -102,8 +106,9 @@ const ColleagueIntegration = ({ colleague }) => {
                   title={skill.provider}
                   description={skill.description}
                   logo={getProviderLogo(skill.provider)}
-                  acquired={skill.acquired}
                   onSkillClick={handleSkillClick}
+                  id={skill.id}
+                  oauth={skill.oauth}
                 />
               ))}
           </Grid>
@@ -111,7 +116,7 @@ const ColleagueIntegration = ({ colleague }) => {
 
         {selectedTab === 1 && (
           <Grid container spacing={2}>
-            {colleagueIntegrations
+            {integrations
               ?.filter((skill) => skill.direction === "OUTGOING")
               ?.map((skill) => (
                 <Integrations
@@ -119,8 +124,9 @@ const ColleagueIntegration = ({ colleague }) => {
                   title={skill.provider}
                   description={skill.description}
                   logo={getProviderLogo(skill.provider)}
-                  acquired={skill.acquired}
                   onSkillClick={handleSkillClick}
+                  id={skill.id}
+                  oauth={skill.oauth}
                 />
               ))}
           </Grid>
@@ -130,8 +136,9 @@ const ColleagueIntegration = ({ colleague }) => {
           open={skillDialogOpen}
           handleClose={handleSkillDialogClose}
           skill={selectedSkill}
-          team={teamById}
           colleagues={colleagues}
+          acquiredIntegrations={acquiredIntegrations}
+          getTokens={getTokens}
         />
 
         <IncomingDrawer

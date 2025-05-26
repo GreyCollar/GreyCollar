@@ -4,6 +4,7 @@ import * as platform from "@nucleoidai/platform-express";
 
 import agent from "./functions/agent";
 import colleagues from "./routes/colleagues";
+import communications from "./routes/communications";
 import engines from "./routes/engines";
 import integrations from "./routes/integrations";
 import knowledge from "./routes/knowledge";
@@ -52,7 +53,7 @@ app.use("/organizations", organizations);
 app.use("/statistics", statistics);
 app.use("/responsibilities", responsibilities);
 app.use("/integrations", integrations);
-
+app.use("/communications", communications);
 subscribe("MESSAGE", "USER_MESSAGED", ({ teamId, content }) =>
   agent.teamChat({ teamId, content })
 );

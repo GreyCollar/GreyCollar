@@ -48,28 +48,21 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
                 },
               ]
             : []),
-          { content: parsedMessage, role: "user" },
         ];
 
-        const response = await http.post("/colleagues/responsibility", {
-          context: history,
+        const { data } = await http.post("/colleagues/responsibilities", {
+          history,
+          content: message,
         });
 
-        if (response.status >= 200 && response.status < 300) {
-          const aiMessage = response?.data?.response;
-          if (!aiMessage) {
-            throw new Error("No response received from AI");
-          }
+        const aiMessage = data?.response;
 
-          setAiResponse(response.data);
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { content: aiMessage, role: "assistant" },
-          ]);
-          publish("MESSAGES_LOADED", true);
-        } else {
-          throw new Error(`Server responded with status: ${response.status}`);
-        }
+        setAiResponse(aiMessage);
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { content: aiMessage, role: "assistant" },
+        ]);
       }
     } catch (err) {
       const errorMessage =
@@ -80,6 +73,7 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
       console.error("Error in addMessage:", err);
     } finally {
       setLoading(false);
+      publish("MESSAGES_LOADED", true);
     }
   };
 

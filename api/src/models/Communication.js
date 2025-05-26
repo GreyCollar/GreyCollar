@@ -4,37 +4,32 @@ const {
 } = platform.module();
 const { DataTypes, UUIDV4 } = platform.require("sequelize");
 
-const Integration = sequelize.define("Integration", {
+const Communication = sequelize.define("Communication", {
   id: {
     type: DataTypes.UUID,
     defaultValue: UUIDV4,
     primaryKey: true,
     allowNull: false,
   },
-  mcpId: {
-    type: DataTypes.UUID,
-    allowNull: false,
-  },
-  refreshToken: {
+  channelType: {
     type: DataTypes.STRING,
-    allowNull: true,
-  },
-  colleagueId: {
-    type: DataTypes.UUID,
-    allowNull: true,
-    reference: {
-      model: "Colleague",
-      key: "id",
+    allowNull: false,
+    validate: {
+      isIn: [["WHATSAPP", "SLACK", "EMAIL"]],
     },
   },
-  teamId: {
+  channelCode: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  responsibilityId: {
     type: DataTypes.UUID,
-    allowNull: true,
-    reference: {
-      model: "Project",
+    allowNull: false,
+    references: {
+      model: "Responsibility",
       key: "id",
     },
   },
 });
 
-module.exports = Integration;
+module.exports = Communication;

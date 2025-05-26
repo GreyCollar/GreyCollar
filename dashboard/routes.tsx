@@ -1,4 +1,5 @@
 import AddTeam from "./src/pages/addTeam";
+import Callback from "./src/pages/callback";
 import Chat from "./src/pages/chat";
 import Colleague from "./src/pages/colleague";
 import Colleagues from "./src/pages/colleagues";
@@ -39,6 +40,7 @@ const routes = [
           { path: "/colleagues/:colleagueId", element: <Colleague /> },
           { path: "/settings", element: <Settings /> },
           { path: "/teams/add", element: <AddTeam /> },
+          { path: "/integrations/callback", element: <Callback /> },
         ],
       },
       {

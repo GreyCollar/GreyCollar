@@ -18,6 +18,14 @@ async function init() {
   const Responsibility = require("./Responsibility");
   const ResponsibilityNode = require("./ResponsibilityNode");
   const Integration = require("./Integration");
+  const Communication = require("./Communication");
+
+  Responsibility.hasMany(Communication, {
+    foreignKey: "responsibilityId",
+  });
+  Communication.belongsTo(Responsibility, {
+    foreignKey: "responsibilityId",
+  });
 
   Project.hasMany(Colleague, {
     foreignKey: "teamId",
