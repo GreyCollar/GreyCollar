@@ -43,8 +43,6 @@ function ResponsibilitiesWidget() {
     theme.breakpoints.down("lg")
   );
 
-  console.log("Responsibility AI response:", aiResponse);
-
   return (
     <Container>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>

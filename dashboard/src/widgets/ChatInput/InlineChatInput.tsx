@@ -12,7 +12,12 @@ import { styled } from "@mui/material/styles";
 import useColleagues from "../../hooks/useColleagues";
 import { withHistory } from "slate-history";
 
-import { BaseEditor, Element as SlateElement, createEditor } from "slate";
+import {
+  BaseEditor,
+  Element as SlateElement,
+  Transforms,
+  createEditor,
+} from "slate";
 import { Editable, ReactEditor, Slate, withReact } from "slate-react";
 import { useCallback, useMemo, useRef, useState } from "react";
 
@@ -152,12 +157,11 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showCommands, setShowCommands] = useState(false);
   const [showIntegrations, setShowIntegrations] = useState(false);
-  s;
   const [showMentions, setShowMentions] = useState(false);
   const [selectedCommand, setSelectedCommand] = useState<
     (typeof ResponsibilityCommands)[number] | null
   >(null);
-  const [selectedOptionIndex, setSelectedOptionIndex] = useState(null);
+  const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const { colleagues } = useColleagues();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -166,6 +170,25 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
     () => withCommands(withHistory(withReact(createEditor()))),
     []
   );
+
+  const resetEditor = useCallback(() => {
+    const point = { path: [0, 0], offset: 0 };
+
+    for (let i = editor.children.length - 1; i >= 0; i--) {
+      Transforms.removeNodes(editor, { at: [i] });
+    }
+
+    Transforms.insertNodes(editor, initialValue[0], { at: [0] });
+
+    setValue([...initialValue]);
+
+    Transforms.select(editor, {
+      anchor: point,
+      focus: point,
+    });
+
+    ReactEditor.focus(editor);
+  }, [editor]);
 
   const handleSend = useCallback(() => {
     const message = value
@@ -208,53 +231,20 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
 
     if (message && onSend) {
       onSend(message);
-      setValue(initialValue);
-      editor.children = initialValue;
+      // Use setTimeout to defer the reset until after the current event loop
+      setTimeout(() => {
+        resetEditor();
+      }, 0);
     }
-  }, [value, onSend, editor]);
-
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.key === "/" && !showCommands) {
-        event.preventDefault();
-        setShowCommands(true);
-        setAnchorEl(event.currentTarget);
-      } else if (event.key === "@" && !showMentions) {
-        event.preventDefault();
-        setShowMentions(true);
-        setAnchorEl(event.currentTarget);
-      } else if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-
-        if (showCommands && selectedOptionIndex) {
-          handleCommandSelect(ResponsibilityCommands[selectedOptionIndex]);
-        } else if (showIntegrations) {
-          handleIntegrationSelect(
-            selectedCommand?.next?.list[selectedOptionIndex]
-          );
-        } else if (showMentions) {
-          handleMentionSelect(colleagues[selectedOptionIndex]);
-        }
-
-        handleSend();
-      } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-        setSelectedOptionIndex(
-          event.key === "ArrowUp"
-            ? selectedOptionIndex - 1
-            : selectedOptionIndex + 1
-        );
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [showCommands, showMentions, handleSend, selectedOptionIndex]
-  );
+  }, [value, onSend, resetEditor]);
 
   const handleCommandSelect = useCallback(
-    (command) => {
+    (command: (typeof ResponsibilityCommands)[number]) => {
       if (command.type === "integration") {
         setSelectedCommand(command);
         setShowCommands(false);
         setShowIntegrations(true);
+        setSelectedOptionIndex(0);
       } else {
         const integrationNode: CustomElement = {
           type: ELEMENT_TYPES.INTEGRATION,
@@ -262,16 +252,19 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           children: [{ text: "" }],
         };
 
-        editor.insertNode(integrationNode);
+        Transforms.insertNodes(editor, integrationNode);
         setShowCommands(false);
         setAnchorEl(null);
+        setSelectedOptionIndex(0);
       }
     },
     [editor]
   );
 
   const handleIntegrationSelect = useCallback(
-    (integration) => {
+    (
+      integration: (typeof ResponsibilityCommands)[0]["next"]["list"][number]
+    ) => {
       if (selectedCommand) {
         const integrationNode: CustomElement = {
           type: ELEMENT_TYPES.INTEGRATION,
@@ -280,17 +273,18 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           children: [{ text: "" }],
         };
 
-        editor.insertNode(integrationNode);
+        Transforms.insertNodes(editor, integrationNode);
         setShowIntegrations(false);
         setAnchorEl(null);
         setSelectedCommand(null);
+        setSelectedOptionIndex(0);
       }
     },
     [editor, selectedCommand]
   );
 
   const handleMentionSelect = useCallback(
-    (colleague) => {
+    (colleague: any) => {
       const mentionNode: CustomElement = {
         type: ELEMENT_TYPES.MENTION,
         colleague: {
@@ -301,20 +295,94 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         children: [{ text: "" }],
       };
 
-      editor.insertNode(mentionNode);
+      Transforms.insertNodes(editor, mentionNode);
       setShowMentions(false);
       setAnchorEl(null);
+      setSelectedOptionIndex(0);
     },
     [editor]
   );
 
-  const renderElement = useCallback((props) => {
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === "/" && !showCommands) {
+        event.preventDefault();
+        setShowCommands(true);
+        setAnchorEl(event.currentTarget as HTMLElement);
+      } else if (event.key === "@" && !showMentions) {
+        event.preventDefault();
+        setShowMentions(true);
+        setAnchorEl(event.currentTarget as HTMLElement);
+      } else if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+
+        if (showCommands && selectedOptionIndex !== null) {
+          handleCommandSelect(ResponsibilityCommands[selectedOptionIndex]);
+          return;
+        } else if (
+          showIntegrations &&
+          selectedCommand?.next?.list[selectedOptionIndex]
+        ) {
+          handleIntegrationSelect(
+            selectedCommand.next.list[selectedOptionIndex]
+          );
+          return;
+        } else if (showMentions && colleagues[selectedOptionIndex]) {
+          handleMentionSelect(colleagues[selectedOptionIndex]);
+          return;
+        }
+
+        handleSend();
+      } else if (event.key === "Escape") {
+        setShowCommands(false);
+        setShowIntegrations(false);
+        setShowMentions(false);
+        setAnchorEl(null);
+        setSelectedCommand(null);
+        setSelectedOptionIndex(0);
+      } else if (
+        (event.key === "ArrowUp" || event.key === "ArrowDown") &&
+        (showCommands || showIntegrations || showMentions)
+      ) {
+        event.preventDefault();
+        let maxIndex = 0;
+
+        if (showCommands) {
+          maxIndex = ResponsibilityCommands.length - 1;
+        } else if (showIntegrations && selectedCommand?.next?.list) {
+          maxIndex = selectedCommand.next.list.length - 1;
+        } else if (showMentions) {
+          maxIndex = colleagues.length - 1;
+        }
+
+        if (event.key === "ArrowUp") {
+          setSelectedOptionIndex((prev) => Math.max(0, prev - 1));
+        } else {
+          setSelectedOptionIndex((prev) => Math.min(maxIndex, prev + 1));
+        }
+      }
+    },
+    [
+      showCommands,
+      showMentions,
+      showIntegrations,
+      handleSend,
+      selectedOptionIndex,
+      colleagues,
+      selectedCommand,
+      handleCommandSelect,
+      handleIntegrationSelect,
+      handleMentionSelect,
+    ]
+  );
+
+  const renderElement = useCallback((props: any) => {
     const { element, children, attributes } = props;
 
     switch (element.type) {
       case ELEMENT_TYPES.INTEGRATION:
         return (
-          <IntegrationElement {...attributes}>
+          <IntegrationElement {...attributes} contentEditable={false}>
             {element.selectedIntegration ? (
               <>
                 <Iconify
@@ -334,12 +402,12 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         );
       case ELEMENT_TYPES.MENTION:
         return (
-          <MentionElement {...attributes}>
+          <MentionElement {...attributes} contentEditable={false}>
             <SourcedAvatar
               name={element.colleague?.name}
               source={"MINIMAL"}
               avatarUrl={element.colleague?.avatar}
-              sx={{ mr: 2 }}
+              sx={{ mr: 0.5, width: 20, height: 20 }}
             />
             {element.colleague?.name}
             {children}
@@ -378,6 +446,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         onClose={() => {
           setShowCommands(false);
           setAnchorEl(null);
+          setSelectedOptionIndex(0);
         }}
         anchorOrigin={{
           vertical: "top",
@@ -389,10 +458,11 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         }}
       >
         <CommandList>
-          {ResponsibilityCommands.map((command) => (
+          {ResponsibilityCommands.map((command, index) => (
             <ListItem
               key={command.id}
               button
+              selected={index === selectedOptionIndex}
               onClick={() => handleCommandSelect(command)}
             >
               <ListItemIcon>
@@ -414,6 +484,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           setShowIntegrations(false);
           setAnchorEl(null);
           setSelectedCommand(null);
+          setSelectedOptionIndex(0);
         }}
         anchorOrigin={{
           vertical: "top",
@@ -425,10 +496,11 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         }}
       >
         <CommandList>
-          {selectedCommand?.next?.list.map((integration) => (
+          {selectedCommand?.next?.list.map((integration, index) => (
             <ListItem
               key={integration.id}
               button
+              selected={index === selectedOptionIndex}
               onClick={() => handleIntegrationSelect(integration)}
             >
               <ListItemIcon>
@@ -446,6 +518,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         onClose={() => {
           setShowMentions(false);
           setAnchorEl(null);
+          setSelectedOptionIndex(0);
         }}
         anchorOrigin={{
           vertical: "top",
@@ -457,10 +530,11 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         }}
       >
         <CommandList>
-          {colleagues.map((colleague) => (
+          {colleagues.map((colleague, index) => (
             <ListItem
               key={colleague.id}
               button
+              selected={index === selectedOptionIndex}
               onClick={() => handleMentionSelect(colleague)}
             >
               <ListItemIcon>
@@ -468,7 +542,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
                   name={colleague.name}
                   source={"MINIMAL"}
                   avatarUrl={colleague.avatar}
-                  sx={{ mr: 2 }}
+                  sx={{ width: 32, height: 32 }}
                 />
               </ListItemIcon>
               <ListItemText

@@ -224,6 +224,7 @@ const ChatInputCommandEditor = ({
             {
               text: `@${selectedColleague}`,
               type: "mention",
+              colleagueId: selectedColleague,
             },
           ],
         },
@@ -263,8 +264,15 @@ const ChatInputCommandEditor = ({
       return;
     }
 
+    // Handle simple paragraph text
+    if (content.length === 1 && content[0].text) {
+      onKeyUp({ key: "Enter", target: { value: content[0].text } });
+      clearEditor();
+      return;
+    }
+
     const text = content[0].text;
-    const isItCommand = !text && content[1].type === "commandText";
+    const isItCommand = !text && content[1]?.type === "commandText";
     const isMention = content[1]?.type === "mention";
 
     setReadOnly(true);
@@ -313,12 +321,15 @@ const ChatInputCommandEditor = ({
   };
 
   const handleChange = (event) => {
+    if (!event || !event[0] || !event[0].children) return;
+    
     let types = event[0]?.children
       .map((child) => child.type)
       .filter((type) => typeof type === "string");
 
-    const sentence = event[0].children[0].text;
+    const sentence = event[0].children[0]?.text || "";
     const sentenceNode = editor.children[0];
+    
     if (sentence.startsWith("/")) {
       setDropdownOpen(true);
 

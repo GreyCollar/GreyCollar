@@ -48,6 +48,7 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
                 },
               ]
             : []),
+          { content: parsedMessage, role: "user" },
         ];
 
         const { data } = await http.post("/colleagues/responsibilities", {
@@ -57,7 +58,7 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
 
         const aiMessage = data?.response;
 
-        setAiResponse(aiMessage);
+        setAiResponse(data);
 
         setMessages((prevMessages) => [
           ...prevMessages,
