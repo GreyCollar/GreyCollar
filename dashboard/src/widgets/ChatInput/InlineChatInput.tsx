@@ -12,14 +12,15 @@ import { styled } from "@mui/material/styles";
 import useColleagues from "../../hooks/useColleagues";
 import { withHistory } from "slate-history";
 
+import { BaseEditor, Descendant, Node, Transforms, createEditor } from "slate";
 import {
-  BaseEditor,
-  Element as SlateElement,
-  Transforms,
-  createEditor,
-} from "slate";
-import { Editable, ReactEditor, Slate, withReact } from "slate-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+  Editable,
+  ReactEditor,
+  RenderElementProps,
+  Slate,
+  withReact,
+} from "slate-react";
+import { useCallback, useMemo, useState } from "react";
 
 const ELEMENT_TYPES = {
   INTEGRATION: "integration",
@@ -42,14 +43,6 @@ type CustomElement = {
 type CustomText = {
   text: string;
 };
-
-declare module "slate" {
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
-    Element: CustomElement;
-    Text: CustomText;
-  }
-}
 
 const EditorContainer = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
@@ -125,15 +118,15 @@ const withCommands = (editor: BaseEditor & ReactEditor) => {
   const { isInline, isVoid } = editor;
 
   editor.isInline = (element) => {
-    return element.type === ELEMENT_TYPES.INTEGRATION ||
-      element.type === ELEMENT_TYPES.MENTION
+    return (element as CustomElement).type === ELEMENT_TYPES.INTEGRATION ||
+      (element as CustomElement).type === ELEMENT_TYPES.MENTION
       ? true
       : isInline(element);
   };
 
   editor.isVoid = (element) => {
-    return element.type === ELEMENT_TYPES.INTEGRATION ||
-      element.type === ELEMENT_TYPES.MENTION
+    return (element as CustomElement).type === ELEMENT_TYPES.INTEGRATION ||
+      (element as CustomElement).type === ELEMENT_TYPES.MENTION
       ? true
       : isVoid(element);
   };
@@ -141,7 +134,7 @@ const withCommands = (editor: BaseEditor & ReactEditor) => {
   return editor;
 };
 
-const initialValue: CustomElement[] = [
+const initialValue: Descendant[] = [
   {
     type: ELEMENT_TYPES.PARAGRAPH,
     children: [{ text: "" }],
@@ -153,7 +146,7 @@ interface InlineChatInputProps {
 }
 
 const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
-  const [value, setValue] = useState<CustomElement[]>(initialValue);
+  const [value, setValue] = useState<Descendant[]>(initialValue);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showCommands, setShowCommands] = useState(false);
   const [showIntegrations, setShowIntegrations] = useState(false);
@@ -163,8 +156,6 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
   >(null);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const { colleagues } = useColleagues();
-
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const editor = useMemo(
     () => withCommands(withHistory(withReact(createEditor()))),
@@ -192,14 +183,12 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
 
   const handleSend = useCallback(() => {
     const message = value
-      .map((node) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((node: any) => {
         if (node.type === ELEMENT_TYPES.PARAGRAPH) {
           return node.children
             .map((child) => {
-              if (
-                SlateElement.isElement(child) &&
-                child.type === ELEMENT_TYPES.INTEGRATION
-              ) {
+              if ((child as CustomElement).type === ELEMENT_TYPES.INTEGRATION) {
                 return (
                   JSON.stringify({
                     type: "INTEGRATION",
@@ -209,10 +198,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
                   }) + " "
                 );
               }
-              if (
-                SlateElement.isElement(child) &&
-                child.type === ELEMENT_TYPES.MENTION
-              ) {
+              if (child.type === ELEMENT_TYPES.MENTION) {
                 return (
                   JSON.stringify({
                     type: "COLLEAGUE",
@@ -252,7 +238,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           children: [{ text: "" }],
         };
 
-        Transforms.insertNodes(editor, integrationNode);
+        Transforms.insertNodes(editor, integrationNode as unknown as Node);
         setShowCommands(false);
         setAnchorEl(null);
         setSelectedOptionIndex(0);
@@ -273,7 +259,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           children: [{ text: "" }],
         };
 
-        Transforms.insertNodes(editor, integrationNode);
+        Transforms.insertNodes(editor, integrationNode as unknown as Node);
         setShowIntegrations(false);
         setAnchorEl(null);
         setSelectedCommand(null);
@@ -284,7 +270,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
   );
 
   const handleMentionSelect = useCallback(
-    (colleague: any) => {
+    (colleague: CustomElement["colleague"]) => {
       const mentionNode: CustomElement = {
         type: ELEMENT_TYPES.MENTION,
         colleague: {
@@ -295,7 +281,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         children: [{ text: "" }],
       };
 
-      Transforms.insertNodes(editor, mentionNode);
+      Transforms.insertNodes(editor, mentionNode as unknown as Node);
       setShowMentions(false);
       setAnchorEl(null);
       setSelectedOptionIndex(0);
@@ -376,10 +362,14 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
     ]
   );
 
-  const renderElement = useCallback((props: any) => {
-    const { element, children, attributes } = props;
+  const renderElement = useCallback((props: RenderElementProps) => {
+    const { element, children, attributes } = props as {
+      element: CustomElement;
+      children: React.ReactNode;
+      attributes: React.HTMLAttributes<HTMLElement>;
+    };
 
-    switch (element.type) {
+    switch ((element as CustomElement).type) {
       case ELEMENT_TYPES.INTEGRATION:
         return (
           <IntegrationElement {...attributes} contentEditable={false}>
@@ -423,7 +413,6 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
       <EditorContainer>
         <EditorWrapper>
           <Slate
-            ref={inputRef}
             editor={editor}
             initialValue={initialValue}
             onChange={setValue}

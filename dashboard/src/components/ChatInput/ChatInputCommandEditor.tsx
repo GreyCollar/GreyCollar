@@ -322,14 +322,14 @@ const ChatInputCommandEditor = ({
 
   const handleChange = (event) => {
     if (!event || !event[0] || !event[0].children) return;
-    
+
     let types = event[0]?.children
       .map((child) => child.type)
       .filter((type) => typeof type === "string");
 
     const sentence = event[0].children[0]?.text || "";
     const sentenceNode = editor.children[0];
-    
+
     if (sentence.startsWith("/")) {
       setDropdownOpen(true);
 
