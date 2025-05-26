@@ -4,6 +4,7 @@ import { Handle, Position } from "@xyflow/react";
 import React, { useEffect, useState } from "react";
 
 const CustomNode = ({ data }) => {
+  console.log(data);
   const [animated, setAnimated] = useState(false);
 
   useEffect(() => {

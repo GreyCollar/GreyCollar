@@ -34,7 +34,7 @@ function ResponsibilityMessageBox({ message }) {
         sx={{ userSelect: "text" }}
         data-cy="message-content"
       >
-        {message.text}
+        {message.content}
       </Typography>
     </Box>
   );

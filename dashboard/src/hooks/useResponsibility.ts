@@ -30,7 +30,7 @@ function useResponsibility() {
     fetchState: DependencyArray = []
   ) => {
     const { data, loading, error, fetch } = Api(
-      () => http.get(`/responsibilities/${id}`),
+      () => http.get(id ? `/responsibilities/${id}` : null),
       [...fetchState]
     );
     let result;

@@ -1,11 +1,14 @@
+import azure from "./azure";
+import openai from "./openai";
+
 let llm;
 
 if (process.env.PLATFORM_LLM === "OPENAI") {
-  llm = require("./openai").default;
+  llm = openai;
 }
 
 if (process.env.PLATFORM_LLM === "AZURE") {
-  llm = require("./azure").default;
+  llm = azure;
 }
 
 async function generate({

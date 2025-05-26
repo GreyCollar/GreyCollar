@@ -4,6 +4,7 @@ import "./flow.css";
 import AIResponseNode from "./AIResponseNode";
 import CustomNode from "./CustomNode";
 import ELK from "elkjs/lib/elk.bundled.js";
+import { convertToNodesAndEdges } from "../../components/ResponsibilityFlow/flowAdapter";
 import useResponsibility from "../../hooks/useResponsibility";
 
 import {
@@ -69,18 +70,17 @@ const getLayoutedElements = (nodes, edges, options = {}) => {
 function ResponsibilityFlow({ aiResponse, responsibility }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [processedResponses, setProcessedResponses] = useState([]);
-  const [isAnimating, setIsAnimating] = useState(false);
+
   const [isLoading, setIsLoading] = useState(true);
   const { getResponsibilityWithNode } = useResponsibility();
   const { responsibilityNodes, loading } = getResponsibilityWithNode(
-    responsibility.id
+    responsibility?.id
   );
 
   const { fitView } = useReactFlow();
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && responsibilityNodes) {
       const formattedNodes = responsibilityNodes.nodes.map((node) => ({
         id: node.id,
         position: { x: 0, y: 0 },
@@ -107,120 +107,51 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         setIsLoading(false);
         setTimeout(() => fitView(), 50);
       });
+    } else {
+      setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, setNodes, setEdges, fitView]);
+
+  useEffect(() => {
+    if (aiResponse) {
+      const { nodes: newNodes, edges: newEdges } = convertToNodesAndEdges(
+        aiResponse?.flow
+      );
+
+      const formattedNodes = newNodes.map((node) => ({
+        id: node.id,
+        position: { x: 0, y: 0 },
+        data: {
+          label: node.label,
+          icon: node.icon,
+        },
+        type: "custom",
+      }));
+
+      const formattedEdges = newEdges.map((edge) => ({
+        id: `e${edge.source}-${edge.target}`,
+        source: edge.source.toString(),
+        target: edge.target.toString(),
+        style: { strokeDasharray: "5,5" },
+      }));
+
+      getLayoutedElements(formattedNodes, formattedEdges, {
+        "elk.direction": "DOWN",
+        ...elkOptions,
+      }).then(({ nodes: formattedNodes, edges: formattedEdges }) => {
+        setNodes((prev) => [...prev, ...formattedNodes]);
+        setEdges((prev) => [...prev, ...formattedEdges]);
+        setIsLoading(false);
+        setTimeout(() => fitView(), 50);
+      });
+    }
+  }, [aiResponse, setNodes, setEdges, fitView]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
-
-  const findLastNode = useCallback(() => {
-    const aiNodes = nodes.filter((n) => n.id.startsWith("ai-"));
-
-    if (aiNodes.length > 0) {
-      const sortedNodes = [...aiNodes].sort((a, b) => {
-        const aTime = parseInt(a.id.split("-")[1]);
-        const bTime = parseInt(b.id.split("-")[1]);
-        return bTime - aTime;
-      });
-
-      return sortedNodes[0];
-    }
-
-    // Find terminal nodes (nodes with no outgoing edges)
-    const hasOutgoing = new Set();
-    edges.forEach((edge) => {
-      hasOutgoing.add(edge.source);
-    });
-
-    const terminalNodes = nodes.filter(
-      (node) => !hasOutgoing.has(node.id) && !node.id.startsWith("ai-")
-    );
-
-    if (terminalNodes.length > 0) {
-      // Sort by Y position to find the lowest one
-      return terminalNodes.sort((a, b) => b.position.y - a.position.y)[0];
-    }
-
-    // Fallback: return the node with the highest ID
-    return nodes.sort((a, b) => {
-      const aId = parseInt(a.id);
-      const bId = parseInt(b.id);
-      return isNaN(aId) || isNaN(bId) ? 0 : bId - aId;
-    })[0];
-  }, [nodes, edges]);
-
-  const addNodeFromAI = useCallback(
-    (response) => {
-      if (
-        isAnimating ||
-        processedResponses.includes(response) ||
-        nodes.length === 0
-      )
-        return;
-
-      setIsAnimating(true);
-      setProcessedResponses((prev) => [...prev, response]);
-
-      const timestamp = Date.now();
-      const newId = `ai-${timestamp}`;
-
-      const lastNode = findLastNode();
-      if (!lastNode) return;
-
-      // Position based on the last node, but place it below
-      const newNode = {
-        id: newId,
-        position: {
-          x: lastNode.position.x,
-          y: lastNode.position.y + 150,
-        },
-        data: {
-          label: "Integration Response",
-          icon: "https://cdn-icons-png.flaticon.com/512/4712/4712038.png",
-        },
-        type: "aiResponse",
-      };
-
-      setNodes((nds) => [...nds, newNode]);
-
-      setTimeout(() => {
-        const newEdge = {
-          id: `e${lastNode.id}-${newId}`,
-          source: lastNode.id,
-          target: newId,
-          style: {
-            strokeDasharray: "5,5",
-            className: "animated-edge",
-          },
-          animated: true,
-        };
-
-        setEdges((eds) => [...eds, newEdge]);
-
-        // We don't auto-layout after adding AI nodes to maintain a clean appearance
-        setTimeout(() => {
-          setIsAnimating(false);
-        }, 2500);
-      }, 1000);
-    },
-    [
-      isAnimating,
-      processedResponses,
-      findLastNode,
-      setNodes,
-      setEdges,
-      nodes.length,
-    ]
-  );
-
-  useEffect(() => {
-    if (aiResponse && !isAnimating && !isLoading) {
-      addNodeFromAI(aiResponse);
-    }
-  }, [aiResponse, addNodeFromAI, isAnimating, isLoading]);
 
   if (isLoading) {
     return <div>Loading flow diagram...</div>;
