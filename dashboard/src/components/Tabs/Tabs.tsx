@@ -14,6 +14,9 @@ function TabBar({ TABS, currentTab, setCurrentTab }) {
     <Tabs
       value={currentTab}
       onChange={handleTabChange}
+      scrollButtons="auto"
+      variant="scrollable"
+      allowScrollButtonsMobile
       sx={{
         width: 1,
         bottom: 0,
@@ -22,10 +25,10 @@ function TabBar({ TABS, currentTab, setCurrentTab }) {
         bgcolor: "background.paper",
         [`& .${tabsClasses.flexContainer}`]: {
           pr: { md: 3 },
-          justifyContent: {
-            sm: "center",
-            md: "flex-end",
-          },
+          justifyContent: { md: "flex-end" },
+        },
+        [`& .MuiTabs-scrollButtons`]: {
+          zIndex: 10,
         },
       }}
     >
