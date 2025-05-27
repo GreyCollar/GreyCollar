@@ -1,6 +1,13 @@
 import { Icon } from "@iconify/react";
 
-import { Box, Card, Container, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  Card,
+  Container,
+  Stack,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import React, { useMemo } from "react";
 
 const DEFAULT_RESPONSIBILITY_ICON =
@@ -112,109 +119,123 @@ function CommunicationDiagram(props) {
         width={leftX + horizontalGap + nodeWidth}
         height={containerHeight}
         mx="auto"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
       >
-        {positionsLeft
-          .filter((node) => (connections || []).some((c) => c.left === node.id))
-          .map((node) =>
-            renderChannelNode ? (
-              renderChannelNode(node)
-            ) : (
-              <Card
-                key={node.id}
-                sx={{
-                  position: "absolute",
-                  width: nodeWidth,
-                  height: nodeHeight,
-                  top: node.y,
-                  left: node.x,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: 3,
-                  borderRadius: 2,
-                  bgcolor: theme.palette.background.paper,
-                }}
-              >
-                {showLeftIcons && (
-                  <Icon icon={node.icon} width="36" height="36" />
-                )}
-                <Typography
-                  variant="subtitle2"
-                  sx={{ mt: 1, textAlign: "center" }}
-                >
-                  {node.label}
-                </Typography>
-              </Card>
-            )
-          )}
+        {!connections || connections.length === 0 ? (
+          <Stack sx={{ textAlign: "center", my: 4, color: "text.secondary" }}>
+            No communication connections available.
+          </Stack>
+        ) : (
+          <>
+            {positionsLeft
+              .filter((node) =>
+                (connections || []).some((c) => c.left === node.id)
+              )
+              .map((node) =>
+                renderChannelNode ? (
+                  renderChannelNode(node)
+                ) : (
+                  <Card
+                    key={node.id}
+                    sx={{
+                      position: "absolute",
+                      width: nodeWidth,
+                      height: nodeHeight,
+                      top: node.y,
+                      left: node.x,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: 3,
+                      borderRadius: 2,
+                      bgcolor: theme.palette.background.paper,
+                    }}
+                  >
+                    {showLeftIcons && (
+                      <Icon icon={node.icon} width="48" height="48" />
+                    )}
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ mt: 1, textAlign: "center" }}
+                    >
+                      {node.label}
+                    </Typography>
+                  </Card>
+                )
+              )}
 
-        {rightNodes.map((node) =>
-          renderResponsibilityNode ? (
-            renderResponsibilityNode(node)
-          ) : (
-            <Card
-              key={node.id}
-              sx={{
+            {rightNodes.map((node) =>
+              renderResponsibilityNode ? (
+                renderResponsibilityNode(node)
+              ) : (
+                <Card
+                  key={node.id}
+                  sx={{
+                    position: "absolute",
+                    width: nodeWidth,
+                    height: nodeHeight,
+                    top: node.y,
+                    left: node.x,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    bgcolor: theme.palette.background.paper,
+                  }}
+                >
+                  {showRightIcons && (
+                    <Icon icon={node.icon} width="36" height="36" />
+                  )}
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ mt: 1, textAlign: "center" }}
+                  >
+                    {node.title}
+                  </Typography>
+                </Card>
+              )
+            )}
+
+            <svg
+              style={{
                 position: "absolute",
-                width: nodeWidth,
-                height: nodeHeight,
-                top: node.y,
-                left: node.x,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: 3,
-                borderRadius: 2,
-                bgcolor: theme.palette.background.paper,
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
               }}
             >
-              {showRightIcons && (
-                <Icon icon={node.icon} width="36" height="36" />
-              )}
-              <Typography
-                variant="subtitle2"
-                sx={{ mt: 1, textAlign: "center" }}
-              >
-                {node.title}
-              </Typography>
-            </Card>
-          )
+              <defs>
+                {positionsLeft.map((node) => (
+                  <marker
+                    key={node.id}
+                    id={`arrow-${node.id}`}
+                    markerWidth="6"
+                    markerHeight="6"
+                    refX="4.5"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <path
+                      d="M0,0 L0,6 L6,3 Z"
+                      fill={
+                        internalColorMap[node.type] ||
+                        theme.palette.text.secondary
+                      }
+                    />
+                  </marker>
+                ))}
+              </defs>
+              {renderEdges()}
+            </svg>
+          </>
         )}
-
-        <svg
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-          }}
-        >
-          <defs>
-            {positionsLeft.map((node) => (
-              <marker
-                key={node.id}
-                id={`arrow-${node.id}`}
-                markerWidth="8"
-                markerHeight="8"
-                refX="6"
-                refY="4"
-                orient="auto"
-              >
-                <path
-                  d="M0,0 L0,8 L8,4 Z"
-                  fill={
-                    internalColorMap[node.type] || theme.palette.text.secondary
-                  }
-                />
-              </marker>
-            ))}
-          </defs>
-          {renderEdges()}
-        </svg>
       </Box>
     </Container>
   );
