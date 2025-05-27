@@ -61,6 +61,7 @@ const CommunicationChannelSelection = ({
             justifyContent: "space-between",
             gap: 2,
             p: 2,
+            mt: 2,
             cursor: "pointer",
             border:
               leftSelection === node.id
@@ -88,6 +89,11 @@ const CommunicationChannelSelection = ({
         startIcon={<AddIcon />}
         variant="outlined"
         onClick={handleAddChannelClick}
+        sx={{
+          mt: 2,
+          width: "70%",
+          alignSelf: "center",
+        }}
       >
         Add Channel
       </Button>
@@ -97,11 +103,17 @@ const CommunicationChannelSelection = ({
         onClose={handleAddChannelClose}
       >
         {(availableChannels || []).map((c) => (
-          <MenuItem key={c.id} onClick={() => handleChannelOptionClick(c.id)}>
+          <MenuItem
+            sx={{
+              width: 180,
+            }}
+            key={c.id}
+            onClick={() => handleChannelOptionClick(c.id)}
+          >
             <Icon
               icon={c.icon}
-              width="24"
-              height="24"
+              width="28"
+              height="28"
               style={{ marginRight: 8 }}
             />
             {c.label}
