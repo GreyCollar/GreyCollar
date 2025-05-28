@@ -10,7 +10,6 @@ function AddNewButton({ type, addNew, onClickFunction }) {
     width: "",
     height: "",
     borderRadius: "",
-    minWidth: "",
     maxHeight: "",
   });
 
@@ -34,10 +33,9 @@ function AddNewButton({ type, addNew, onClickFunction }) {
         onClick={onClickFunction}
         sx={{
           ...styles.default,
-          width: { xs: "240px", sm: size.width },
+          width: { xs: "255px", sm: size.width },
           height: { xs: "250px", sm: size.height },
           borderRadius: size.borderRadius,
-          minWidth: size.minWidth,
           maxHeight: size.maxHeight,
         }}
       >
