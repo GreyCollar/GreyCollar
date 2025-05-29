@@ -3,14 +3,26 @@ import ResponsibilityCard from "../../components/ResponsibilityCard/Responsibili
 import ResponsibilityDrawer from "../../components/ResponsbilityDrawer/ResponsibilityDrawer";
 import ResponsibilityFlowDialog from "../../components/ResponsibilityFlow/ResponsibilityFlowDialog";
 import { Theme } from "@mui/material/styles";
+import { useEvent } from "@nucleoidai/react-event";
 import useResponsibility from "../../hooks/useResponsibility";
 
 import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 
 function ResponsibilitiesWidget() {
-  const { getResponsibility } = useResponsibility();
-  const { responsibility } = getResponsibility();
+  const [responsibilityUpsertedEvent] = useEvent("RESPONSIBILITY_UPSERTED", {
+    responsibility: null,
+  });
+  const [responsibilityRemovedEvent] = useEvent("RESPONSIBILITY_REMOVED", {
+    responsibility: null,
+  });
+
+  const { getResponsibility, removeResponsibility } = useResponsibility();
+
+  const { responsibility } = getResponsibility([
+    responsibilityUpsertedEvent.responsibility,
+    responsibilityRemovedEvent.responsibility,
+  ]);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -18,9 +30,7 @@ function ResponsibilitiesWidget() {
   const [flowDialogOpen, setFlowDialogOpen] = useState(false);
 
   const handleDrawerOpen = (item) => {
-    item === null
-      ? setSelectedItem({ id: "test", title: "", description: "" })
-      : setSelectedItem(item);
+    setSelectedItem(item);
     setDrawerOpen(true);
   };
 
@@ -53,6 +63,8 @@ function ResponsibilitiesWidget() {
               item={item}
               handleDrawerOpen={handleDrawerOpen}
               handleFlowDialogOpen={handleFlowDialogOpen}
+              removeResponsibility={removeResponsibility}
+              colleagueId={item.colleagueId}
             />
           ))}
         </Box>
@@ -63,6 +75,7 @@ function ResponsibilitiesWidget() {
         selectedItem={selectedItem}
         setAiResponse={setAiResponse}
         aiResponse={aiResponse}
+        setSelectedItem={setSelectedItem}
       />
       <ResponsibilityFlowDialog
         flowDialogOpen={flowDialogOpen}

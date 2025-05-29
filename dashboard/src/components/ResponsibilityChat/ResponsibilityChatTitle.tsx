@@ -1,3 +1,4 @@
+import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 
 import {
@@ -8,30 +9,34 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Skeleton,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
 import React, { useState } from "react";
 
-const ResponsibilityChatTitle = ({ selectedItem }) => {
+const ResponsibilityChatTitle = ({
+  title,
+  description,
+  messages,
+  handleCreateResponsibility,
+  setTitle,
+}) => {
   const theme = useTheme();
   const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(selectedItem.title);
-  const [description, setDescription] = useState(selectedItem.description);
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleSaveClick = () => {
+    handleCreateResponsibility(title, description);
     setIsEditing(false);
   };
 
   const handleCancelClick = () => {
     setIsEditing(false);
-    setTitle(selectedItem.title);
-    setDescription(selectedItem.description);
   };
 
   return (
@@ -58,22 +63,30 @@ const ResponsibilityChatTitle = ({ selectedItem }) => {
             gap: 1,
           }}
         >
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: "bold",
-              color: theme.palette.text.primary,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              flexGrow: 1,
-            }}
-          >
-            {title}
-          </Typography>
-          <IconButton onClick={handleEditClick}>
-            <EditIcon />
-          </IconButton>
+          {title === null && messages.length > 0 ? (
+            <>
+              <Skeleton variant="text" width={200} height={24} />
+            </>
+          ) : (
+            <>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontWeight: "bold",
+                  color: theme.palette.text.primary,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  flexGrow: 1,
+                }}
+              >
+                {title ? title : "Add Title"}
+              </Typography>
+              <IconButton onClick={handleEditClick}>
+                {title ? <EditIcon /> : <AddIcon />}
+              </IconButton>
+            </>
+          )}
         </Box>
         <Box
           sx={{
@@ -82,43 +95,42 @@ const ResponsibilityChatTitle = ({ selectedItem }) => {
             gap: 1,
           }}
         >
-          <Typography
-            variant="body2"
-            sx={{
-              color: theme.palette.text.secondary,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              maxWidth: "350px",
-              flexGrow: 1,
-            }}
-          >
-            {description}
-          </Typography>
-          <IconButton onClick={handleEditClick}>
-            <EditIcon />
-          </IconButton>
+          {description === null && messages.length > 0 ? (
+            <Skeleton variant="text" width={200} height={24} />
+          ) : (
+            <>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: theme.palette.text.secondary,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  maxWidth: "350px",
+                  flexGrow: 1,
+                }}
+              >
+                {description}
+              </Typography>
+            </>
+          )}
         </Box>
       </Box>
 
       <Dialog open={isEditing} onClose={handleCancelClick} fullWidth>
-        <DialogTitle>Edit Details</DialogTitle>
+        <DialogTitle>
+          {messages.length > 0
+            ? "Edit Responsibility"
+            : "Create Responsibility"}
+        </DialogTitle>
         <DialogContent>
           <TextField
             margin="dense"
             label="Title"
             fullWidth
             variant="outlined"
-            value={title}
             onChange={(e) => setTitle(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Description"
-            fullWidth
-            variant="outlined"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={title}
           />
         </DialogContent>
         <DialogActions>

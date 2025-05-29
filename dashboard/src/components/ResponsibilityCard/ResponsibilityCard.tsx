@@ -24,6 +24,8 @@ const ResponsibilityCard = ({
   item,
   handleDrawerOpen,
   handleFlowDialogOpen,
+  removeResponsibility,
+  colleagueId,
 }) => {
   const popover = usePopover();
 
@@ -178,6 +180,7 @@ const ResponsibilityCard = ({
         <MenuItem
           data-cy="responsibility-menu-delete"
           onClick={() => {
+            removeResponsibility(item.id, colleagueId);
             popover.onClose();
           }}
           sx={{ color: "error.main" }}

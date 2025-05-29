@@ -2,7 +2,20 @@ import { convertToNodesAndEdges } from "../components/ResponsibilityFlow/flowAda
 import http from "../http";
 import { publish } from "@nucleoidai/react-event";
 import useApi from "./useApiV2";
+import { v4 as uuidv4 } from "uuid";
+
 type DependencyArray = object[];
+
+type NodeType = {
+  id: string;
+  properties?: {
+    label: string;
+    icon: string;
+  };
+  type: string;
+  responsibilityId?: string;
+  dependencyId?: string | null;
+};
 
 function useResponsibility() {
   const { Api } = useApi();
@@ -30,7 +43,7 @@ function useResponsibility() {
     fetchState: DependencyArray = []
   ) => {
     const { data, loading, error, fetch } = Api(
-      () => http.get(id ? `/responsibilities/${id}` : null),
+      () => (id ? http.get(`/responsibilities/${id}`) : null),
       [...fetchState]
     );
     let result;
@@ -52,9 +65,69 @@ function useResponsibility() {
     };
   };
 
+  const createResponsibility = async (
+    title: string,
+    description: string,
+    colleagueId: string
+  ) => {
+    const response = await http.post("/responsibilities", {
+      title,
+      description,
+      colleagueId,
+    });
+    if (response?.data) {
+      publish("RESPONSIBILITY_CREATED", { responsibility: response.data });
+    }
+    return { responsibility: response?.data };
+  };
+
+  const upsertResponsibility = async (
+    responsibilityId: string,
+    title: string,
+    description: string,
+    colleagueId: string,
+    nodes?: NodeType[]
+  ) => {
+    if (!responsibilityId) {
+      responsibilityId = uuidv4();
+    }
+
+    const response = await http.put(`/responsibilities/${responsibilityId}`, {
+      title,
+      description,
+      nodes,
+      colleagueId,
+    });
+    if (response?.data) {
+      publish("RESPONSIBILITY_UPSERTED", { responsibility: response.data });
+    }
+    return { responsibility: response?.data };
+  };
+
+  const removeResponsibility = async (
+    responsibilityId: string,
+    colleagueId: string
+  ) => {
+    const response = await http.delete(
+      `/responsibilities/${responsibilityId}`,
+      {
+        data: {
+          colleagueId,
+        },
+      }
+    );
+    if (response?.data) {
+      publish("RESPONSIBILITY_REMOVED", { responsibility: response.data });
+    }
+    return { responsibility: response?.data };
+  };
+
   return {
     getResponsibility,
     getResponsibilityWithNode,
+    createResponsibility,
+    upsertResponsibility,
+    removeResponsibility,
   };
 }
 
