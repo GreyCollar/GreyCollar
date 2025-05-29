@@ -55,7 +55,7 @@ function ColleagueWizard({
     },
   ];
 
-  const steps = ["Name", "Avatar", "Character", "Role", "Engine", "Summary"];
+  const steps = ["Name", "Title", "Character", "Engine", "Summary"];
 
   const stepExp = [
     "Give colleague a name.",
