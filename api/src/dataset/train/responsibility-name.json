@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Find Accounting Related Documents",
+    "description": "find accounting related documents and send email to test@bla.com without summarizing the documents",
+    "content": "Dont summarize docs, just find the documents",
+    "history": [
+      {
+        "content": "{ integrationId: 8f828016-dd2e-4f76-bad5-2a0ca9b71d6f } find accounting related documents and send email to test@bla.com",
+        "role": "user"
+      },
+      {
+        "content": "Here’s the flow for your request to find accounting-related documents and send an email to test@bla.com",
+        "role": "assistant"
+      }
+    ]
+  }
+]
