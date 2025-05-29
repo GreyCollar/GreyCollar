@@ -90,6 +90,19 @@ function ColleagueWizard({
     "Natural Leader",
   ];
   const roles = [
+    "Explores and discovers new scientific knowledge.",
+    "Investigates and solves complex cases.",
+    "Writes and reports news stories.",
+    "Designs innovative and functional buildings.",
+    "Creates delicious meals and culinary experiences.",
+    "Educates and inspires students to achieve their potential.",
+    "Develops solutions to technical challenges.",
+    "Operates aircraft and ensures safe travel.",
+    "Expresses creativity through visual or performing arts.",
+    "Provides emergency medical care and assistance.",
+  ];
+
+  const titles = [
     "Scientist",
     "Detective",
     "Journalist",
@@ -169,6 +182,9 @@ function ColleagueWizard({
         break;
       case "role":
         randomValue = roles[Math.floor(Math.random() * roles.length)];
+        break;
+      case "title":
+        randomValue = titles[Math.floor(Math.random() * titles.length)];
         break;
       default:
         randomValue = "";
