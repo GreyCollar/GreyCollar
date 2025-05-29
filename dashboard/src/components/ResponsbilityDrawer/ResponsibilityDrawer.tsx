@@ -10,8 +10,21 @@ const ResponsibilityDrawer = ({
   selectedItem,
   handleAiResponse,
   aiResponse,
+}: {
+  drawerOpen: boolean;
+  handleDrawerClose: () => void;
+  selectedItem: {
+    id: string;
+    title: string;
+    description: string;
+    colleagueId: string;
+  };
+  handleAiResponse?: (response) => void;
+  aiResponse?: string;
 }) => {
   const theme = useTheme();
+
+  console.log("aiResponse", aiResponse);
 
   return (
     <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
