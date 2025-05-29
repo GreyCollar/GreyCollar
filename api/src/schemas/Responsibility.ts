@@ -5,19 +5,22 @@ const Responsibility = {
     title: z.string(),
     description: z.string(),
     colleagueId: z.string().uuid(),
-    nodes: z.array(
-      z.object({
-        id: z.string().uuid(),
-        properties: z
-          .object({
-            label: z.string(),
-            icon: z.string(),
-          })
-          .optional(),
-        dependencyId: z.string().uuid().optional(),
-        responsibilityId: z.string().uuid().optional(),
-      })
-    ),
+    nodes: z
+      .array(
+        z.object({
+          id: z.string().uuid(),
+          properties: z
+            .object({
+              label: z.string(),
+              icon: z.string(),
+            })
+            .optional(),
+          type: z.string(),
+          responsibilityId: z.string().uuid().optional(),
+          dependencyId: z.string().uuid().nullish(),
+        })
+      )
+      .optional(),
   }),
   create: z.object({
     history: z
@@ -45,3 +48,4 @@ const Responsibility = {
 };
 
 export default Responsibility;
+
