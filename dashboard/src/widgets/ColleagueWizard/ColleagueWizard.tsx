@@ -195,7 +195,7 @@ function ColleagueWizard({
   const Name = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <SparkleInput
             data-cy="colleague-wizard-name-input"
             prop="name"
@@ -203,6 +203,11 @@ function ColleagueWizard({
             onChange={handleInputChange("name")}
             onRandomValue={() => handleRandomValue("name")}
             multiline={""}
+          />
+          <SelectAvatar
+            handleEmojiSelect={handleEmojiSelect}
+            avatarSrc={newItem.src}
+            avatar={newItem?.avatar?.replace(/:/g, "")}
           />
         </div>
 
@@ -314,13 +319,6 @@ function ColleagueWizard({
       case 0:
         return Name();
       case 1:
-        return (
-          <SelectAvatar
-            handleEmojiSelect={handleEmojiSelect}
-            avatarSrc={newItem.src}
-            avatar={newItem?.avatar?.replace(/:/g, "")}
-          />
-        );
       case 2:
         return Personality();
       case 3:
