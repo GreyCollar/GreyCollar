@@ -293,15 +293,26 @@ function ColleagueWizard({
 
   const Responsibility = () => {
     return (
-      <SparkleInput
-        data-cy="colleague-wizard-role-input"
-        prop="role"
-        onChange={handleInputChange("role")}
-        onRandomValue={() => handleRandomValue("role")}
-        value={newItem["role"]}
-        multiline
-        rows={11}
-      />
+      <>
+        <SparkleInput
+          data-cy="colleague-wizard-role-input"
+          prop="title"
+          onChange={handleInputChange("title")}
+          onRandomValue={() => handleRandomValue("title")}
+          value={newItem["title"]}
+          multiline
+          rows={1}
+        />
+        <SparkleInput
+          data-cy="colleague-wizard-role-input"
+          prop="role"
+          onChange={handleInputChange("role")}
+          onRandomValue={() => handleRandomValue("role")}
+          value={newItem["role"]}
+          multiline
+          rows={11}
+        />
+      </>
     );
   };
 
@@ -319,11 +330,10 @@ function ColleagueWizard({
       case 0:
         return Name();
       case 1:
+        return Responsibility();
       case 2:
         return Personality();
       case 3:
-        return Responsibility();
-      case 4:
         return (
           <EnginesChart
             handleEngineSelect={handleEngineSelect}
@@ -332,7 +342,7 @@ function ColleagueWizard({
             setOpen={""}
           />
         );
-      case 5:
+      case 4:
         return <ItemSummary newItem={newItem} />;
     }
   };
