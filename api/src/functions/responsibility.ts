@@ -38,17 +38,6 @@ async function getWithNodes(id: string) {
   return responsibility.toJSON();
 }
 
-type NodeType = {
-  id: string;
-  properties: {
-    label: string;
-    icon: string;
-  };
-  type: string;
-  responsibilityId?: string;
-  dependencyId?: string;
-};
-
 async function upsert(
   title: string,
   description: string,
@@ -67,10 +56,6 @@ async function upsert(
         where: { responsibilityId: id },
       });
     }
-
-    await ResponsibilityNode.destroy({
-      where: { responsibilityId: id },
-    });
 
     await existingResponsibility.update({ title, description, colleagueId });
 
@@ -126,7 +111,26 @@ async function upsert(
   };
 }
 
+async function remove({
+  responsibilityId,
+  withNodes,
+}: {
+  responsibilityId: string;
+  withNodes: boolean;
+}) {
+  if (withNodes) {
+    await ResponsibilityNode.destroy({
+      where: { responsibilityId },
+    });
+  }
+
+  await Responsibility.destroy({
+    where: { id: responsibilityId },
+  });
+}
+
 export default {
   getWithNodes,
   upsert,
+  remove,
 };
