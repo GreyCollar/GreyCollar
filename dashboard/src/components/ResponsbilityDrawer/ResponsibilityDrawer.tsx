@@ -21,6 +21,7 @@ const ResponsibilityDrawer = ({
   };
   handleAiResponse?: (response) => void;
   aiResponse?: string;
+  setAiResponse?: (response: string) => void;
 }) => {
   const theme = useTheme();
   console.log("ResponsibilityDrawer", aiResponse);
