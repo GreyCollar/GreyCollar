@@ -1,13 +1,12 @@
 import Card from "@mui/material/Card";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import { Image } from "@nucleoidai/platform/minimal/components";
-import ListAltIcon from "@mui/icons-material/ListAlt";
 import React from "react";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
+import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { getBackgroundUrl } from "../../../utils/background";
 
-import { IconButton, Stack } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------

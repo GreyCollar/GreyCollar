@@ -1,8 +1,7 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
 import React from "react";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
 
-import { Box, Card, Chip, Stack, Typography } from "@mui/material";
+import { Card, Chip, Stack, Typography } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 
 function ManagerNode({

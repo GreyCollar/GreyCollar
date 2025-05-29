@@ -1,9 +1,9 @@
+import { Box } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
 import OrganizationChart from "../widgets/OrganizationChart/OrganizationChart";
 import TeamChart from "../widgets/TeamChart/TeamChart";
 
-import { Box, Button } from "@mui/material";
 import React, { useState } from "react";
 
 const Organizations = () => {
