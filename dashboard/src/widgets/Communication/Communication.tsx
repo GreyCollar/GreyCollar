@@ -10,12 +10,12 @@ import React, { useEffect, useState } from "react";
 const availableChannels = [
   {
     id: "whatsapp",
-    label: "WhatsApp Business",
-    icon: "logos:whatsapp",
+    label: "WhatsApp",
+    icon: "logos:whatsapp-icon",
     requiresInput: true,
     inputLabel: "Phone Number",
   },
-  { id: "slack", label: "Slack", icon: "logos:slack" },
+  { id: "slack", label: "Slack", icon: "devicon:slack" },
   { id: "email", label: "Email", icon: "mdi:email-outline" },
 ];
 

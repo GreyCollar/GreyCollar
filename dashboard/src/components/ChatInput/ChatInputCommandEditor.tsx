@@ -113,6 +113,7 @@ const ChatInputCommandEditor = ({
   };
 
   const handleCommandSelect = (command) => {
+    console.log(command, "command");
     setSelectedCommand(command);
     insertCommand(command.name);
   };
@@ -124,6 +125,7 @@ const ChatInputCommandEditor = ({
         type: "input",
         options: currentInput.list,
         onSelect: (selectedOption) => {
+          console.log(selectedOption, "selectedOption");
           if (!selectedOption || !selectedOption.name) return;
 
           const selectedInput = currentInput.action(selectedOption.name);
@@ -222,6 +224,7 @@ const ChatInputCommandEditor = ({
             {
               text: `@${selectedColleague}`,
               type: "mention",
+              colleagueId: selectedColleague,
             },
           ],
         },
@@ -261,8 +264,15 @@ const ChatInputCommandEditor = ({
       return;
     }
 
+    // Handle simple paragraph text
+    if (content.length === 1 && content[0].text) {
+      onKeyUp({ key: "Enter", target: { value: content[0].text } });
+      clearEditor();
+      return;
+    }
+
     const text = content[0].text;
-    const isItCommand = !text && content[1].type === "commandText";
+    const isItCommand = !text && content[1]?.type === "commandText";
     const isMention = content[1]?.type === "mention";
 
     setReadOnly(true);
@@ -311,12 +321,15 @@ const ChatInputCommandEditor = ({
   };
 
   const handleChange = (event) => {
+    if (!event || !event[0] || !event[0].children) return;
+
     let types = event[0]?.children
       .map((child) => child.type)
       .filter((type) => typeof type === "string");
 
-    const sentence = event[0].children[0].text;
+    const sentence = event[0].children[0]?.text || "";
     const sentenceNode = editor.children[0];
+
     if (sentence.startsWith("/")) {
       setDropdownOpen(true);
 
@@ -351,6 +364,16 @@ const ChatInputCommandEditor = ({
               setCurrentInput(firstInput.next);
             },
             children: [{ text: "Select a Colleague" }],
+          });
+        } else if (firstInput.type === "INTEGRATION") {
+          Transforms.insertNodes(editor, {
+            type: "input",
+            options: firstInput.list,
+            onSelect: (option) => {
+              console.log(option, "option");
+              handleInputSubmit(firstInput.action(option.name), option.name);
+            },
+            children: [{ text: firstInput.label }],
           });
         }
         Transforms.insertText(editor, " ", { at: Editor.end(editor, []) });

@@ -1,52 +1,80 @@
 import Box from "@mui/material/Box";
-import ChatInput from "../../widgets/ChatInput/ChatInput";
+import InlineChatInput from "../../widgets/ChatInput/InlineChatInput";
 import ResponsibilityChatContent from "./ResponsibilityChatContent";
-import { createEditor } from "slate";
-import { withHistory } from "slate-history";
-import { withReact } from "slate-react";
+import http from "../../http";
+import { publish } from "@nucleoidai/react-event";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
-const predefinedResponses = {
-  "What is an AI agent?":
-    "An AI agent is a system that can perceive its environment and take actions to achieve its goals.",
-  "Can an AI agent think like a human?":
-    "Not exactly! AI agents can simulate some aspects of thinking, but they don't truly understand or feel like humans do.",
-  "Are AI agents always right?":
-    "I try my best, but even AI agents can make mistakes sometimes!",
-  "Can AI agents learn?":
-    "Some can! Learning agents improve their performance over time using data and experience.",
-  "Do AI agents sleep?": "I don't need sleep—I'm always here when you need me!",
-  "Can AI agents take over the world?":
-    "That's more science fiction than reality. I'm just here to help!",
-  "Are you a smart AI agent?":
-    "I'd like to think so! I've read a lot of books—digitally, of course.",
-  "Can I train my own AI agent?":
-    "Absolutely! With the right tools and data, anyone can build and train an AI agent.",
-};
-
-function ResponsibilityChat({ onAiResponse, selectedItem }) {
+function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [error, setError] = useState(null);
 
-  const editor = useMemo(
-    () => withMentions(withInlines(withHistory(withReact(createEditor())))),
-    []
-  );
+  const addMessage = async (message, role = "user") => {
+    try {
+      const parsedMessage = message
+        .split(/(\{.*?\})/)
+        .map((part) => {
+          if (part.startsWith("{") && part.endsWith("}")) {
+            try {
+              const parsed = JSON.parse(part);
+              return JSON.stringify(parsed);
+            } catch {
+              return part;
+            }
+          }
+          return part;
+        })
+        .filter((part) => part !== "")
+        .join("");
 
-  const addMessage = (message, role = "user") => {
-    setMessages((prevMessages) => [...prevMessages, { text: message, role }]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { content: parsedMessage, role },
+      ]);
 
-    if (role === "user" && predefinedResponses[message]) {
-      setLoading(true);
-      setTimeout(() => {
-        const response = predefinedResponses[message];
-        addMessage(response, "assistant");
-        if (onAiResponse) {
-          onAiResponse(response);
-        }
-        setLoading(false);
-      }, 2000);
+      if (role === "user") {
+        setLoading(true);
+        setError(null);
+
+        const history = [
+          ...messages,
+          ...(aiResponse?.flow
+            ? [
+                {
+                  content: JSON.stringify(aiResponse.flow),
+                  role: "assistant",
+                },
+              ]
+            : []),
+          { content: parsedMessage, role: "user" },
+        ];
+
+        const { data } = await http.post("/colleagues/responsibilities", {
+          history,
+          content: message,
+        });
+
+        const aiMessage = data?.response;
+
+        setAiResponse(data);
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { content: aiMessage, role: "assistant" },
+        ]);
+      }
+    } catch (err) {
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to fetch AI response";
+      setError(errorMessage);
+      console.error("Error in addMessage:", err);
+    } finally {
+      setLoading(false);
+      publish("MESSAGES_LOADED", true);
     }
   };
 
@@ -67,57 +95,23 @@ function ResponsibilityChat({ onAiResponse, selectedItem }) {
         messages={messages}
         selectedItem={selectedItem}
       />
-      <ChatInput
-        onSendMessage={addMessage}
-        editor={editor}
-        responsibilityChat={true}
-      />
+      {error && (
+        <Box
+          sx={{
+            color: "error.main",
+            my: 1,
+            fontSize: "0.875rem",
+            padding: "8px",
+            backgroundColor: "error.light",
+            borderRadius: "4px",
+          }}
+        >
+          {error}
+        </Box>
+      )}
+      <InlineChatInput onSend={(message) => addMessage(message)} />
     </Box>
   );
 }
 
 export default ResponsibilityChat;
-
-const withInlines = (editor) => {
-  const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =
-    editor;
-
-  editor.isInline = (element) =>
-    ["commandText", "input", "optional"].includes(element.type) ||
-    isInline(element);
-
-  editor.isElementReadOnly = (element) =>
-    element.type === "input" ||
-    element.type === "commandText" ||
-    element.type === "optional" ||
-    isElementReadOnly(element);
-
-  editor.isSelectable = (element) =>
-    element.type !== "input" ||
-    element.type !== "optional" ||
-    (element.type !== "commandText" && isSelectable(element));
-
-  editor.insertText = (text) => {
-    insertText(text);
-  };
-
-  editor.insertData = (data) => {
-    insertData(data);
-  };
-
-  return editor;
-};
-
-const withMentions = (editor) => {
-  const { isInline, isVoid, markableVoid } = editor;
-  editor.isInline = (element) => {
-    return element.type === "mention" ? true : isInline(element);
-  };
-  editor.isVoid = (element) => {
-    return element.type === "mention" ? true : isVoid(element);
-  };
-  editor.markableVoid = (element) => {
-    return element.type === "mention" || markableVoid(element);
-  };
-  return editor;
-};
