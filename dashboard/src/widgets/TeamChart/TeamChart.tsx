@@ -1,5 +1,6 @@
 import ColleagueWizard from "../ColleagueWizard/ColleagueWizard";
 import ManagerNode from "./common/ManagerNode";
+import ResponsibilityDrawer from "../../components/ResponsbilityDrawer/ResponsibilityDrawer";
 import TeamWithColleagues from "./TeamWithColleagues";
 import { storage } from "@nucleoidjs/webstorage";
 import useColleagues from "../../hooks/useColleagues";
@@ -11,7 +12,7 @@ import { useTheme } from "@mui/material/styles";
 import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 
-function OrganizationalChart({ sx }) {
+function TeamChart({ sx }) {
   const theme = useTheme();
   const managerRef = useRef(null);
   const teamRefs = useRef({});
@@ -46,6 +47,9 @@ function OrganizationalChart({ sx }) {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [selectedTeamId, setSelectedTeamId] = useState(null);
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const handleAddColleague = (teamId) => {
     setSelectedTeamId(teamId);
     setDialogOpen(true);
@@ -54,6 +58,13 @@ function OrganizationalChart({ sx }) {
   const handleCloseDialog = () => {
     setDialogOpen(false);
     setSelectedTeamId(null);
+  };
+
+  const handleDrawerOpen = (item) => {
+    if (item && item.id) {
+      setSelectedItem(item);
+      setDrawerOpen(true);
+    }
   };
 
   useEffect(
@@ -299,6 +310,14 @@ function OrganizationalChart({ sx }) {
           />
         )}
 
+        {drawerOpen && selectedItem && selectedItem.id && (
+          <ResponsibilityDrawer
+            drawerOpen={drawerOpen}
+            handleDrawerClose={() => setDrawerOpen(false)}
+            selectedItem={selectedItem}
+          />
+        )}
+
         {filteredOrganizations.length > 0 ? (
           <Stack
             alignItems="center"
@@ -320,6 +339,7 @@ function OrganizationalChart({ sx }) {
                   colleagueRefs={colleagueRefs}
                   responsibilityRefs={responsibilityRefs}
                   onAddColleague={() => handleAddColleague(org.id)}
+                  handleDrawerOpen={handleDrawerOpen}
                 />
               ))}
             </Stack>
@@ -334,4 +354,4 @@ function OrganizationalChart({ sx }) {
   );
 }
 
-export default OrganizationalChart;
+export default TeamChart;

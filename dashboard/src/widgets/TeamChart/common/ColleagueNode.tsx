@@ -1,11 +1,13 @@
 import Card from "@mui/material/Card";
+import { Iconify } from "@nucleoidai/platform/minimal/components";
 import { Image } from "@nucleoidai/platform/minimal/components";
+import ListAltIcon from "@mui/icons-material/ListAlt";
 import React from "react";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
-import { Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { getBackgroundUrl } from "../../../utils/background";
 
+import { IconButton, Stack } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
@@ -32,7 +34,7 @@ function ColleagueNode({
       <Card
         sx={{
           p: 0,
-          minWidth: 300,
+          minWidth: 350,
           maxWidth: 400,
           height: 120,
           borderRadius: 1.5,
@@ -45,6 +47,7 @@ function ColleagueNode({
             boxShadow: (theme) => theme.shadows[6],
           },
           ...sx,
+          ml: 1,
         }}
       >
         <Stack
@@ -90,25 +93,44 @@ function ColleagueNode({
             padding: 2,
           }}
         >
-          <Typography
-            variant="subtitle2"
-            noWrap
-            sx={{
-              color: (theme) => theme.palette.primary.dark,
-            }}
+          <Stack
+            display={"flex"}
+            flexDirection={"row"}
+            gap={1}
+            sx={{ mt: 1 }}
+            alignItems={"center"}
           >
-            {node.name}
-          </Typography>
-          <Typography
-            variant="caption"
-            component="div"
-            noWrap
-            sx={{
-              color: "text.secondary",
-            }}
+            <Iconify icon="mingcute:location-fill" width={24} />
+            <Typography
+              variant="caption"
+              component="div"
+              noWrap
+              sx={{
+                color: "text.secondary",
+              }}
+            >
+              {node.name}
+            </Typography>
+          </Stack>
+          <Stack
+            display={"flex"}
+            flexDirection={"row"}
+            gap={1}
+            sx={{ mt: 1 }}
+            alignItems={"center"}
           >
-            {node.coach ? node.coach : node.role}
-          </Typography>
+            <Iconify icon="ic:round-business-center" width={24} />
+            <Typography
+              variant="caption"
+              component="div"
+              noWrap
+              sx={{
+                color: "text.secondary",
+              }}
+            >
+              {node.role}
+            </Typography>
+          </Stack>
         </Stack>
       </Card>
     </>

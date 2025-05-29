@@ -29,8 +29,8 @@ function ResponsibilityNode({
           flexDirection: "row",
           alignItems: "center",
           minWidth: 200,
-          maxWidth: 310,
-          height: 80,
+          maxWidth: 290,
+          height: 100,
           borderRadius: 1.5,
           boxShadow: 3,
           "&:hover": {
@@ -44,7 +44,7 @@ function ResponsibilityNode({
           spacing={1}
           sx={{
             position: "relative",
-            width: 45,
+            width: 65,
             height: "100%",
             display: "flex",
             justifyContent: "center",
@@ -54,37 +54,38 @@ function ResponsibilityNode({
             padding: 1,
           }}
         >
-          <Fab
-            color="default"
-            size="small"
+          <Box
             sx={{
-              width: 32,
-              height: 32,
-              minHeight: "auto",
-              boxShadow: 2,
+              position: "relative",
+              height: "100%",
+              width: "100%",
             }}
           >
-            <Iconify icon="logos:slack-icon" />
-          </Fab>
-          <Fab
-            color="default"
-            size="small"
-            sx={{
-              width: 32,
-              height: 32,
-              minHeight: "auto",
-              boxShadow: 2,
-            }}
-          >
-            <Iconify icon="logos:whatsapp-icon" />
-          </Fab>
+            {["logos:slack-icon", "logos:whatsapp-icon"].map((icon, index) => (
+              <Fab
+                key={icon}
+                color="default"
+                size="small"
+                sx={{
+                  width: 26,
+                  height: 26,
+                  minHeight: "auto",
+                  boxShadow: 2,
+                  position: "absolute",
+                  top: index * 20,
+                  left: 0,
+                }}
+              >
+                <Iconify icon={icon} />
+              </Fab>
+            ))}
+          </Box>
         </Stack>
 
         <Stack
           direction="column"
           spacing={1}
           sx={{
-            flex: 1,
             padding: 2,
           }}
         >
