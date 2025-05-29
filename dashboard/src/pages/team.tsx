@@ -6,7 +6,7 @@ import TeamChart from "../widgets/TeamChart/TeamChart";
 
 import React, { useState } from "react";
 
-const Organizations = () => {
+const Team = () => {
   const [isOldChartOpen, setIsOldChartOpen] = useState(false);
 
   return (
@@ -31,4 +31,4 @@ const Organizations = () => {
   );
 };
 
-export default Organizations;
+export default Team;

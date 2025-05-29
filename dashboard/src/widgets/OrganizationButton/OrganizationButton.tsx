@@ -9,7 +9,7 @@ function OrganizationButton() {
 
   const handleClick = () => {
     setOpen(!open);
-    navigate("/organizations");
+    navigate("/team");
   };
 
   return (

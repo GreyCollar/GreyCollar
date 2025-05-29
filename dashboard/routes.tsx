@@ -7,8 +7,8 @@ import Container from "./src/Container";
 import Dashboard from "./src/pages/dashboard";
 import Integrations from "./src/pages/integrations";
 import KnowledgeBase from "./src/pages/knowledgeBase";
-import Organizations from "./src/pages/organizations";
 import Settings from "./src/pages/settings";
+import Team from "./src/pages/team";
 
 import {
   DashboardLayout,
@@ -49,8 +49,8 @@ const routes = [
         pages: [
           { path: "/chat", element: <Chat /> },
           {
-            path: "/organizations",
-            element: <Organizations />,
+            path: "/team",
+            element: <Team />,
           },
         ],
       },
