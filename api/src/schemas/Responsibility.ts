@@ -30,6 +30,18 @@ const Responsibility = {
       .optional(),
     content: z.string(),
   }),
+  createResponsibilityName: z.object({
+    history: z.array(
+      z.object({
+        role: z.enum(["user", "system", "assistant"]),
+        content: z.string(),
+      })
+    ),
+    content: z.string(),
+  }),
+  delete: z.object({
+    colleagueId: z.string().uuid(),
+  }),
 };
 
 export default Responsibility;

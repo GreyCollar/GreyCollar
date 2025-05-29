@@ -175,5 +175,14 @@ router.post("/responsibilities", async (req, res) => {
   });
 });
 
-export default router;
+router.post("/responsibility-name", async (req, res) => {
+  const { body } = req;
+  const { history, content } =
+    Responsibility.createResponsibilityName.parse(body);
 
+  const response = await agent.responsibilityName({ history, content });
+
+  res.json(response);
+});
+
+export default router;

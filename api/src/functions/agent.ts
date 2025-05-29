@@ -362,5 +362,30 @@ async function responsibility({
   return response;
 }
 
-export default { teamChat, chat, task, step, responsibility };
+async function responsibilityName({
+  history,
+  content,
+}: {
+  history?: {
+    role: "system" | "user" | "assistant";
+    content: string;
+  }[];
+  content: string;
+}) {
+  const response = await generate({
+    dataset: dataset.train.responsibilityName,
+    context: history,
+    content,
+    json_format: "{ title: <TITLE>, description: <DESCRIPTION> }",
+  });
+  return response;
+}
 
+export default {
+  teamChat,
+  chat,
+  task,
+  step,
+  responsibility,
+  responsibilityName,
+};
