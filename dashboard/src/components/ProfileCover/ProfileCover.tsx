@@ -44,7 +44,7 @@ function ProfileCover({ name, avatarUrl, role, coverUrl, loading }) {
         direction={{ xs: "column", md: "row" }}
         sx={{
           left: { md: 24 },
-          bottom: { md: 24 },
+          bottom: { md: 54 },
           zIndex: { md: 10 },
           pt: { xs: 6, md: 0 },
           position: { md: "absolute" },

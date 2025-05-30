@@ -48,14 +48,14 @@ const TABS = [
     icon: <Iconify icon="material-symbols:task" width={24} />,
   },
   {
-    value: "integrations",
-    label: "Integrations",
-    icon: <Iconify icon="carbon:ibm-cloud-pak-integration" width={24} />,
-  },
-  {
     value: "communication",
     label: "Communication",
     icon: <Iconify icon="material-symbols:chat" width={24} />,
+  },
+  {
+    value: "integrations",
+    label: "Integrations",
+    icon: <Iconify icon="carbon:ibm-cloud-pak-integration" width={24} />,
   },
 ];
 
@@ -117,7 +117,7 @@ function ColleagueLayout({ colleague, loading }) {
             <Stack
               sx={{
                 position: "absolute",
-                bottom: mdDown ? "auto" : 20,
+                bottom: mdDown ? "auto" : 44,
                 left: mdDown ? "auto" : 120,
                 top: mdDown ? 25 : "auto",
                 right: mdDown ? 25 : "auto",
