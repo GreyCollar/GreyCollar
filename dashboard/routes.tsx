@@ -8,6 +8,7 @@ import Dashboard from "./src/pages/dashboard";
 import Integrations from "./src/pages/integrations";
 import KnowledgeBase from "./src/pages/knowledgeBase";
 import Settings from "./src/pages/settings";
+import Team from "./src/pages/team";
 
 import {
   DashboardLayout,
@@ -45,7 +46,13 @@ const routes = [
       },
       {
         layout: <FullScreenLayout />,
-        pages: [{ path: "/chat", element: <Chat /> }],
+        pages: [
+          { path: "/chat", element: <Chat /> },
+          {
+            path: "/team",
+            element: <Team />,
+          },
+        ],
       },
     ],
   },

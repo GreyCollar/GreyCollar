@@ -55,7 +55,7 @@ function ColleagueWizard({
     },
   ];
 
-  const steps = ["Name", "Avatar", "Character", "Role", "Engine", "Summary"];
+  const steps = ["Name", "Title", "Character", "Engine", "Summary"];
 
   const stepExp = [
     "Give colleague a name.",
@@ -90,6 +90,19 @@ function ColleagueWizard({
     "Natural Leader",
   ];
   const roles = [
+    "Explores and discovers new scientific knowledge.",
+    "Investigates and solves complex cases.",
+    "Writes and reports news stories.",
+    "Designs innovative and functional buildings.",
+    "Creates delicious meals and culinary experiences.",
+    "Educates and inspires students to achieve their potential.",
+    "Develops solutions to technical challenges.",
+    "Operates aircraft and ensures safe travel.",
+    "Expresses creativity through visual or performing arts.",
+    "Provides emergency medical care and assistance.",
+  ];
+
+  const titles = [
     "Scientist",
     "Detective",
     "Journalist",
@@ -170,6 +183,9 @@ function ColleagueWizard({
       case "role":
         randomValue = roles[Math.floor(Math.random() * roles.length)];
         break;
+      case "title":
+        randomValue = titles[Math.floor(Math.random() * titles.length)];
+        break;
       default:
         randomValue = "";
     }
@@ -179,7 +195,7 @@ function ColleagueWizard({
   const Name = () => {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <SparkleInput
             data-cy="colleague-wizard-name-input"
             prop="name"
@@ -187,6 +203,11 @@ function ColleagueWizard({
             onChange={handleInputChange("name")}
             onRandomValue={() => handleRandomValue("name")}
             multiline={""}
+          />
+          <SelectAvatar
+            handleEmojiSelect={handleEmojiSelect}
+            avatarSrc={newItem.src}
+            avatar={newItem?.avatar?.replace(/:/g, "")}
           />
         </div>
 
@@ -272,15 +293,26 @@ function ColleagueWizard({
 
   const Responsibility = () => {
     return (
-      <SparkleInput
-        data-cy="colleague-wizard-role-input"
-        prop="role"
-        onChange={handleInputChange("role")}
-        onRandomValue={() => handleRandomValue("role")}
-        value={newItem["role"]}
-        multiline
-        rows={11}
-      />
+      <>
+        <SparkleInput
+          data-cy="colleague-wizard-role-input"
+          prop="title"
+          onChange={handleInputChange("title")}
+          onRandomValue={() => handleRandomValue("title")}
+          value={newItem["title"]}
+          multiline
+          rows={1}
+        />
+        <SparkleInput
+          data-cy="colleague-wizard-role-input"
+          prop="role"
+          onChange={handleInputChange("role")}
+          onRandomValue={() => handleRandomValue("role")}
+          value={newItem["role"]}
+          multiline
+          rows={11}
+        />
+      </>
     );
   };
 
@@ -298,18 +330,10 @@ function ColleagueWizard({
       case 0:
         return Name();
       case 1:
-        return (
-          <SelectAvatar
-            handleEmojiSelect={handleEmojiSelect}
-            avatarSrc={newItem.src}
-            avatar={newItem?.avatar?.replace(/:/g, "")}
-          />
-        );
+        return Responsibility();
       case 2:
         return Personality();
       case 3:
-        return Responsibility();
-      case 4:
         return (
           <EnginesChart
             handleEngineSelect={handleEngineSelect}
@@ -318,7 +342,7 @@ function ColleagueWizard({
             setOpen={""}
           />
         );
-      case 5:
+      case 4:
         return <ItemSummary newItem={newItem} />;
     }
   };

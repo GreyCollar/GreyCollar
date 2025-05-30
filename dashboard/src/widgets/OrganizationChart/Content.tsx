@@ -27,9 +27,7 @@ function OrganizationalChart({ variant = "simple", sx }) {
     useOrganizations().getOrganizationById(organizationId);
 
   const filteredOrganizations = organization
-    ? [organization].filter(
-        (org) => org.colleagues && org.colleagues.length > 0
-      )
+    ? organization.filter((org) => org.colleagues && org.colleagues.length > 0)
     : [];
 
   if (loading) {

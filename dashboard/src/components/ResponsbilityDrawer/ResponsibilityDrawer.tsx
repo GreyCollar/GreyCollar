@@ -10,6 +10,18 @@ const ResponsibilityDrawer = ({
   selectedItem,
   setAiResponse,
   aiResponse,
+}: {
+  drawerOpen: boolean;
+  handleDrawerClose: () => void;
+  selectedItem: {
+    id: string;
+    title: string;
+    description: string;
+    colleagueId: string;
+  };
+  handleAiResponse?: (response) => void;
+  aiResponse?: string;
+  setAiResponse?: (response: string) => void;
   setSelectedItem,
 }) => {
   const theme = useTheme();
@@ -54,7 +66,6 @@ const ResponsibilityDrawer = ({
                   selectedItem={selectedItem}
                   setAiResponse={setAiResponse}
                   aiResponse={aiResponse}
-                  setSelectedItem={setSelectedItem}
                 />
               </Box>
             </Box>
