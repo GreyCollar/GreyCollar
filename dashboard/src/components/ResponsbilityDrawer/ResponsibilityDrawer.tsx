@@ -22,7 +22,6 @@ const ResponsibilityDrawer = ({
   handleAiResponse?: (response) => void;
   aiResponse?: string;
   setAiResponse?: (response: string) => void;
-  setSelectedItem,
 }) => {
   const theme = useTheme();
 
