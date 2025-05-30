@@ -3,6 +3,17 @@ import Responsibility from "../models/Responsibility";
 import ResponsibilityNode from "../models/ResponsibilityNode";
 import { v4 as uuidv4 } from "uuid";
 
+type NodeType = {
+  id: string;
+  properties?: {
+    label: string;
+    icon: string;
+  };
+  type: string;
+  responsibilityId?: string;
+  dependencyId?: string | null;
+};
+
 async function getWithNodes(id: string) {
   if (!id) {
     throw new Error("ID is required");
@@ -27,77 +38,72 @@ async function getWithNodes(id: string) {
   return responsibility.toJSON();
 }
 
-type NodeType = {
-  id: string;
-  properties: {
-    label: string;
-    icon: string;
-  };
-  type: string;
-  responsibilityId?: string;
-  dependencyId?: string;
-};
-
 async function upsert(
   title: string,
   description: string,
   colleagueId: string,
-  nodes: NodeType[] = [],
-  id?: string
+  id: string,
+  nodes?: NodeType[]
 ) {
-
   let responsibility;
+  let createdNodes;
 
-  if (id) {
-    const existingResponsibility = await Responsibility.findByPk(id);
+  const existingResponsibility = await Responsibility.findByPk(id);
 
-    if (!existingResponsibility) {
-      throw new NotFoundError();
+  if (existingResponsibility) {
+    if (nodes) {
+      await ResponsibilityNode.destroy({
+        where: { responsibilityId: id },
+      });
     }
-
-    await ResponsibilityNode.destroy({
-      where: { responsibilityId: id },
-    });
 
     await existingResponsibility.update({ title, description, colleagueId });
 
     responsibility = existingResponsibility;
   } else {
     responsibility = await Responsibility.create({
+      id,
       title,
       description,
       colleagueId,
     });
   }
 
-  const idMap = new Map();
-  const nodesToCreate = nodes.map((node: NodeType) => {
-    const nodeUuid = uuidv4();
-    idMap.set(node.id, nodeUuid);
+  if (nodes) {
+    const idMap = new Map();
+    const nodesToCreate = nodes.map((node: NodeType) => {
+      const nodeUuid = uuidv4();
+      idMap.set(node.id, nodeUuid);
 
-    return {
-      id: nodeUuid,
-      type: "standard",
-      properties: {
-        label: node.properties.label,
-        icon: node.properties.icon,
-      },
-      responsibilityId: responsibility.id,
-      dependencyId: null,
-    };
-  });
+      return {
+        id: nodeUuid,
+        type: "standard",
+        properties: node.properties
+          ? {
+              label: node.properties.label,
+              icon: node.properties.icon,
+            }
+          : {
+              label: "",
+              icon: "",
+            },
+        responsibilityId: responsibility.id,
+        dependencyId: null,
+      };
+    });
 
-  nodesToCreate.forEach((node) => {
-    const originalNode = nodes.find(
-      (n: NodeType) => idMap.get(n.id) === node.id
-    );
+    nodesToCreate.forEach((node) => {
+      const originalNode = nodes.find(
+        (n: NodeType) => idMap.get(n.id) === node.id
+      );
 
-    if (originalNode && originalNode.dependencyId) {
-      node.dependencyId = idMap.get(originalNode.dependencyId);
-    }
-  });
+      if (originalNode && originalNode.dependencyId) {
+        node.dependencyId = idMap.get(originalNode.dependencyId);
+      }
+    });
 
-  const createdNodes = await ResponsibilityNode.bulkCreate(nodesToCreate);
+    createdNodes = await ResponsibilityNode.bulkCreate(nodesToCreate);
+  }
 
   return {
     ...responsibility.toJSON(),
@@ -105,7 +111,26 @@ async function upsert(
   };
 }
 
+async function remove({
+  responsibilityId,
+  withNodes,
+}: {
+  responsibilityId: string;
+  withNodes: boolean;
+}) {
+  if (withNodes) {
+    await ResponsibilityNode.destroy({
+      where: { responsibilityId },
+    });
+  }
+
+  await Responsibility.destroy({
+    where: { id: responsibilityId },
+  });
+}
+
 export default {
   getWithNodes,
   upsert,
+  remove,
 };

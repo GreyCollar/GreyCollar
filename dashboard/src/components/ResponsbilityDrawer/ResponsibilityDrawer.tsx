@@ -10,6 +10,7 @@ const ResponsibilityDrawer = ({
   selectedItem,
   setAiResponse,
   aiResponse,
+  setSelectedItem,
 }: {
   drawerOpen: boolean;
   handleDrawerClose: () => void;
@@ -22,9 +23,15 @@ const ResponsibilityDrawer = ({
   handleAiResponse?: (response) => void;
   aiResponse?: string;
   setAiResponse?: (response: string) => void;
+  setSelectedItem?: (item: {
+    id: string;
+    title: string;
+    description: string;
+    colleagueId: string;
+  }) => void;
 }) => {
   const theme = useTheme();
-  console.log("ResponsibilityDrawer", aiResponse);
+
   return (
     <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
       <Box
@@ -36,58 +43,57 @@ const ResponsibilityDrawer = ({
         }}
         role="presentation"
       >
-        {selectedItem && (
-          <Grid container sx={{ flex: 1 }} spacing={2}>
-            <Grid
-              item
-              xs={5}
+        <Grid container sx={{ flex: 1 }} spacing={2}>
+          <Grid
+            item
+            xs={5}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+            }}
+          >
+            <Box
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
+                flex: 1,
+                borderRight: `1px solid ${theme.palette.divider}`,
+                padding: 2,
               }}
             >
               <Box
                 sx={{
-                  flex: 1,
-                  borderRight: `1px solid ${theme.palette.divider}`,
-                  padding: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
                 }}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                  }}
-                >
-                  <ResponsibilityChat
-                    selectedItem={selectedItem}
-                    setAiResponse={setAiResponse}
-                    aiResponse={aiResponse}
-                  />
-                </Box>
+                <ResponsibilityChat
+                  selectedItem={selectedItem}
+                  setAiResponse={setAiResponse}
+                  aiResponse={aiResponse}
+                  setSelectedItem={setSelectedItem}
+                />
               </Box>
-            </Grid>
-            <Grid item xs={7} sx={{ display: "flex", flexDirection: "column" }}>
-              <Box
-                sx={{
-                  flex: 1,
-                  padding: 2,
-                  overflowY: "auto",
-                }}
-              >
-                <Box>
-                  <ResponsibilityFlow
-                    responsibility={selectedItem}
-                    aiResponse={aiResponse}
-                  />
-                </Box>
-              </Box>
-            </Grid>
+            </Box>
           </Grid>
-        )}
+          <Grid item xs={7} sx={{ display: "flex", flexDirection: "column" }}>
+            <Box
+              sx={{
+                flex: 1,
+                padding: 2,
+                overflowY: "auto",
+              }}
+            >
+              <Box>
+                <ResponsibilityFlow
+                  responsibility={selectedItem}
+                  aiResponse={aiResponse}
+                />
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
       </Box>
     </Drawer>
   );

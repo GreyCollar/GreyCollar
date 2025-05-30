@@ -1,10 +1,10 @@
 import { AuthenticationError } from "@nucleoidai/platform-express/error";
 import Joi from "joi";
 import Responsibility from "../models/Responsibility";
+import ResponsibilitySchema from "../schemas/Responsibility";
 import colleague from "../functions/colleague";
 import express from "express";
 import responsibility from "../functions/responsibility";
-import schemas from "../schemas";
 
 const router = express.Router();
 
@@ -33,16 +33,17 @@ router.get("/:id", async (req, res) => {
   res.status(200).json(responsibilityWithNodes);
 });
 
-router.post("/", async (req, res) => {
+router.put("/:responsibilityId", async (req, res) => {
   const { projectId: teamId } = req.session;
-
+  const { responsibilityId } = req.params;
   const { title, description, colleagueId, nodes } =
-    Responsibility.upsert.parse(req.body);
+    ResponsibilitySchema.upsert.parse(req.body);
 
   if (colleagueId) {
     const { teamId: colleagueTeamId } = await colleague.get({
       colleagueId,
     });
+
     if (teamId !== colleagueTeamId) {
       throw new AuthenticationError();
     }
@@ -52,36 +53,32 @@ router.post("/", async (req, res) => {
     title,
     description,
     colleagueId,
+    responsibilityId,
     nodes
   );
 
   res.status(200).json(result);
 });
 
-router.put("/:responsibilityId", async (req, res) => {
+router.delete("/:responsibilityId", async (req, res) => {
   const { projectId: teamId } = req.session;
   const { responsibilityId } = req.params;
-  const { title, description, colleagueId, nodes } =
-    Responsibility.upsert.parse(req.body);
+
+  const { colleagueId } = ResponsibilitySchema.delete.parse(req.body);
 
   if (colleagueId) {
     const { teamId: colleagueTeamId } = await colleague.get({
       colleagueId,
     });
+
     if (teamId !== colleagueTeamId) {
       throw new AuthenticationError();
     }
   }
 
-  const result = await responsibility.upsert(
-    title,
-    description,
-    colleagueId,
-    nodes,
-    responsibilityId
-  );
+  await responsibility.remove({ responsibilityId, withNodes: true });
 
-  res.status(200).json(result);
+  res.status(200).json({ message: "Responsibility deleted" });
 });
 
 export default router;

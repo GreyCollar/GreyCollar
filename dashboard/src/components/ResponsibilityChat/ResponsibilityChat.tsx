@@ -3,13 +3,41 @@ import InlineChatInput from "../../widgets/ChatInput/InlineChatInput";
 import ResponsibilityChatContent from "./ResponsibilityChatContent";
 import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
+import { useParams } from "react-router-dom";
+import useResponsibility from "../../hooks/useResponsibility";
+import { useState } from "react";
 
-import React, { useState } from "react";
-
-function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
+function ResponsibilityChat({
+  setAiResponse,
+  selectedItem,
+  aiResponse,
+  setSelectedItem,
+}) {
+  const { colleagueId } = useParams();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
+  const [title, setTitle] = useState(selectedItem?.title);
+  const [description, setDescription] = useState(selectedItem?.description);
+  const { upsertResponsibility, getResponsibilityWithNode } =
+    useResponsibility();
+  const { responsibilityNodes } = getResponsibilityWithNode(selectedItem?.id);
+
+  const handleCreateResponsibility = async (title, description) => {
+    const response = await upsertResponsibility(
+      selectedItem?.id,
+      title,
+      description,
+      colleagueId
+    );
+
+    setSelectedItem(response.responsibility);
+
+    if (response.responsibility) {
+      setTitle(response.responsibility.title);
+      setDescription(response.responsibility.description);
+    }
+  };
 
   const addMessage = async (message, role = "user") => {
     try {
@@ -43,7 +71,9 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
           ...(aiResponse?.flow
             ? [
                 {
-                  content: JSON.stringify(aiResponse.flow),
+                  content: JSON.stringify(
+                    aiResponse.flow || responsibilityNodes
+                  ),
                   role: "assistant",
                 },
               ]
@@ -55,6 +85,27 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
           history,
           content: message,
         });
+
+        const { data: responsibilityNameData } = await http.post(
+          "/colleagues/responsibility-name",
+          {
+            history: messages,
+            content: message,
+          }
+        );
+
+        setTitle(responsibilityNameData.title);
+        setDescription(responsibilityNameData.description);
+
+        const response = await upsertResponsibility(
+          selectedItem?.id,
+          responsibilityNameData.title,
+          responsibilityNameData.description,
+          colleagueId,
+          data?.flow
+        );
+
+        setSelectedItem(response.responsibility);
 
         const aiMessage = data?.response;
 
@@ -93,7 +144,10 @@ function ResponsibilityChat({ setAiResponse, selectedItem, aiResponse }) {
       <ResponsibilityChatContent
         loading={loading}
         messages={messages}
-        selectedItem={selectedItem}
+        title={title}
+        description={description}
+        setTitle={setTitle}
+        handleCreateResponsibility={handleCreateResponsibility}
       />
       {error && (
         <Box

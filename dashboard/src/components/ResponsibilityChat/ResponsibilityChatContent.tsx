@@ -4,7 +4,14 @@ import ResponsibilityWelcomeMessage from "./ResponsibilityWelcomeMessage";
 
 import { Box, CircularProgress, useTheme } from "@mui/material";
 
-const ResponsibilityChatContent = ({ loading, messages, selectedItem }) => {
+const ResponsibilityChatContent = ({
+  loading,
+  messages,
+  title,
+  description,
+  handleCreateResponsibility,
+  setTitle,
+}) => {
   const theme = useTheme();
 
   return (
@@ -20,7 +27,14 @@ const ResponsibilityChatContent = ({ loading, messages, selectedItem }) => {
         paddingTop: "5px",
       }}
     >
-      <ResponsibilityChatTitle selectedItem={selectedItem} />
+      <ResponsibilityChatTitle
+        title={title}
+        description={description}
+        messages={messages}
+        handleCreateResponsibility={handleCreateResponsibility}
+        setTitle={setTitle}
+      />
+
       {messages.length === 0 && <ResponsibilityWelcomeMessage />}
 
       {messages.map((message, index) => (

@@ -115,6 +115,8 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
 
   useEffect(() => {
     if (aiResponse) {
+      setNodes([]);
+      setEdges([]);
       const { nodes: newNodes, edges: newEdges } = convertToNodesAndEdges(
         aiResponse?.flow
       );
