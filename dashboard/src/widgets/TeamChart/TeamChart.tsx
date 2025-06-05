@@ -262,6 +262,7 @@ function TeamChart({ sx }) {
           resizeObserver.unobserve(containerNode);
         }
         if (viewportRef.current) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
           resizeObserver.unobserve(viewportRef.current);
         }
         window.removeEventListener("resize", handleResize);
