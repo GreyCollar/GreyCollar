@@ -3,6 +3,8 @@ import { Iconify } from "@nucleoidai/platform/minimal/components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import { alpha, useTheme } from "@mui/material/styles";
+
 function OrganizationButton() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -12,17 +14,22 @@ function OrganizationButton() {
     navigate("/team");
   };
 
+  const theme = useTheme();
+
   return (
     <>
       <IconButton
         data-cy="organization-button"
         sx={{
-          bgcolor: (theme) => theme.palette.primary.main,
+          background: `linear-gradient(135deg, ${alpha(
+            theme.palette.secondary.light,
+            0.2
+          )}, ${alpha(theme.palette.primary.main, 0.5)})`,
           color: (theme) => theme.palette.text.primary,
         }}
         onClick={handleClick}
       >
-        <Iconify icon={"ri:node-tree"} width={24} />
+        <Iconify icon={"ri:node-tree"} width={28} />
       </IconButton>
     </>
   );

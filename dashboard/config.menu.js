@@ -1,5 +1,4 @@
-import AIMarketplaceButton from "./src/widgets/AIMarketplace/AIMarketplaceButton";
-import OrganizationButton from "./src/widgets/OrganizationButton/index.ts";
+import TeamChartButton from "./src/widgets/TeamChartButton/index.ts";
 
 const menuConfig = {
   topMenu: [],
@@ -55,7 +54,7 @@ const menuConfig = {
       linkTo: "/",
     },
   ],
-  actionButtons: [AIMarketplaceButton, OrganizationButton],
+  actionButtons: [TeamChartButton],
   fullScreenLayout: "left",
 };
 

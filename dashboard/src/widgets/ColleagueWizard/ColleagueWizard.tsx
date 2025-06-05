@@ -31,6 +31,7 @@ function ColleagueWizard({
       avatar: ":2:",
       src: `https://cdn.nucleoid.com/greycollar/avatars/2.jpg`,
       character: "Quick-Witted",
+      title: "Engineer",
       role: "Software Engineer",
       aiEngineId: "289a3c9a-f23b-421a-ac6e-f14052a2d57c",
       engineName: "OpenAI",
@@ -40,6 +41,7 @@ function ColleagueWizard({
       avatar: ":5:",
       src: `https://cdn.nucleoid.com/greycollar/avatars/5.jpg`,
       character: "Ambitious",
+      title: "Scientist",
       role: "Data Scientist",
       aiEngineId: "d9c93323-3baf-4623-a96c-b85db99b4441",
       engineName: "Claude",
@@ -49,6 +51,7 @@ function ColleagueWizard({
       avatar: ":8:",
       src: `https://cdn.nucleoid.com/greycollar/avatars/8.jpg`,
       character: "Natural Leader",
+      title: "Designer",
       role: "Product Manager",
       aiEngineId: "123a3c9a-b23b-421a-ac6e-f14052a2d57c",
       engineName: "DeepMind",
@@ -131,7 +134,7 @@ function ColleagueWizard({
 
   const handleTemplateSelect = (colleague) => {
     setNewItem(colleague);
-    setActiveStep(5);
+    setActiveStep(4);
   };
 
   useEffect(() => {

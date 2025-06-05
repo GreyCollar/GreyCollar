@@ -105,12 +105,7 @@ function TeamWithColleagues({
                   <Fab
                     color="default"
                     size="small"
-                    onClick={() => {
-                      const firstResponsibility = colleagueResponsibilities[0];
-                      if (firstResponsibility) {
-                        handleDrawerOpen(firstResponsibility);
-                      }
-                    }}
+                    onClick={() => handleDrawerOpen(null)}
                     sx={{
                       width: 32,
                       height: 32,
@@ -155,6 +150,7 @@ function TeamWithColleagues({
                   >
                     {colleagueResponsibilities.map((responsibility, index) => (
                       <Box
+                        sx={{ position: "relative" }}
                         key={`resp-${index}-${
                           responsibility.id || responsibility.title
                         }`}
@@ -168,6 +164,30 @@ function TeamWithColleagues({
                           responsibility={responsibility}
                           sx={sx}
                         />
+
+                        <Fab
+                          color="default"
+                          size="small"
+                          onClick={() => {
+                            const firstResponsibility =
+                              colleagueResponsibilities[0];
+                            if (firstResponsibility) {
+                              handleDrawerOpen(firstResponsibility);
+                            }
+                          }}
+                          sx={{
+                            width: 32,
+                            height: 32,
+                            minHeight: "auto",
+                            boxShadow: 2,
+                            position: "absolute",
+                            top: "50%",
+                            right: -40,
+                            transform: "translateY(-50%)",
+                          }}
+                        >
+                          <EditIcon />
+                        </Fab>
                       </Box>
                     ))}
                   </Stack>

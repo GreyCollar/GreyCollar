@@ -23,7 +23,7 @@ function OrganizationalChart({ variant = "simple", sx }) {
 
   const organizationId = teamById?.organizationId;
 
-  const { organization, loading, error } =
+  const { organization, loading } =
     useOrganizations().getOrganizationById(organizationId);
 
   const filteredOrganizations = organization
@@ -35,14 +35,6 @@ function OrganizationalChart({ variant = "simple", sx }) {
       <Stack alignItems="center" justifyContent="center" sx={{ height: 200 }}>
         <CircularProgress />
       </Stack>
-    );
-  }
-
-  if (error) {
-    return (
-      <Typography color="error" align="center">
-        Error loading organization: {error}
-      </Typography>
     );
   }
 

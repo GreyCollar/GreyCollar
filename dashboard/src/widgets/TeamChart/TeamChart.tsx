@@ -1,4 +1,5 @@
 import ColleagueWizard from "../ColleagueWizard/ColleagueWizard";
+import Draggable from "react-draggable"; // Add this import
 import ManagerNode from "./common/ManagerNode";
 import ResponsibilityDrawer from "../../components/ResponsbilityDrawer/ResponsibilityDrawer";
 import TeamWithColleagues from "./TeamWithColleagues";
@@ -19,7 +20,16 @@ function TeamChart({ sx }) {
   const colleagueRefs = useRef({});
   const responsibilityRefs = useRef({});
   const containerRef = useRef(null);
+  const viewportRef = useRef(null);
   const [connections, setConnections] = useState([]);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDraggable, setIsDraggable] = useState(false);
+  const [bounds, setBounds] = useState({
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+  });
 
   const manager = {
     name: "Jack Shepherd",
@@ -32,7 +42,7 @@ function TeamChart({ sx }) {
   const { teamById } = useTeam(projectId);
   const organizationId = teamById?.organizationId;
 
-  const { organization, loading, error } =
+  const { organization, loading } =
     useOrganizations().getOrganizationById(organizationId);
 
   const { createColleague } = useColleagues();
@@ -41,7 +51,10 @@ function TeamChart({ sx }) {
   const { responsibility: allResponsibilities } = getResponsibility();
 
   const filteredOrganizations = organization
-    ? organization.filter((org) => org.colleagues && org.colleagues.length > 0)
+    ? organization.filter(
+        (org) =>
+          org.colleagues && org.colleagues.length > 0 && org.id === projectId
+      )
     : [];
 
   const [dialogOpen, setDialogOpen] = React.useState(false);
@@ -61,9 +74,48 @@ function TeamChart({ sx }) {
   };
 
   const handleDrawerOpen = (item) => {
-    if (item && item.id) {
-      setSelectedItem(item);
-      setDrawerOpen(true);
+    setSelectedItem(item);
+    setDrawerOpen(true);
+  };
+
+  const handleDrag = (e, data) => {
+    setPosition({ x: data.x, y: data.y });
+  };
+
+  const checkContentSize = () => {
+    if (!containerRef.current || !viewportRef.current) return;
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const viewportRect = viewportRef.current.getBoundingClientRect();
+
+    const contentWidth = containerRect.width;
+    const contentHeight = containerRect.height;
+
+    const viewportWidth = viewportRect.width;
+    const viewportHeight = viewportRect.height;
+
+    const exceedsWidth = contentWidth > viewportWidth;
+    const exceedsHeight = contentHeight > viewportHeight;
+
+    setIsDraggable(exceedsWidth || exceedsHeight);
+
+    if (exceedsWidth || exceedsHeight) {
+      const horizontalBound = exceedsWidth
+        ? ((contentWidth - viewportWidth) / 2) * 1.5
+        : 0;
+
+      const verticalBound = exceedsHeight
+        ? ((contentHeight - viewportHeight) / 2) * 1.5
+        : 0;
+
+      setBounds({
+        left: -horizontalBound,
+        right: horizontalBound,
+        top: -verticalBound,
+        bottom: verticalBound,
+      });
+    } else {
+      setPosition({ x: 0, y: 0 });
     }
   };
 
@@ -177,10 +229,15 @@ function TeamChart({ sx }) {
         });
 
         setConnections(newConnections);
+
+        checkContentSize();
       };
 
       const handleResize = () => {
-        requestAnimationFrame(updateConnections);
+        requestAnimationFrame(() => {
+          updateConnections();
+          checkContentSize();
+        });
       };
 
       const resizeObserver = new ResizeObserver(handleResize);
@@ -189,13 +246,24 @@ function TeamChart({ sx }) {
         resizeObserver.observe(containerNode);
       }
 
+      if (viewportRef.current) {
+        resizeObserver.observe(viewportRef.current);
+      }
+
       window.addEventListener("resize", handleResize);
 
-      const timeoutId = setTimeout(updateConnections, 200);
+      const timeoutId = setTimeout(() => {
+        updateConnections();
+        checkContentSize();
+      }, 200);
 
       return () => {
         if (containerNode) {
           resizeObserver.unobserve(containerNode);
+        }
+        if (viewportRef.current) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          resizeObserver.unobserve(viewportRef.current);
         }
         window.removeEventListener("resize", handleResize);
         clearTimeout(timeoutId);
@@ -205,19 +273,24 @@ function TeamChart({ sx }) {
     [JSON.stringify(filteredOrganizations), JSON.stringify(allResponsibilities)]
   );
 
+  useEffect(
+    () => {
+      if (containerRef.current) {
+        const timeoutId = setTimeout(() => {
+          checkContentSize();
+        }, 50);
+        return () => clearTimeout(timeoutId);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(position)]
+  );
+
   if (loading) {
     return (
       <Stack alignItems="center" justifyContent="center" sx={{ height: 200 }}>
         <CircularProgress />
       </Stack>
-    );
-  }
-
-  if (error) {
-    return (
-      <Typography color="error" align="center">
-        Error loading organization: {error}
-      </Typography>
     );
   }
 
@@ -237,7 +310,7 @@ function TeamChart({ sx }) {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        height: "100vh",
         width: "100vw",
         backgroundImage: `radial-gradient(${dotColor} ${dotSize}, transparent ${dotSize})`,
         backgroundSize: `${dotSpacing} ${dotSpacing}`,
@@ -245,110 +318,135 @@ function TeamChart({ sx }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        overflow: "auto",
-        py: 2,
+        overflow: "hidden",
+        position: "relative",
       }}
     >
       <Box
-        ref={containerRef}
-        position="relative"
-        mx="auto"
-        sx={{ padding: theme.spacing(4) }}
+        ref={viewportRef}
+        sx={{
+          position: "relative",
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+        }}
       >
-        <svg
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            pointerEvents: "none",
-            zIndex: 0,
-          }}
+        <Draggable
+          nodeRef={containerRef}
+          onDrag={handleDrag}
+          position={position}
+          axis="both"
+          bounds={bounds}
+          disabled={!isDraggable}
         >
-          <defs>
-            <marker
-              id="arrow"
-              viewBox="0 0 10 10"
-              refX="9"
-              refY="5"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto"
-            >
-              <path d="M 0 0 L 10 5 L 0 10 z" fill={lineColor} />
-            </marker>
-          </defs>
-
-          {connections.map((conn, index) => (
-            <path
-              key={index}
-              d={conn.path}
-              fill="none"
-              stroke={lineColor}
-              strokeWidth={lineWidth}
-              markerEnd={
-                conn.type === "manager-team" ||
-                conn.type === "team-colleague" ||
-                conn.type === "colleague-responsibility"
-                  ? "url(#arrow)"
-                  : "none"
-              }
-            />
-          ))}
-        </svg>
-
-        {dialogOpen && (
-          <ColleagueWizard
-            open={dialogOpen}
-            onClose={handleCloseDialog}
-            itemProperties={["name", "character", "role"]}
-            onSubmit={(newColleague) => {
-              createColleague(newColleague, selectedTeamId);
+          <Box
+            ref={containerRef}
+            sx={{
+              padding: theme.spacing(4),
+              cursor: isDraggable ? "move" : "default",
+              touchAction: "none",
+              userSelect: "none",
             }}
-            itemToEdit={null}
-          />
-        )}
-
-        {drawerOpen && selectedItem && selectedItem.id && (
-          <ResponsibilityDrawer
-            drawerOpen={drawerOpen}
-            handleDrawerClose={() => setDrawerOpen(false)}
-            selectedItem={selectedItem}
-          />
-        )}
-
-        {filteredOrganizations.length > 0 ? (
-          <Stack
-            alignItems="center"
-            spacing={8}
-            sx={{ position: "relative", zIndex: 1 }}
           >
-            <Box ref={managerRef}>
-              <ManagerNode sx={sx} node={manager} />
-            </Box>
+            <svg
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                pointerEvents: "none",
+                zIndex: 0,
+              }}
+            >
+              <defs>
+                <marker
+                  id="arrow"
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="6"
+                  markerHeight="6"
+                  orient="auto"
+                >
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill={lineColor} />
+                </marker>
+              </defs>
 
-            <Stack direction="row" spacing={8} justifyContent="center">
-              {filteredOrganizations.map((org) => (
-                <TeamWithColleagues
-                  key={org.id}
-                  data={org}
-                  sx={sx}
-                  allResponsibilities={allResponsibilities}
-                  teamRefs={teamRefs}
-                  colleagueRefs={colleagueRefs}
-                  responsibilityRefs={responsibilityRefs}
-                  onAddColleague={() => handleAddColleague(org.id)}
-                  handleDrawerOpen={handleDrawerOpen}
+              {connections.map((conn, index) => (
+                <path
+                  key={index}
+                  d={conn.path}
+                  fill="none"
+                  stroke={lineColor}
+                  strokeWidth={lineWidth}
+                  markerEnd={
+                    conn.type === "manager-team" ||
+                    conn.type === "team-colleague" ||
+                    conn.type === "colleague-responsibility"
+                      ? "url(#arrow)"
+                      : "none"
+                  }
                 />
               ))}
-            </Stack>
-          </Stack>
-        ) : (
-          <Typography align="center">
-            No organization data to display.
-          </Typography>
-        )}
+            </svg>
+
+            {dialogOpen && (
+              <ColleagueWizard
+                open={dialogOpen}
+                onClose={handleCloseDialog}
+                itemProperties={["name", "character", "role"]}
+                onSubmit={(newColleague) => {
+                  createColleague(newColleague, selectedTeamId);
+                }}
+                itemToEdit={null}
+              />
+            )}
+
+            {drawerOpen && (
+              <ResponsibilityDrawer
+                drawerOpen={drawerOpen}
+                handleDrawerClose={() => setDrawerOpen(false)}
+                selectedItem={selectedItem}
+              />
+            )}
+
+            {filteredOrganizations.length > 0 ? (
+              <Stack
+                alignItems="center"
+                spacing={8}
+                sx={{ position: "relative", zIndex: 1 }}
+              >
+                <Box ref={managerRef}>
+                  <ManagerNode sx={sx} node={manager} />
+                </Box>
+
+                <Stack direction="row" spacing={8} justifyContent="center">
+                  {filteredOrganizations.map((org) => (
+                    <TeamWithColleagues
+                      key={org.id}
+                      data={org}
+                      sx={sx}
+                      allResponsibilities={allResponsibilities}
+                      teamRefs={teamRefs}
+                      colleagueRefs={colleagueRefs}
+                      responsibilityRefs={responsibilityRefs}
+                      onAddColleague={() => handleAddColleague(org.id)}
+                      handleDrawerOpen={handleDrawerOpen}
+                    />
+                  ))}
+                </Stack>
+              </Stack>
+            ) : (
+              <Typography align="center">
+                No organization data to display.
+              </Typography>
+            )}
+          </Box>
+        </Draggable>
       </Box>
     </Box>
   );

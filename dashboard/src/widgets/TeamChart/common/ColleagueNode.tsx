@@ -3,13 +3,14 @@ import { Iconify } from "@nucleoidai/platform/minimal/components";
 import { Image } from "@nucleoidai/platform/minimal/components";
 import React from "react";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
-import { Stack } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import { getBackgroundUrl } from "../../../utils/background";
 
+import { Chip, Stack } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
+
+const animatedBgClassName = "animated-background-image";
 
 function ColleagueNode({
   node,
@@ -34,7 +35,7 @@ function ColleagueNode({
         sx={{
           p: 0,
           minWidth: 350,
-          maxWidth: 400,
+          maxWidth: 450,
           height: 120,
           borderRadius: 1.5,
           textAlign: "left",
@@ -45,10 +46,34 @@ function ColleagueNode({
           "&:hover": {
             boxShadow: (theme) => theme.shadows[6],
           },
+          overflow: "hidden",
+          [`&:hover .${animatedBgClassName}`]: {
+            width: "100%",
+          },
           ...sx,
           ml: 1,
         }}
       >
+        <Image
+          className={animatedBgClassName}
+          src={getBackgroundUrl(node?.id)}
+          alt={node?.engine?.vendor || "Background"}
+          ratio="16/9"
+          sx={{
+            width: 100,
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: 0,
+            transition: theme.transitions.create("width", {
+              duration: theme.transitions.duration.standard,
+              easing: theme.transitions.easing.easeInOut,
+            }),
+          }}
+          overlay={alpha(theme.palette.grey[900], 0.48)}
+        />
+
         <Stack
           direction="column"
           spacing={8}
@@ -59,23 +84,9 @@ function ColleagueNode({
             alignItems: "center",
             borderRadius: "8px 0 0 8px",
             position: "relative",
-            overflow: "hidden",
+            zIndex: 1,
           }}
         >
-          <Image
-            src={getBackgroundUrl(node?.id)}
-            alt={node?.engine?.vendor || "Background"}
-            ratio="16/9"
-            sx={{
-              width: "100%",
-              height: "100%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              zIndex: 0,
-            }}
-            overlay={alpha(theme.palette.grey[900], 0.48)}
-          />
           <SourcedAvatar
             name={node.name}
             source={node.coach ? node.icon : "MINIMAL"}
@@ -90,6 +101,8 @@ function ColleagueNode({
           sx={{
             flex: 1,
             padding: 2,
+            zIndex: 1,
+            position: "relative",
           }}
         >
           <Stack
@@ -99,17 +112,27 @@ function ColleagueNode({
             sx={{ mt: 1 }}
             alignItems={"center"}
           >
-            <Iconify icon="mingcute:location-fill" width={24} />
-            <Typography
-              variant="caption"
-              component="div"
-              noWrap
+            <Chip
+              label={node.name}
+              icon={<Iconify icon="mingcute:location-fill" width={24} />}
+              size="small"
               sx={{
-                color: "text.secondary",
+                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "0.75rem",
+                cursor: "pointer",
+                "& .MuiChip-icon": {
+                  color: "white",
+                },
+                "&:hover": {
+                  color: theme.palette.background.paper,
+                  "& .MuiChip-icon": {
+                    color: theme.palette.background.paper,
+                  },
+                },
               }}
-            >
-              {node.name}
-            </Typography>
+            />
           </Stack>
           <Stack
             display={"flex"}
@@ -118,17 +141,27 @@ function ColleagueNode({
             sx={{ mt: 1 }}
             alignItems={"center"}
           >
-            <Iconify icon="ic:round-business-center" width={24} />
-            <Typography
-              variant="caption"
-              component="div"
-              noWrap
+            <Chip
+              label={node.role}
+              icon={<Iconify icon="ic:round-business-center" width={24} />}
+              size="small"
               sx={{
-                color: "text.secondary",
+                bgcolor: alpha(theme.palette.primary.main, 0.1),
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "0.75rem",
+                cursor: "pointer",
+                "& .MuiChip-icon": {
+                  color: "white",
+                },
+                "&:hover": {
+                  color: theme.palette.background.paper,
+                  "& .MuiChip-icon": {
+                    color: theme.palette.background.paper,
+                  },
+                },
               }}
-            >
-              {node.role}
-            </Typography>
+            />
           </Stack>
         </Stack>
       </Card>
