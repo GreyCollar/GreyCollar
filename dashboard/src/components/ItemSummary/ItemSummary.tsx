@@ -5,6 +5,8 @@ import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 
 export default function ItemSummary({ newItem }) {
+  console.log("ItemSummary newItem:", newItem);
+
   return (
     <>
       <DialogContentText sx={{ textAlign: "center", mb: 2 }}>
@@ -66,12 +68,22 @@ export default function ItemSummary({ newItem }) {
             />
           </Card>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={4}>
           <Card>
             <CardHeader title="Character" />
             <CardContent>
               <Typography data-cy="item-summary-character-area">
                 {newItem.character}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={4}>
+          <Card>
+            <CardHeader title="Title" />
+            <CardContent>
+              <Typography data-cy="item-summary-title-area">
+                {newItem.title}
               </Typography>
             </CardContent>
           </Card>
