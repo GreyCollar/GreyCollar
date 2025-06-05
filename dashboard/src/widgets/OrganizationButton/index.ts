@@ -1,2 +1,2 @@
-import OrganizationButton from "./OrganizationButton";
-export default OrganizationButton;
+import TeamChartButton from "./TeamChartButton";
+export default TeamChartButton;

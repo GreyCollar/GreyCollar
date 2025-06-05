@@ -1,4 +1,4 @@
-import OrganizationButton from "./src/widgets/OrganizationButton/index.ts";
+import TeamChartButton from "./src/widgets/TeamChartButton/index.ts";
 
 const menuConfig = {
   topMenu: [],
@@ -54,7 +54,7 @@ const menuConfig = {
       linkTo: "/",
     },
   ],
-  actionButtons: [OrganizationButton],
+  actionButtons: [TeamChartButton],
   fullScreenLayout: "left",
 };
 
