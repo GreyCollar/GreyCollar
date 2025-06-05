@@ -1,4 +1,3 @@
-import AIMarketplaceButton from "./src/widgets/AIMarketplace/AIMarketplaceButton";
 import OrganizationButton from "./src/widgets/OrganizationButton/index.ts";
 
 const menuConfig = {
@@ -55,7 +54,7 @@ const menuConfig = {
       linkTo: "/",
     },
   ],
-  actionButtons: [AIMarketplaceButton, OrganizationButton],
+  actionButtons: [OrganizationButton],
   fullScreenLayout: "left",
 };
 
