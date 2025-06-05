@@ -23,8 +23,6 @@ function TeamNode({
 }) {
   const theme = useTheme();
 
-  console.log("TeamNode node:", node);
-
   return (
     <Card
       sx={{
