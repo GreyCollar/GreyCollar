@@ -5,8 +5,8 @@ const config = {
   beta: true,
   api: "http://localhost:3000/api",
   socket: {
-    host: "http://localhost:3000",
-    path: "/api/socket.io",
+    host: "http://localhost:3003",
+    path: "/socket.io",
   },
   project: {
     github: {
