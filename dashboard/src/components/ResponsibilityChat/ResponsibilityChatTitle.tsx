@@ -64,7 +64,7 @@ const ResponsibilityChatTitle = ({
       });
 
       const matches = [];
-      let modifiedDescription = description;
+      const modifiedDescription = description;
 
       availableIntegrations.forEach((integration) => {
         const regex = new RegExp(`\\b${integration.name}\\b`, "gi");
@@ -106,7 +106,7 @@ const ResponsibilityChatTitle = ({
         const parts = [];
         let lastIndex = 0;
 
-        matches.forEach((match, i) => {
+        matches.forEach((match) => {
           const currentIndex = modifiedDescription
             .toLowerCase()
             .indexOf(match.text.toLowerCase(), lastIndex);
@@ -174,7 +174,7 @@ const ResponsibilityChatTitle = ({
       });
 
       const matches = [];
-      let modifiedTitle = title;
+      const modifiedTitle = title;
 
       availableIntegrations.forEach((integration) => {
         const regex = new RegExp(`\\b${integration.name}\\b`, "gi");
@@ -212,7 +212,7 @@ const ResponsibilityChatTitle = ({
         const parts = [];
         let lastIndex = 0;
 
-        matches.forEach((match, i) => {
+        matches.forEach((match) => {
           const currentIndex = modifiedTitle
             .toLowerCase()
             .indexOf(match.text.toLowerCase(), lastIndex);

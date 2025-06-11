@@ -16,7 +16,9 @@ import {
   BaseEditor,
   Descendant,
   Editor,
+  Element,
   Node,
+  Text,
   Transforms,
   createEditor,
 } from "slate";
@@ -193,11 +195,15 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
 
   const handleSend = useCallback(() => {
     const message = value
-      .map((node: any) => {
-        if (node.type === ELEMENT_TYPES.PARAGRAPH) {
+      .map((node) => {
+        if (Element.isElement(node) && node.type === ELEMENT_TYPES.PARAGRAPH) {
           return node.children
             .map((child) => {
-              if ((child as CustomElement).type === ELEMENT_TYPES.INTEGRATION) {
+              if (
+                Element.isElement(child) &&
+                (child as CustomElement).type === ELEMENT_TYPES.INTEGRATION
+              ) {
+                const customChild = child as CustomElement;
                 const integrationData: {
                   type: "INTEGRATION";
                   id: string | undefined;
@@ -210,27 +216,37 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
                   };
                 } = {
                   type: "INTEGRATION",
-                  id: child.selectedIntegration?.id || child.command?.id,
-                  name: child.selectedIntegration?.name || child.command?.label,
-                  icon: child.selectedIntegration?.icon || child.command?.icon,
+                  id:
+                    customChild.selectedIntegration?.id ||
+                    customChild.command?.id,
+                  name:
+                    customChild.selectedIntegration?.name ||
+                    customChild.command?.label,
+                  icon:
+                    customChild.selectedIntegration?.icon ||
+                    customChild.command?.icon,
                 };
 
-                if (child.selectedScope) {
+                if (customChild.selectedScope) {
                   integrationData.scope = {
-                    id: child.selectedScope.id,
-                    name: child.selectedScope.name,
-                    icon: child.selectedScope.icon,
+                    id: customChild.selectedScope.id,
+                    name: customChild.selectedScope.name,
+                    icon: customChild.selectedScope.icon,
                   };
                 }
                 return JSON.stringify(integrationData);
               }
-              if (child.type === ELEMENT_TYPES.MENTION) {
+              if (
+                Element.isElement(child) &&
+                (child as CustomElement).type === ELEMENT_TYPES.MENTION
+              ) {
+                const customChild = child as CustomElement;
                 return JSON.stringify({
                   type: "COLLEAGUE",
-                  id: child.colleague?.id,
+                  id: customChild.colleague?.id,
                 });
               }
-              return child.text;
+              return Text.isText(child) ? child.text : "";
             })
             .join(" ");
         }
@@ -304,7 +320,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
   );
 
   const handleScopeSelect = useCallback(
-    (scope: any) => {
+    (scope) => {
       if (selectedIntegration) {
         const { selection } = editor;
         if (selection) {
