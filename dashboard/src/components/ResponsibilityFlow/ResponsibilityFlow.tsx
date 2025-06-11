@@ -14,7 +14,6 @@ import {
   addEdge,
   useEdgesState,
   useNodesState,
-  useReactFlow,
 } from "@xyflow/react";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -77,8 +76,6 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
     responsibility?.id
   );
 
-  const { fitView } = useReactFlow();
-
   useEffect(() => {
     if (!loading && responsibilityNodes) {
       const formattedNodes = responsibilityNodes.nodes.map((node) => ({
@@ -105,13 +102,12 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
         setIsLoading(false);
-        setTimeout(() => fitView(), 50);
       });
     } else {
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, setNodes, setEdges, fitView]);
+  }, [loading, setNodes, setEdges]);
 
   useEffect(() => {
     if (aiResponse) {
@@ -145,10 +141,9 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         setNodes((prev) => [...prev, ...formattedNodes]);
         setEdges((prev) => [...prev, ...formattedEdges]);
         setIsLoading(false);
-        setTimeout(() => fitView(), 50);
       });
     }
-  }, [aiResponse, setNodes, setEdges, fitView]);
+  }, [aiResponse, setNodes, setEdges]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -160,7 +155,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
   }
 
   return (
-    <div style={{ width: "50vw", height: "90vh", overflow: "hidden" }}>
+    <div style={{ width: "50vw", height: "95vh" }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -168,12 +163,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
-        fitView
-        fitViewOptions={{
-          padding: 0.8,
-          includeHiddenNodes: false,
-        }}
-        preventScrolling
+        defaultViewport={{ x: 120, y: 150, zoom: 0.75 }}
       >
         <Background />
       </ReactFlow>

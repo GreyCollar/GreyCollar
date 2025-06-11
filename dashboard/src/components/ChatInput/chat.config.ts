@@ -186,7 +186,26 @@ const ResponsibilityCommands = [
     next: {
       label: "Select an Integration",
       list: [
-        { id: "g-drive-id", name: "Google Drive", icon: "mdi:google-drive" },
+        {
+          id: "g-drive-id",
+          name: "Google Drive",
+          icon: "mdi:google-drive",
+          next: {
+            label: "Select a Scope",
+            list: [
+              {
+                id: "g-drive-search",
+                name: "Search",
+                icon: "mdi:magnify",
+              },
+              {
+                id: "g-drive-upload",
+                name: "Upload",
+                icon: "mdi:upload",
+              },
+            ],
+          },
+        },
         { id: "slack-id", name: "Slack", icon: "mdi:slack" },
         { id: "github-id", name: "Github", icon: "mdi:github" },
       ],

@@ -12,7 +12,16 @@ import { styled } from "@mui/material/styles";
 import useColleagues from "../../hooks/useColleagues";
 import { withHistory } from "slate-history";
 
-import { BaseEditor, Descendant, Node, Transforms, createEditor } from "slate";
+import {
+  BaseEditor,
+  Descendant,
+  Editor,
+  Element,
+  Node,
+  Text,
+  Transforms,
+  createEditor,
+} from "slate";
 import {
   Editable,
   ReactEditor,
@@ -20,6 +29,10 @@ import {
   Slate,
   withReact,
 } from "slate-react";
+import {
+  IntegrationElement,
+  MentionElement,
+} from "../../components/ResponsibilityChat/IntegrationElement";
 import { useCallback, useMemo, useState } from "react";
 
 const ELEMENT_TYPES = {
@@ -33,6 +46,11 @@ type CustomElement = {
   children: CustomText[];
   command?: (typeof ResponsibilityCommands)[number];
   selectedIntegration?: (typeof ResponsibilityCommands)[0]["next"]["list"][number];
+  selectedScope?: {
+    id: string;
+    name: string;
+    icon: string;
+  };
   colleague?: {
     id: string;
     name: string;
@@ -88,29 +106,19 @@ const CommandList = styled(List)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
 }));
 
-const IntegrationElement = styled(Box)(({ theme }) => ({
+const IntegrationScopeElement = styled(Box)(({ theme }) => ({
   display: "inline-flex",
   alignItems: "center",
-  backgroundColor: theme.palette.primary.light,
-  color: theme.palette.primary.contrastText,
-  padding: "2px 8px",
+  backgroundColor: theme.palette.info.light,
+  color: theme.palette.info.contrastText,
+  padding: "2px",
   borderRadius: theme.shape.borderRadius,
-  margin: "0 2px",
+  marginLeft: "10px",
   "& .MuiTypography-root": {
-    fontSize: "0.875rem",
+    fontSize: "0.4rem",
   },
-}));
-
-const MentionElement = styled(Box)(({ theme }) => ({
-  display: "inline-flex",
-  alignItems: "center",
-  backgroundColor: theme.palette.secondary.light,
-  color: theme.palette.secondary.contrastText,
-  padding: "2px 8px",
-  borderRadius: theme.shape.borderRadius,
-  margin: "0 2px",
-  "& .MuiTypography-root": {
-    fontSize: "0.875rem",
+  "& .MuiSvgIcon-root": {
+    fontSize: "0.8rem",
   },
 }));
 
@@ -150,9 +158,13 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showCommands, setShowCommands] = useState(false);
   const [showIntegrations, setShowIntegrations] = useState(false);
+  const [showScopes, setShowScopes] = useState(false);
   const [showMentions, setShowMentions] = useState(false);
   const [selectedCommand, setSelectedCommand] = useState<
     (typeof ResponsibilityCommands)[number] | null
+  >(null);
+  const [selectedIntegration, setSelectedIntegration] = useState<
+    (typeof ResponsibilityCommands)[0]["next"]["list"][number] | null
   >(null);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0);
   const { colleagues } = useColleagues();
@@ -183,32 +195,60 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
 
   const handleSend = useCallback(() => {
     const message = value
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .map((node: any) => {
-        if (node.type === ELEMENT_TYPES.PARAGRAPH) {
+      .map((node) => {
+        if (Element.isElement(node) && node.type === ELEMENT_TYPES.PARAGRAPH) {
           return node.children
             .map((child) => {
-              if ((child as CustomElement).type === ELEMENT_TYPES.INTEGRATION) {
-                return (
-                  JSON.stringify({
-                    type: "INTEGRATION",
-                    id: child.selectedIntegration?.id || child.command?.id,
-                    icon:
-                      child.selectedIntegration?.icon || child.command?.icon,
-                  }) + " "
-                );
+              if (
+                Element.isElement(child) &&
+                (child as CustomElement).type === ELEMENT_TYPES.INTEGRATION
+              ) {
+                const customChild = child as CustomElement;
+                const integrationData: {
+                  type: "INTEGRATION";
+                  id: string | undefined;
+                  name: string | undefined;
+                  icon: string | undefined;
+                  scope?: {
+                    id: string;
+                    name: string;
+                    icon: string;
+                  };
+                } = {
+                  type: "INTEGRATION",
+                  id:
+                    customChild.selectedIntegration?.id ||
+                    customChild.command?.id,
+                  name:
+                    customChild.selectedIntegration?.name ||
+                    customChild.command?.label,
+                  icon:
+                    customChild.selectedIntegration?.icon ||
+                    customChild.command?.icon,
+                };
+
+                if (customChild.selectedScope) {
+                  integrationData.scope = {
+                    id: customChild.selectedScope.id,
+                    name: customChild.selectedScope.name,
+                    icon: customChild.selectedScope.icon,
+                  };
+                }
+                return JSON.stringify(integrationData);
               }
-              if (child.type === ELEMENT_TYPES.MENTION) {
-                return (
-                  JSON.stringify({
-                    type: "COLLEAGUE",
-                    id: child.colleague?.id,
-                  }) + " "
-                );
+              if (
+                Element.isElement(child) &&
+                (child as CustomElement).type === ELEMENT_TYPES.MENTION
+              ) {
+                const customChild = child as CustomElement;
+                return JSON.stringify({
+                  type: "COLLEAGUE",
+                  id: customChild.colleague?.id,
+                });
               }
-              return child.text;
+              return Text.isText(child) ? child.text : "";
             })
-            .join("");
+            .join(" ");
         }
         return "";
       })
@@ -217,7 +257,6 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
 
     if (message && onSend) {
       onSend(message);
-      // Use setTimeout to defer the reset until after the current event loop
       setTimeout(() => {
         resetEditor();
       }, 0);
@@ -251,22 +290,71 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
     (
       integration: (typeof ResponsibilityCommands)[0]["next"]["list"][number]
     ) => {
-      if (selectedCommand) {
-        const integrationNode: CustomElement = {
-          type: ELEMENT_TYPES.INTEGRATION,
-          command: selectedCommand,
-          selectedIntegration: integration,
-          children: [{ text: "" }],
-        };
+      setSelectedIntegration(integration);
 
-        Transforms.insertNodes(editor, integrationNode as unknown as Node);
+      const integrationNode: CustomElement = {
+        type: ELEMENT_TYPES.INTEGRATION,
+        command: selectedCommand,
+        selectedIntegration: integration,
+        children: [{ text: "" }],
+      };
+
+      Transforms.insertNodes(editor, integrationNode as unknown as Node);
+
+      Transforms.move(editor);
+
+      if (integration.next && integration.next.list) {
         setShowIntegrations(false);
-        setAnchorEl(null);
-        setSelectedCommand(null);
+        setShowScopes(true);
         setSelectedOptionIndex(0);
+        return;
       }
+
+      setShowIntegrations(false);
+      setAnchorEl(null);
+      setSelectedCommand(null);
+      setSelectedIntegration(null);
+      setSelectedOptionIndex(0);
     },
     [editor, selectedCommand]
+  );
+
+  const handleScopeSelect = useCallback(
+    (scope) => {
+      if (selectedIntegration) {
+        const { selection } = editor;
+        if (selection) {
+          const before = Editor.before(editor, selection.anchor);
+          if (before) {
+            const [match] = Editor.nodes(editor, {
+              at: before,
+              match: (n) =>
+                (n as CustomElement).type === ELEMENT_TYPES.INTEGRATION,
+            });
+
+            if (match) {
+              const [, path] = match;
+              Transforms.setNodes(
+                editor,
+                { selectedScope: scope } as Partial<CustomElement>,
+                {
+                  at: path,
+                }
+              );
+            }
+          }
+        }
+
+        setShowScopes(false);
+        setAnchorEl(null);
+        setSelectedCommand(null);
+        setSelectedIntegration(null);
+        setSelectedOptionIndex(0);
+        Transforms.move(editor);
+        ReactEditor.focus(editor);
+      }
+    },
+    [editor, selectedIntegration]
   );
 
   const handleMentionSelect = useCallback(
@@ -313,6 +401,24 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
             selectedCommand.next.list[selectedOptionIndex]
           );
           return;
+        } else if (
+          showScopes &&
+          selectedIntegration?.next?.list &&
+          selectedOptionIndex !== null
+        ) {
+          // Handle the scope selection
+          const scope =
+            typeof selectedIntegration.next.list === "object" &&
+            !Array.isArray(selectedIntegration.next.list)
+              ? selectedIntegration.next.list
+              : Array.isArray(selectedIntegration.next.list)
+              ? selectedIntegration.next.list[selectedOptionIndex]
+              : null;
+
+          if (scope) {
+            handleScopeSelect(scope);
+          }
+          return;
         } else if (showMentions && colleagues[selectedOptionIndex]) {
           handleMentionSelect(colleagues[selectedOptionIndex]);
           return;
@@ -322,13 +428,15 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
       } else if (event.key === "Escape") {
         setShowCommands(false);
         setShowIntegrations(false);
+        setShowScopes(false);
         setShowMentions(false);
         setAnchorEl(null);
         setSelectedCommand(null);
+        setSelectedIntegration(null);
         setSelectedOptionIndex(0);
       } else if (
         (event.key === "ArrowUp" || event.key === "ArrowDown") &&
-        (showCommands || showIntegrations || showMentions)
+        (showCommands || showIntegrations || showScopes || showMentions)
       ) {
         event.preventDefault();
         let maxIndex = 0;
@@ -337,6 +445,10 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           maxIndex = ResponsibilityCommands.length - 1;
         } else if (showIntegrations && selectedCommand?.next?.list) {
           maxIndex = selectedCommand.next.list.length - 1;
+        } else if (showScopes && selectedIntegration?.next?.list) {
+          maxIndex = Array.isArray(selectedIntegration.next.list)
+            ? selectedIntegration.next.list.length - 1
+            : 0;
         } else if (showMentions) {
           maxIndex = colleagues.length - 1;
         }
@@ -352,12 +464,15 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
       showCommands,
       showMentions,
       showIntegrations,
+      showScopes,
       handleSend,
       selectedOptionIndex,
       colleagues,
       selectedCommand,
+      selectedIntegration,
       handleCommandSelect,
       handleIntegrationSelect,
+      handleScopeSelect,
       handleMentionSelect,
     ]
   );
@@ -387,6 +502,12 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
                 {element.command?.label}
               </>
             )}
+            {element.selectedScope && (
+              <IntegrationScopeElement>
+                <Iconify icon={element.selectedScope.icon} sx={{ mr: 1 }} />
+                {element.selectedScope.name}
+              </IntegrationScopeElement>
+            )}
             {children}
           </IntegrationElement>
         );
@@ -409,7 +530,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
   }, []);
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 600, mx: "auto", p: 2 }}>
+    <Box sx={{ width: "100%", maxWidth: 1000, mx: "auto", p: 2 }}>
       <EditorContainer>
         <EditorWrapper>
           <Slate
@@ -445,6 +566,8 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           vertical: "bottom",
           horizontal: "left",
         }}
+        disableAutoFocus={true}
+        disableEnforceFocus={true}
       >
         <CommandList>
           {ResponsibilityCommands.map((command, index) => (
@@ -483,6 +606,8 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           vertical: "bottom",
           horizontal: "left",
         }}
+        disableAutoFocus={true}
+        disableEnforceFocus={true}
       >
         <CommandList>
           {selectedCommand?.next?.list.map((integration, index) => (
@@ -496,6 +621,44 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
                 <Iconify icon={integration.icon} />
               </ListItemIcon>
               <ListItemText primary={integration.name} />
+            </ListItem>
+          ))}
+        </CommandList>
+      </Popover>
+
+      <Popover
+        open={showScopes}
+        anchorEl={anchorEl}
+        onClose={() => {
+          setShowScopes(false);
+          setAnchorEl(null);
+          setSelectedCommand(null);
+          setSelectedIntegration(null);
+          setSelectedOptionIndex(0);
+        }}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        disableAutoFocus={true}
+        disableEnforceFocus={true}
+      >
+        <CommandList>
+          {selectedIntegration?.next?.list.map((scope, index) => (
+            <ListItem
+              key={scope.id}
+              button
+              selected={index === selectedOptionIndex}
+              onClick={() => handleScopeSelect(scope)}
+            >
+              <ListItemIcon>
+                <Iconify icon={scope.icon} />
+              </ListItemIcon>
+              <ListItemText primary={scope.name} />
             </ListItem>
           ))}
         </CommandList>

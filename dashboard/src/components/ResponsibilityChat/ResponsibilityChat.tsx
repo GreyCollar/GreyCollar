@@ -136,9 +136,8 @@ function ResponsibilityChat({
         flexDirection: "column",
         backgroundColor: (theme) => theme.palette.background.paper,
         paddingTop: "10px",
-        paddingX: "10px",
         height: "100%",
-        width: 700,
+        width: 820,
       }}
     >
       <ResponsibilityChatContent
