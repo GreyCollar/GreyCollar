@@ -25,6 +25,20 @@ const MentionElement = styled(Box)(({ theme }) => ({
   "& .MuiTypography-root": {
     fontSize: "0.875rem",
   },
+const IntegrationScopeElement = styled(Box)(({ theme }) => ({
+  display: "inline-flex",
+  alignItems: "center",
+  backgroundColor: theme.palette.info.light,
+  color: theme.palette.info.contrastText,
+  padding: "2px 4px 2px 2px",
+  borderRadius: theme.shape.borderRadius,
+  margin: "0 4px 0 4px",
+  "& .MuiTypography-root": {
+    fontSize: "0.4rem",
+  },
+  "& .MuiSvgIcon-root": {
+    fontSize: "0.8rem",
+  },
 }));
 
 export { IntegrationElement, MentionElement };
