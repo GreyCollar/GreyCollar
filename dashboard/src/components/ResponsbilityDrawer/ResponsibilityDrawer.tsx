@@ -46,7 +46,7 @@ const ResponsibilityDrawer = ({
         <Grid container sx={{ flex: 1 }} spacing={2}>
           <Grid
             item
-            xs={5}
+            xs={8}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -77,7 +77,7 @@ const ResponsibilityDrawer = ({
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={7} sx={{ display: "flex", flexDirection: "column" }}>
+          <Grid item xs={4} sx={{ display: "flex", flexDirection: "column" }}>
             <Box
               sx={{
                 flex: 1,
