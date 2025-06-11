@@ -49,6 +49,7 @@ const ResponsibilityChatTitle = ({
     if (!description) return null;
 
     try {
+      // TODO: Extract integrations and its scopes
       const availableIntegrations = ResponsibilityCommands[0]?.next?.list || [];
       const availableScopes = [];
 
