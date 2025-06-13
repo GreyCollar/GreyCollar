@@ -77,7 +77,7 @@ describe("Colleagues page", () => {
 
     cy.fixture("colleagues-page/delete/colleagues.delete.json").then(
       (colleague) => {
-        cy.intercept("DELETE", `/colleagues/` + colleague.id, {
+        cy.intercept("DELETE", `/api/colleagues/` + colleague.id, {
           fixture: "colleagues-page/delete/colleagues.delete.json",
         }).as("deleteColleague");
       }
@@ -85,13 +85,13 @@ describe("Colleagues page", () => {
 
     cy.fixture("colleagues-page/delete/colleagues.get.json").then(
       (colleague) => {
-        cy.intercept("GET", `/colleagues/${colleague.id}`, {
+        cy.intercept("GET", `/api/colleagues/${colleague.id}`, {
           fixture: "colleagues-page/delete/colleagues.get.json",
         }).as("getColleagues");
       }
     );
 
-    cy.intercept("GET", `/colleagues`, {
+    cy.intercept("GET", `/api/colleagues`, {
       fixture: "colleagues-page/delete/colleagues.get.json",
     }).as("getColleagues");
 
@@ -118,15 +118,15 @@ describe("Colleagues page", () => {
     cy.setColleagueIntercept();
 
     cy.fixture("colleagues-page/colleagues.json").then((colleague) => {
-      cy.intercept("GET", `/colleagues/${colleague[1].id}`, {
+      cy.intercept("GET", `/api/colleagues/${colleague[0].id}`, {
         fixture: "colleagues-page/colleague.json",
       }).as("getColleague");
     });
 
-    cy.getBySel("colleague-card-more-vert").eq(1).first().click();
+    cy.getBySel("colleague-card-more-vert").eq(0).first().click();
 
     cy.getBySel("colleague-card-menu-view").click();
 
-    cy.checkRoute(`/colleagues/${this.colleagues[1].id}`);
+    cy.checkRoute(`/colleagues/${this.colleagues[0].id}`);
   });
 });

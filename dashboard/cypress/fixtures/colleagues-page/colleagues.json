@@ -1,21 +1,13 @@
 [
   {
-    "id": "72ef5b08-b4a9-42b7-bb0a-22d40e56798b",
-    "name": "Alex",
-    "avatar": ":5:",
-    "character": "Professional, friendly, and a problem solver",
-    "title": "Account Expert",
-    "role": "Specializes in financial management and strategy.",
-    "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
-    "AIEngine": {
-      "id": "d9c93323-3baf-4623-a96c-b85db99b4441",
-      "vendor": "Claude",
-      "avatar": "https://www.fahimai.com/wp-content/uploads/2024/06/Untitled-design-7.png",
-      "model": "Sonnet 3.5",
-      "createdAt": "2024-07-01T00:00:00.000Z",
-      "description": "Claude 3.5 Sonnet is Anthropic's advanced AI model, offering a balanced combination of intelligence and efficiency. It features enhanced natural language understanding, improved reasoning capabilities, and excels at tasks ranging from analysis and coding to creative writing and detailed explanations, while maintaining high accuracy and ethical considerations.",
-      "price": 1.5
-    }
+    "id": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+    "name": "Ava",
+    "title": "Barista",
+    "avatar": ":1:",
+    "character": "Funny, friendly, and a coffee lover",
+    "role": "Barista Expert",
+    "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+    "aiEngineId": "289a3c9a-f23b-421a-ac6e-f14052a2d57c"
   },
   {
     "id": "ef906c5d-cafe-4518-9edc-b80c605df58e",
@@ -24,7 +16,7 @@
     "character": "Friendly, helpful, and a team player",
     "title": "Customer Service Representative",
     "role": "Customer Service Representative",
-    "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
+    "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
     "AIEngine": {
       "id": "289a3c9a-f23b-421a-ac6e-f14052a2d57c",
       "vendor": "OpenAI",

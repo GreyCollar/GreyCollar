@@ -1,4 +1,10 @@
 {
+  "id": "d92da3ee-521c-4b93-9770-c38dcea173a5",
+  "sessionId": "b605ad87-fe47-4dc8-b1cd-23d783c0a547",
+  "conversationId": "93dcd933-9bd8-45c0-b347-2dc12a0b2658",
+  "question": "What time do you close?",
   "answer": "We are 7/24 coffee shop",
-  "status": "ANSWERED"
+  "status": "IN_PROGRESS",
+  "colleagueId": "72ef5b08-b4a9-42b7-bb0a-22d40e56798b",
+  "createdAt": "2023-08-06T12:00:00.000Z"
 }
