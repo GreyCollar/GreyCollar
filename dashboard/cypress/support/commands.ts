@@ -1,15 +1,81 @@
+declare namespace Cypress {
+  interface Chainable {
+    createColleagueViaDialog(
+      colleague: {
+        name: string;
+        character: string;
+        role: string;
+        title: string;
+        avatar: string;
+      },
+      newColleaguesFixture: string
+    ): Chainable<void>;
+
+    editColleagueViaDialog(
+      colleague: {
+        id: string;
+        name: string;
+        character: string;
+        role: string;
+        title: string;
+        avatar: string;
+      },
+      newColleagues: string
+    ): Chainable<void>;
+
+    setColleagueIntercept(): Chainable<void>;
+
+    chatPageIntercept(): Chainable<void>;
+
+    verifyColleagueCard(
+      colleague: {
+        character: string;
+        role: string;
+        name: string;
+        AIEngine: {
+          vendor: string;
+          model: string;
+        };
+      },
+      index: number
+    ): Chainable<void>;
+
+    typeMessageInput(text: string): Chainable<void>;
+
+    useKeyboard(
+      key: "ArrowUp" | "ArrowDown" | "Enter" | "Tab"
+    ): Chainable<void>;
+
+    waitEvent(eventName: string, timeout?: number): Chainable<void>;
+
+    getBySel(selector: string): Chainable<JQuery<HTMLElement>>;
+
+    selectIconFromPicker(icon: string): Chainable<void>;
+
+    storageGet(key: string): Chainable<string | null>;
+
+    storageSet(key: string, value: string): Chainable<void>;
+
+    platformSetup(
+      itemId: string,
+      itemFixturePath: string,
+      config: { name: string }
+    ): Chainable<void>;
+
+    checkRoute(route: string): Chainable<void>;
+  }
+}
+
 Cypress.Commands.add(
   "createColleagueViaDialog",
   (colleague, newColleaguesFixture) => {
-    const { name, character, role, avatar } = colleague;
+    const { name, character, title, role, avatar } = colleague;
 
     cy.getBySel("colleague-wizard-name-input").click();
 
     cy.getBySel("name").type(name, {
       force: true,
     });
-
-    cy.getBySel("colleague-next-button").click();
 
     cy.getBySel("avatar-select-button").click();
 
@@ -19,24 +85,24 @@ Cypress.Commands.add(
 
     cy.getBySel("colleague-next-button").click();
 
+    cy.getBySel("colleague-wizard-title-input").type(title);
+
+    cy.getBySel("colleague-wizard-role-input").type(role);
+
+    cy.getBySel("colleague-next-button").click();
+
     cy.get('[data-cy="character"]').type(character, {
       force: true,
     });
 
     cy.getBySel("colleague-next-button").click();
 
-    cy.getBySel("role").type(role, {
-      force: true,
-    });
+    cy.getBySel("ai-marketplace-item").eq(1).click();
 
-    cy.getBySel("colleague-next-button").click();
-
-    cy.getBySel("ai-marketplace-item").eq(0).click();
-
-    cy.intercept("POST", `/colleagues`, colleague);
+    cy.intercept("POST", `/api/colleagues`, colleague);
 
     cy.storageGet("itemId").then(() => {
-      cy.intercept("GET", "/colleagues", newColleaguesFixture);
+      cy.intercept("GET", "/api/colleagues", newColleaguesFixture);
     });
 
     cy.getBySel("colleague-finish-button").click();
@@ -46,7 +112,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("editColleagueViaDialog", (colleague, newColleagues) => {
-  const { id, name, character, role, avatar } = colleague;
+  const { id, name, character, role, title, avatar } = colleague;
 
   cy.getBySel("name").clear();
 
@@ -54,13 +120,19 @@ Cypress.Commands.add("editColleagueViaDialog", (colleague, newColleagues) => {
     force: true,
   });
 
-  cy.getBySel("colleague-next-button").click();
-
   cy.getBySel("avatar-select-button").click();
 
   cy.getBySel("avatar-selection").should("be.visible");
 
   cy.selectIconFromPicker(avatar);
+
+  cy.getBySel("colleague-next-button").click();
+
+  cy.getBySel("colleague-wizard-title-input").clear();
+  cy.getBySel("colleague-wizard-title-input").type(title);
+
+  cy.getBySel("colleague-wizard-role-input").clear();
+  cy.getBySel("colleague-wizard-role-input").type(role);
 
   cy.getBySel("colleague-next-button").click();
 
@@ -72,20 +144,12 @@ Cypress.Commands.add("editColleagueViaDialog", (colleague, newColleagues) => {
 
   cy.getBySel("colleague-next-button").click();
 
-  cy.getBySel("role").clear();
+  cy.getBySel("ai-marketplace-item").eq(1).click();
 
-  cy.getBySel("role").type(role, {
-    force: true,
-  });
-
-  cy.getBySel("colleague-next-button").click();
-
-  cy.getBySel("ai-marketplace-item").eq(0).click();
-
-  cy.intercept("PUT", `/colleagues/${id}`, colleague);
+  cy.intercept("PUT", `/api/colleagues/${id}`, colleague);
 
   cy.storageGet("itemId").then(() => {
-    cy.intercept("GET", "/colleagues", newColleagues);
+    cy.intercept("GET", "/api/colleagues", newColleagues);
   });
 
   cy.getBySel("colleague-finish-button").click();
@@ -95,37 +159,45 @@ Cypress.Commands.add("editColleagueViaDialog", (colleague, newColleagues) => {
 
 Cypress.Commands.add("setColleagueIntercept", () => {
   cy.storageGet("itemId").then(() => {
-    cy.intercept("GET", `/projects`, {
+    cy.intercept("GET", `/api/projects`, {
       fixture: `colleagues-page/team.json`,
     });
-    cy.intercept("GET", `/colleagues`, {
+    cy.intercept("GET", `/api/colleagues`, {
       fixture: `colleagues-page/colleagues.json`,
     });
 
-    cy.intercept("GET", `/engines`, {
+    cy.intercept("GET", `/api/engines`, {
       fixture: `colleagues-page/engines.json`,
+    });
+
+    cy.intercept("GET", `/api/organizations`, {
+      fixture: `organizations/organization.json`,
     });
   });
 });
 
 Cypress.Commands.add("chatPageIntercept", () => {
-  cy.intercept("GET", `/supervisings/d92da3ee-521c-4b93-9770-c38dcea173a5`, {
-    fixture: "supervising/supervising.get.json",
-  });
+  cy.intercept(
+    "GET",
+    `/api/supervisings/d92da3ee-521c-4b93-9770-c38dcea173a5`,
+    {
+      fixture: "supervising/supervising.get.json",
+    }
+  );
 
-  cy.intercept("GET", "/projects/e6d4744d-a11b-4c75-acad-e24a02903729", {
+  cy.intercept("GET", "/api/projects/e6d4744d-a11b-4c75-acad-e24a02903729", {
     fixture: "chat-page/team.json",
   });
 
-  cy.intercept("GET", `/knowledge/eab826a3-2566-4ac9-abaf-c3a31b947059`, {
+  cy.intercept("GET", `/api/knowledge/eab826a3-2566-4ac9-abaf-c3a31b947059`, {
     fixture: "knowledges/knowledge.single.json",
   });
 
-  cy.intercept("GET", `/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`, {
+  cy.intercept("GET", `/api/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`, {
     fixture: "chat-page/colleague.json",
   });
 
-  cy.intercept("GET", `/messages`, {
+  cy.intercept("GET", `/api/messages`, {
     fixture: "chat-page/messages/messages.json",
   });
 });
@@ -162,7 +234,7 @@ Cypress.Commands.add("typeMessageInput", (text) => {
   //eslint-disable-next-line
   cy.wait(2000);
 
-  cy.getBySel("message-input").focus({ force: true });
+  cy.getBySel("message-input").focus();
   cy.getBySel("message-input").click({ force: true });
   cy.getBySel("message-input").type(text, { force: true });
 });
