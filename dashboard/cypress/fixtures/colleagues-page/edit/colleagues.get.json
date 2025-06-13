@@ -20,10 +20,10 @@
   {
     "id": "ef906c5d-cafe-4518-9edc-b80c605df58e",
     "name": "Taylor",
-    "avatar": ":2:",
+    "avatar": ":5:",
     "character": "Friendly, helpful, and a team player",
-    "title": "Customer Service Representative",
-    "role": "Customer Service Representative",
+    "title": "Developer",
+    "role": "Full Stack Developer",
     "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729",
     "AIEngine": {
       "id": "289a3c9a-f23b-421a-ac6e-f14052a2d57c",

@@ -17,6 +17,16 @@
         "role": "Barista Expert",
         "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
         "aiEngineId": "289a3c9a-f23b-421a-ac6e-f14052a2d57c"
+      },
+      {
+        "id": "ad906c5d-cafe-4518-9edc-b80c605df58e",
+        "name": "Ella",
+        "avatar": ":1:",
+        "character": "Friendly, helpful, and a team player",
+        "title": "Detective",
+        "role": "Customer Service Representative",
+        "teamId": "add6dfa4-45ba-4da2-bc5c-5a529610b52f",
+        "aiEngineId": "289a3c9a-f23b-421a-ac6e-f14052a2d57c"
       }
     ]
   }
