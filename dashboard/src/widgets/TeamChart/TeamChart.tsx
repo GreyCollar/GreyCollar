@@ -236,6 +236,7 @@ function TeamChart({ sx }) {
 
   return (
     <Box
+      data-cy="team-chart"
       sx={{
         minHeight: "100vh",
         width: "100vw",

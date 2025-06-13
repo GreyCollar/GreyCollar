@@ -159,6 +159,7 @@ function KnowledgeTable({
                     )}
                     <TableCell sx={{ width: "5%" }}>
                       <IconButton
+                        data-cy="delete-knowledge-button"
                         onClick={() => handleDeleteClick(row)}
                         sx={{
                           "&:hover": {

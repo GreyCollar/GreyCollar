@@ -131,7 +131,7 @@ function ColleagueWizard({
 
   const handleTemplateSelect = (colleague) => {
     setNewItem(colleague);
-    setActiveStep(5);
+    setActiveStep(4);
   };
 
   useEffect(() => {
@@ -227,6 +227,7 @@ function ColleagueWizard({
           >
             {sampleColleagues.map((colleague, index) => (
               <Card
+                data-cy="sample-colleague"
                 key={index}
                 onClick={() => handleTemplateSelect(colleague)}
                 sx={{
@@ -295,7 +296,7 @@ function ColleagueWizard({
     return (
       <>
         <SparkleInput
-          data-cy="colleague-wizard-role-input"
+          data-cy="colleague-wizard-title-input"
           prop="title"
           onChange={handleInputChange("title")}
           onRandomValue={() => handleRandomValue("title")}
@@ -348,6 +349,7 @@ function ColleagueWizard({
   };
   return (
     <Dialog
+      data-cy="colleague-dialog"
       fullWidth
       maxWidth={activeStep === 4 ? "xl" : "sm"}
       open={open}
