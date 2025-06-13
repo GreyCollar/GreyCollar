@@ -112,8 +112,6 @@ describe("Colleague page", () => {
       this.knowledges
     );
 
-    cy.getBySel("nav-toggle-button").click();
-
     cy.get('[data-cy="tab-knowledge-base"]').click();
 
     cy.getBySel("add-knowledge-button").click();
@@ -147,8 +145,6 @@ describe("Colleague page", () => {
     cy.visit(`/colleagues/${this.colleague.id}`);
 
     cy.intercept("GET", `/api/colleagues/${this.colleague.id}`, this.colleague);
-
-    cy.getBySel("nav-toggle-button").click();
 
     cy.get('[data-cy="tab-knowledge-base"]').click();
 
@@ -187,8 +183,6 @@ describe("Colleague page", () => {
 
     cy.intercept("GET", `/api/colleagues/${this.colleague.id}`, this.colleague);
 
-    cy.getBySel("nav-toggle-button").click();
-
     cy.get('[data-cy="tab-knowledge-base"]').click();
 
     cy.getBySel("add-knowledge-button").click();
@@ -223,8 +217,6 @@ describe("Colleague page", () => {
     cy.visit(`/colleagues/${this.colleague.id}`);
 
     cy.intercept("GET", `/api/colleagues/${this.colleague.id}`, this.colleague);
-
-    cy.getBySel("nav-toggle-button").click();
 
     cy.intercept(
       "GET",
@@ -268,8 +260,6 @@ describe("Colleague page", () => {
 
     cy.intercept("GET", `/api/colleagues/${this.colleague.id}`, this.colleague);
 
-    cy.getBySel("nav-toggle-button").click();
-
     cy.intercept(
       "GET",
       `/api/knowledge?colleagueId=${this.colleague.id}`,
@@ -311,8 +301,6 @@ describe("Colleague page", () => {
     cy.visit(`/colleagues/${this.colleague.id}`);
 
     cy.intercept("GET", `/api/colleagues/${this.colleague.id}`, this.colleague);
-
-    cy.getBySel("nav-toggle-button").click();
 
     cy.intercept(
       "GET",
@@ -360,8 +348,6 @@ describe("Colleague page", () => {
       this.supervising
     );
     cy.intercept("GET", `/api/colleagues/${this.colleague.id}`, this.colleague);
-
-    cy.getBySel("nav-toggle-button").click();
 
     cy.get('[data-cy="tab-supervisings"]').click();
 
