@@ -9,7 +9,7 @@ describe("Chat widget", () => {
     });
 
     cy.get("@teamId").then(() => {
-      cy.intercept("GET", `/colleagues`, {
+      cy.intercept("GET", `/api/colleagues`, {
         fixture: "chat-page/colleagues.json",
       });
     });
@@ -22,6 +22,10 @@ describe("Chat widget", () => {
   it("takes URL as input", () => {
     cy.typeMessageInput("/");
 
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
+
     cy.getBySel("command-item-learn-url").click();
 
     cy.getBySel("input-item-Alex").click();
@@ -32,13 +36,17 @@ describe("Chat widget", () => {
 
     cy.getBySel("input-component").eq(1).type("www.google.com");
 
-    cy.intercept("POST", `/knowledge`, {
+    cy.intercept("POST", `/api/knowledge`, {
       fixture: "knowledges/create/knowledges.url.post.json",
     });
 
-    cy.intercept("GET", `/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`, {
-      fixture: "chat-page/colleague.json",
-    });
+    cy.intercept(
+      "GET",
+      `/api/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`,
+      {
+        fixture: "chat-page/colleague.json",
+      }
+    );
 
     cy.getBySel("send-button").click();
 
@@ -49,6 +57,10 @@ describe("Chat widget", () => {
 
   it("takes QA as input", () => {
     cy.typeMessageInput("/");
+
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
 
     cy.getBySel("command-item-learn-qa").click();
 
@@ -64,7 +76,7 @@ describe("Chat widget", () => {
 
     cy.getBySel("input-component").eq(2).type("New Delhi");
 
-    cy.intercept("POST", `/knowledge`, {
+    cy.intercept("POST", `/api/knowledge`, {
       fixture: "knowledges/create/knowledges.qa.post.json",
     });
 
@@ -78,6 +90,10 @@ describe("Chat widget", () => {
   it("takes TEXT as input", () => {
     cy.typeMessageInput("/");
 
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
+
     cy.getBySel("command-item-learn-text").click();
 
     cy.getBySel("input-item-Alex").click();
@@ -88,13 +104,17 @@ describe("Chat widget", () => {
 
     cy.getBySel("input-component").eq(1).type("How are you?");
 
-    cy.intercept("POST", `/knowledge`, {
+    cy.intercept("POST", `/api/knowledge`, {
       fixture: "knowledges/create/knowledges.text.post.json",
     });
 
-    cy.intercept("GET", `/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`, {
-      fixture: "chat-page/colleague.json",
-    });
+    cy.intercept(
+      "GET",
+      `/api/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`,
+      {
+        fixture: "chat-page/colleague.json",
+      }
+    );
 
     cy.getBySel("send-button").click();
 
@@ -105,6 +125,10 @@ describe("Chat widget", () => {
 
   it("runs conditional input flow", () => {
     cy.typeMessageInput("/");
+
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
 
     cy.getBySel("command-item-learn").click();
 
@@ -120,13 +144,17 @@ describe("Chat widget", () => {
 
     cy.getBySel("input-component").eq(2).type("www.google.com");
 
-    cy.intercept("POST", `/knowledge`, {
+    cy.intercept("POST", `/api/knowledge`, {
       fixture: "knowledges/create/knowledges.url.post.json",
     });
 
-    cy.intercept("GET", `/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`, {
-      fixture: "chat-page/colleague.json",
-    });
+    cy.intercept(
+      "GET",
+      `/api/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`,
+      {
+        fixture: "chat-page/colleague.json",
+      }
+    );
 
     cy.getBySel("send-button").click();
 
@@ -138,6 +166,10 @@ describe("Chat widget", () => {
   it("complete command story with keyboard only", () => {
     cy.typeMessageInput("/");
 
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
+
     cy.useKeyboard("ArrowDown");
     cy.useKeyboard("ArrowDown");
     cy.useKeyboard("Enter");
@@ -148,13 +180,17 @@ describe("Chat widget", () => {
     cy.getBySel("input-component").should("be.visible");
     cy.getBySel("input-component").eq(1).type("www.google.com");
 
-    cy.intercept("POST", `/knowledge`, {
+    cy.intercept("POST", `/api/knowledge`, {
       fixture: "knowledges/create/knowledges.url.post.json",
     });
 
-    cy.intercept("GET", `/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`, {
-      fixture: "chat-page/colleague.json",
-    });
+    cy.intercept(
+      "GET",
+      `/api/colleagues/72ef5b08-b4a9-42b7-bb0a-22d40e56798b`,
+      {
+        fixture: "chat-page/colleague.json",
+      }
+    );
 
     cy.getBySel("message-input").type("{enter}");
 
@@ -165,33 +201,44 @@ describe("Chat widget", () => {
 
   it("answers supervising", () => {
     cy.getBySel("reply-button").last().click();
-    cy.getBySel("reply-button").last().click();
+
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
 
     cy.typeMessageInput("We are 7/24 coffee shop");
 
     cy.intercept(
       "PATCH",
-      `/supervisings/d92da3ee-521c-4b93-9770-c38dcea173a5`,
+      `/api/supervisings/d92da3ee-521c-4b93-9770-c38dcea173a5`,
       {
         fixture: "supervising/supervising.status.answered.json",
       }
     );
 
-    cy.intercept("GET", `/supervisings/d92da3ee-521c-4b93-9770-c38dcea173a5`, {
-      fixture: "supervising/supervising.status.json",
-    });
+    cy.intercept(
+      "GET",
+      `/api/supervisings/d92da3ee-521c-4b93-9770-c38dcea173a5`,
+      {
+        fixture: "supervising/supervising.status.json",
+      }
+    );
 
     cy.getBySel("send-button").click();
   });
 
   it("sorts by date", () => {
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
+
     cy.typeMessageInput("We are 7/24 coffee shop");
 
-    cy.intercept("POST", `/messages`, {
+    cy.intercept("POST", `/api/messages`, {
       fixture: "chat-page/messages/messages.json",
     });
 
-    cy.intercept("GET", `/supervisings`, {
+    cy.intercept("GET", `/api/supervisings`, {
       fixture: "supervising/supervising.date.json",
     });
 
@@ -199,13 +246,17 @@ describe("Chat widget", () => {
   });
 
   it("sends message", () => {
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
+
     cy.typeMessageInput("Hello");
 
-    cy.intercept("POST", `/messages`, {
+    cy.intercept("POST", `/api/messages`, {
       fixture: "chat-page/messages/message.post.json",
     });
 
-    cy.intercept("GET", `/messages`, {
+    cy.intercept("GET", `/api/messages`, {
       fixture: "chat-page/messages/messages.get.json",
     });
 
@@ -219,17 +270,25 @@ describe("Chat widget", () => {
   });
 
   it("receives message", () => {
-    cy.intercept("POST", `/messages`, {
+    cy.intercept("POST", `/api/messages`, {
       fixture: "chat-page/messages/message.system.post.json",
     });
 
-    cy.intercept("GET", `/messages`, {
+    cy.intercept("GET", `/api/messages`, {
       fixture: "chat-page/messages/messages.system.get.json",
+    });
+
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
     });
   });
 
   it("updates message status", () => {
-    cy.intercept("GET", `/messages`, {
+    cy.intercept("GET", `/api/messages`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
+
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
       fixture: "chat-page/messages/messages.get.json",
     });
 
@@ -237,17 +296,17 @@ describe("Chat widget", () => {
       .last()
       .should("have.attr", "data-status", "READ");
 
-    cy.intercept("GET", `/messages?offset=2023-08-05T13:10:00.000Z`, {
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
       fixture: "chat-page/messages/messages.get.json",
     });
 
-    cy.intercept("PATCH", `/messages?offset=2023-08-05T13:10:00.000Z`, {
+    cy.intercept("PATCH", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
       fixture: "chat-page/messages/message.patch.json",
     });
 
     cy.waitEvent("MESSAGE_STATUS_UPDATED");
 
-    cy.intercept("GET", `/messages`, {
+    cy.intercept("GET", `/api/messages`, {
       fixture: "chat-page/messages/messages.patch.json",
     });
 
@@ -259,7 +318,7 @@ describe("Chat widget", () => {
   });
 
   it("shows system messages", () => {
-    cy.intercept("GET", `/messages`, {
+    cy.intercept("GET", `/api/messages`, {
       fixture: "chat-page/messages/messages.get.json",
     });
 
@@ -268,15 +327,19 @@ describe("Chat widget", () => {
   });
 
   it("replies message", () => {
-    cy.intercept("GET", `/messages`, {
+    cy.intercept("GET", `/api/messages`, {
       fixture: "chat-page/messages/messages.get.json",
     });
 
-    cy.intercept("GET", `/commands`, {
+    cy.intercept("GET", `/api/messages?offset=2023-08-05T13:10:00.000Z`, {
+      fixture: "chat-page/messages/messages.get.json",
+    });
+
+    cy.intercept("GET", `/api/commands`, {
       fixture: "chat-page/commands.json",
     });
 
-    cy.intercept("GET", `/tasks`, {
+    cy.intercept("GET", `/api/tasks`, {
       fixture: "tasks/task.json",
     });
 
@@ -290,11 +353,11 @@ describe("Chat widget", () => {
 
     cy.typeMessageInput("How are you?");
 
-    cy.intercept("POST", `/messages`, {
+    cy.intercept("POST", `/api/messages`, {
       fixture: "chat-page/messages/messages.reply.post.json",
     });
 
-    cy.intercept("GET", `/messages`, {
+    cy.intercept("GET", `/api/messages`, {
       fixture: "chat-page/messages/messages.reply.json",
     });
 

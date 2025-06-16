@@ -83,6 +83,7 @@ const SupervisingCard = ({ supervise, updateSupervising }) => {
 
               {supervise.answer ? (
                 <TextField
+                  data-cy="answer-supervising"
                   variant="outlined"
                   label="Answer"
                   value={`${supervise.answer}`}

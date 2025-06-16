@@ -22,15 +22,8 @@
     }
   },
   "include": ["src"],
-  "types": ["@nucleoidai/platform/types"],
-  "exclude": [
-    "node_modules",
-    "build",
-    "dist",
-    "**/*.spec.ts",
-    "**/*.test.ts",
-    "cypress"
-  ],
+  "types": ["@nucleoidai/platform/types", "cypress"],
+  "exclude": ["node_modules", "build", "dist", "**/*.spec.ts", "**/*.test.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"

@@ -309,6 +309,7 @@ function TeamChart({ sx }) {
 
   return (
     <Box
+      data-cy="team-chart"
       sx={{
         height: "100vh",
         width: "100vw",

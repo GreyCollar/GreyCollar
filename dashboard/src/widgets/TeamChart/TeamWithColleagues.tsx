@@ -65,6 +65,7 @@ function TeamWithColleagues({
         <Fab
           color="default"
           aria-label="add colleague"
+          data-cy="add-colleague-button"
           size="small"
           onClick={onAddColleague}
           sx={{
@@ -103,6 +104,7 @@ function TeamWithColleagues({
                   <ColleagueNode sx={sx} node={colleague} />
 
                   <Fab
+                    data-cy="responsibility-button"
                     color="default"
                     size="small"
                     onClick={() => handleDrawerOpen(null)}
@@ -121,6 +123,7 @@ function TeamWithColleagues({
                   </Fab>
 
                   <Fab
+                    data-cy="colleague-page-button"
                     color="default"
                     size="small"
                     onClick={() => {
