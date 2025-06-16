@@ -2,9 +2,9 @@ import config from "../../config";
 
 describe("Organization chart", () => {
   beforeEach(() => {
-    cy.fixture("colleagues-page/teams.json").then((teams) => {
-      cy.wrap(teams[1].id).as("teamId");
-      cy.platformSetup(teams[1].id, "colleagues-page/team.json", config);
+    cy.fixture("organizations/team.json").then((teams) => {
+      cy.wrap(teams.id).as("teamId");
+      cy.platformSetup(teams.id, "organizations/team.json", config);
       cy.viewport(1280, 720);
     });
     cy.fixture("organizations/team.json").as("project");
