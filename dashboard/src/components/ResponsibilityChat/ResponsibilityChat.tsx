@@ -135,9 +135,25 @@ function ResponsibilityChat({
         display: "flex",
         flexDirection: "column",
         backgroundColor: (theme) => theme.palette.background.paper,
-        paddingTop: "10px",
+        paddingTop: {
+          xs: "8px",
+          sm: "10px",
+          md: "10px",
+        },
         height: "100%",
-        width: 820,
+        width: {
+          xs: "100%",
+          sm: "100%",
+          md: "100%",
+          lg: 820,
+          xl: 820,
+        },
+        maxWidth: "100%",
+        padding: {
+          xs: 1,
+          sm: 1.5,
+          md: 2,
+        },
       }}
     >
       <ResponsibilityChatContent
@@ -153,8 +169,16 @@ function ResponsibilityChat({
           sx={{
             color: "error.main",
             my: 1,
-            fontSize: "0.875rem",
-            padding: "8px",
+            fontSize: {
+              xs: "0.75rem",
+              sm: "0.825rem",
+              md: "0.875rem",
+            },
+            padding: {
+              xs: "6px",
+              sm: "7px",
+              md: "8px",
+            },
             backgroundColor: "error.light",
             borderRadius: "4px",
           }}

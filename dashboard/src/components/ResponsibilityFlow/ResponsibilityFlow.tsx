@@ -16,6 +16,7 @@ import {
   useNodesState,
 } from "@xyflow/react";
 import React, { useCallback, useEffect, useState } from "react";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const elk = new ELK();
 
@@ -69,12 +70,44 @@ const getLayoutedElements = (nodes, edges, options = {}) => {
 function ResponsibilityFlow({ aiResponse, responsibility }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   const [isLoading, setIsLoading] = useState(true);
   const { getResponsibilityWithNode } = useResponsibility();
   const { responsibilityNodes, loading } = getResponsibilityWithNode(
     responsibility?.id
   );
+
+  const getFlowDimensions = () => {
+    if (isMobile) {
+      return {
+        width: "100%",
+        height: "40vh",
+      };
+    }
+    if (isTablet) {
+      return {
+        width: "100%",
+        height: "50vh",
+      };
+    }
+    return {
+      width: "100%",
+      height: "95vh",
+    };
+  };
+
+  const getDefaultViewport = () => {
+    if (isMobile) {
+      return { x: 20, y: 50, zoom: 0.6 };
+    }
+    if (isTablet) {
+      return { x: 60, y: 100, zoom: 0.65 };
+    }
+    return { x: 120, y: 150, zoom: 0.75 };
+  };
 
   useEffect(() => {
     if (!loading && responsibilityNodes) {
@@ -154,8 +187,16 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
     return <div>Loading flow diagram...</div>;
   }
 
+  const flowDimensions = getFlowDimensions();
+
   return (
-    <div style={{ width: "50vw", height: "95vh" }}>
+    <div
+      style={{
+        width: flowDimensions.width,
+        height: flowDimensions.height,
+        minHeight: isMobile ? "300px" : "400px",
+      }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -163,7 +204,11 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
-        defaultViewport={{ x: 120, y: 150, zoom: 0.75 }}
+        defaultViewport={getDefaultViewport()}
+        fitView
+        fitViewOptions={{
+          padding: isMobile ? 0.1 : 0.2,
+        }}
       >
         <Background />
       </ReactFlow>
