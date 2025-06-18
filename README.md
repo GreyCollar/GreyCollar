@@ -24,6 +24,8 @@ Human-in-the-Loop (HITL) is a collaborative approach where AI agents work alongs
 - **Safe & Responsible AI** – Human oversight ensures ethical alignment, reduces bias, and mitigates unintended or harmful outputs.
 - **Operational Efficiency** – AI handles routine, repetitive work at scale, freeing human supervisors to focus on higher-value, strategic decisions.
 
+[GreyCollar Demo](https://github.com/user-attachments/assets/c1194674-5850-434d-a085-7fa3714f3746)
+
 ## Get Started
 
 ```
