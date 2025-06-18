@@ -11,42 +11,45 @@
 
 ![GreyCollar Banner](https://github.com/user-attachments/assets/064fdd2f-b1de-4fca-9cd6-1dbf1e55e470)
 
-## What is Supervised AI Agent?
+GreyCollar AI is a supervised AI agent platform for human–AI collaboration. The platform provides an environment to continuously learn from human supervisors, so they can adapt to real-world workloads.
 
-GreyCollar is a Supervised AI agent platform for Human-AI collaborations in enterprise. Despite recent advancements, AI has yet to reach its full potential in enterprise settings due to reliability concerns. GreyCollar provides a supervised learning platform for agentic AI, enabling AI to be supervised and continuously learn from human supervisors just like a new employee—even in rare or complex cases encountered in daily work.
-
-Designed for human-AI collaboration (Human-in-the-Loop), GreyCollar is highly effective in scenarios that require data-driven decision-making, automation, and real-time adaptability. It incorporates human-in-the-loop mechanisms, enabling iterative learning through continuous feedback and model adjustments. This enhances its ability to handle complex tasks at work environment.
-
-## Autonomous Workflow
-
-Autonomous workflows are self-driven processes where AI agents can independently execute multi-step tasks with human supervision. These workflows integrate task planning, execution, decision-making, and learning based on changing inputs or goals.
-
-1. **Task Decomposition**
-   - The AI agent breaks down complex goals into smaller, executable steps.
-   - Uses methods like hierarchical planning or task graphs.
-2. **Decision-Making & Adaptation**
-   - Dynamically adjusts workflows based on new information.
-   - Uses supervised learning to adapt itself to workspace-related tasks and directions.
-3. **Memory & Context Awareness**
-   - Agents retain context across workflow steps.
-   - Utilizes vector databases, episodic memory, or long-term storage.
-4. **Multi-Agent Coordination** 
-   - Multiple AI agents collaborate by delegating and verifying tasks.
-   - Uses shared knowledge bases to improve coordination and efficiency.
-5. **Human-in-the-Loop & Supervised Learning**
-   - Uses human feedback to improve models through supervised learning.
-   - Helps refine edge cases and prevents unintended consequences.
+Each AI colleague works within defined responsibilities and uses a knowledge base to complete tasks. When uncertain, they escalate to human supervisors—enabling **"Hallucination Control"** to prevent mistakes.
 
 ## Human-AI Collabs (Human-in-the-Loop)
 
 Human-in-the-Loop (HITL) is a collaborative approach where AI agents work alongside human experts to enhance decision-making, automate processes, and refine task execution. In this model, human supervision plays a key role in guiding, correcting, and improving AI-driven workflows.
 
-### **Benefits**
+- **Improved Accuracy** – Human feedback enables AI colleagues to refine responses in real time, reducing errors and increasing reliability.
+- **Continuous Learning** – AI adapts to new tasks and domains by integrating ongoing human input, improving with every interaction.
+- **Safe & Responsible AI** – Human oversight ensures ethical alignment, reduces bias, and mitigates unintended or harmful outputs.
+- **Operational Efficiency** – AI handles routine, repetitive work at scale, freeing human supervisors to focus on higher-value, strategic decisions.
 
-- **Enhanced Accuracy** – Human feedback helps the AI refine its responses and correct errors in real-time.
-- **Adaptive Learning** – AI models improve continuously by integrating human insights, ensuring adaptability to evolving tasks.
-- **Safe AI** – Human oversight prevents biases, ensures fairness, and mitigates unintended consequences.
-- **Task Optimization** – AI streamlines repetitive processes while humans focus on strategic and complex decision-making.
+## Get Started
+
+```
+git clone https://github.com/greycollar/greycollar.git
+npm install
+
+// Add env variables
+JWT_SECRET=<JWT_SECRET>
+PLATFORM_LLM=OPENAI
+OAUTH_CLIENT_SECRET=<OAUTH_CLIENT_SECRET>
+OPENAI_API_KEY=<OPENAI_API_KEY>
+```
+
+```
+npm start
+```
+
+This will start three applications simultaneously: Dashboard, API Server and Proxy Server. Once started, the dashboard should be accessible in your browser at http://localhost:3000
+
+Learn more at [https://greycollar.ai/docs](https://greycollar.ai/docs)
+
+## ⚡n8n Integration
+
+GreyCollar can be part of your favorite flow tools like n8n, enabling you to embed supervised AI directly into automated workflows.
+
+![n8n Integration](https://github.com/user-attachments/assets/ddddd7ee-e8e5-4ebf-b316-41c23075c711)
 
 <br/>
 <table>
@@ -71,27 +74,6 @@ Human-in-the-Loop (HITL) is a collaborative approach where AI agents work alongs
   </tr>
 </table>
 <br/>
-
-## Get Started
-
-```
-git clone https://github.com/greycollar/greycollar.git
-npm install
-
-// Add env variables
-JWT_SECRET=<JWT_SECRET>
-PLATFORM_LLM=OPENAI
-OAUTH_CLIENT_SECRET=<OAUTH_CLIENT_SECRET>
-OPENAI_API_KEY=<OPENAI_API_KEY>
-```
-
-```
-npm start
-```
-
-This will start three applications simultaneously: Dashboard, API Server and Proxy Server. Once started, the dashboard should be accessible in your browser at http://localhost:3000
-
-Learn more at [https://greycollar.ai/docs](https://greycollar.ai/docs)
 
 ## Features
 
