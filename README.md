@@ -79,6 +79,8 @@ GreyCollar can be part of your favorite flow tools like n8n, enabling you to emb
 
 ## Features
 
+![GreyCollar](https://github.com/user-attachments/assets/cedf7872-e4b8-46fe-a2b5-306fb7cb12b5)
+
 - [Colleague (AI)](#colleague-ai): AI assistants that handle tasks based on assigned responsibilities and knowledge.
 - [Supervising (Human)](#supervising-human): Humans who guide AI with feedback, questions, or extra info.
 - [Knowledge](#knowledge): The info AI uses—documents, FAQs, or other sources.
