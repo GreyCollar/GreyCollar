@@ -87,7 +87,7 @@ GreyCollar can be part of your favorite flow tools like n8n, enabling you to emb
 - [Communication](#communication): How you interact with AI—via chat, email, Slack, WhatsApp, etc.
 - [Integration](#integration): Connects to third-party tools via Model Context Protocol (MCP).
 
-## [Colleague (AI)](/docs/features/colleague)
+## Colleague (AI)
 
 ![Colleague Page](https://cdn.nucleoid.com/greycollar/media/5afbf454-97dc-45a9-bc4d-14fb69d6b1f9.png)
 
@@ -97,7 +97,7 @@ Colleagues are AI assistants that help you with your tasks based on responsibili
 - Continuously learn and persist to knowledge base
 - Collaborate with other human supervisors or human colleagues
 
-## [Supervising (Human)](/docs/features/supervising)
+## Supervising (Human)
 
 ![Supervising](https://cdn.nucleoid.com/greycollar/media/c09ef87d-7453-4a49-9b31-c56a0aaaa03f.png)
 
@@ -105,7 +105,7 @@ Supervising by human is raised when the AI is not able to complete the task or n
 
 > :warning: This is the core concept to eliminate hallucination that the AI evaluates knowledge existed before the execution of the task.
 
-## [Knowledge](/docs/features/knowledge)
+## Knowledge
 
 ![Knowledge Base](https://cdn.nucleoid.com/greycollar/media/e10ddf80-499f-45da-9182-7284fcc21bf0.png)
 
@@ -113,7 +113,7 @@ Knowledge is the information that the AI uses when working on responsibilities. 
 
 > Knowledge can be added manually or part of the supervising process during task execution.
 
-## [Responsibility and Task](/docs/features/responsibility)
+## Responsibility and Task
 
 ![Responsibility](https://cdn.nucleoid.com/greycollar/media/d12714f4-e584-4020-92cb-62a25664e14d.png)
 
@@ -121,7 +121,7 @@ Responsibility is a blueprint of the tasks that the AI will perform based on kno
 
 > Tasks are the actions that the AI performs for a given responsibility with knowledge. Once the task is initiated through communication, the AI will execute the task and provide feedback to the supervisor.
 
-## [Team](/docs/features/team)
+## Team
 
 ![Team](https://cdn.nucleoid.com/greycollar/media/8046f722-d9c0-487f-89b2-a4e3aafc1874.png)
 
@@ -130,7 +130,7 @@ Team is a logical grouping of AI colleagues. Mainly this grouping provides 2 maj
 - **Knowledge Management**: Knowledge can be shared between AI colleagues within the team, while each colleague can also maintain their own individual knowledge. In agentic AI, effective knowledge management is crucial to eliminate hallucinations, ensuring that each AI colleague has sufficient knowledge to complete tasks without being misled by irrelevant or unnecessary information. a
 - **Team Lead**: The team lead is the person responsible for handing off the task to the AI colleagues.
 
-## [Communication](/docs/features/communication)
+## Communication
 
 ![Communication](https://cdn.nucleoid.com/greycollar/media/1f23108d-5f9d-4b20-8064-3679ee43289b.png)
 
@@ -138,7 +138,7 @@ Communication is the primary way to interact with AI colleagues. It can occur th
 
 > In short, communication opens up AI colleagues to the outside world, enabling them to perform tasks.
 
-## [Integration](/docs/features/integration)
+## Integration
 
 ![Integration](https://cdn.nucleoid.com/greycollar/media/4a1ef3f7-172a-49ea-a782-ac170d335640.png)
 
