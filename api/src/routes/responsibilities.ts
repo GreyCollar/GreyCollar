@@ -81,6 +81,8 @@ router.delete("/:responsibilityId", async (req, res) => {
   res.status(200).json({ message: "Responsibility deleted" });
 });
 
+//TODO Refactor these routes when  UI is ready
+
 router.post("/task", async (req, res) => {
   const { body } = req;
 
