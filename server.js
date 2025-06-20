@@ -9,7 +9,6 @@ app.use(cors());
 const apiProxy = createProxyMiddleware({
   target: "http://localhost:4000",
   changeOrigin: true,
-  ws: true,
   pathRewrite: {
     "^/api": "",
   },
@@ -38,6 +37,7 @@ const apiProxy = createProxyMiddleware({
 const dashboardProxy = createProxyMiddleware({
   target: "http://localhost:5173",
   changeOrigin: true,
+  ws:true,
   onError: (err, req, res) => {
     console.error("Dashboard Proxy Error:", {
       error: err.message,

@@ -1,5 +1,6 @@
 [
   {
+    "id": "f66cbb2c-d758-4f1f-976c-e7bf5bffb095",
     "description": "List emails from example.com website",
     "steps": [
       {
@@ -25,6 +26,7 @@
     ]
   },
   {
+    "id": "76b345d2-9944-4d4d-a586-d206e9cb1d80",
     "description": "List emails from example.com website",
     "steps": [
       {
@@ -66,6 +68,7 @@
     ]
   },
   {
+    "id": "ce09406c-34de-447c-a89f-104a7c4bcd66",
     "description": "Find phone number and address emails from example.com website",
     "steps": [
       {
@@ -103,6 +106,38 @@
       {
         "action": "COMPLETE",
         "comment": "Completing task"
+      }
+    ]
+  },
+  {
+    "id": "61c38f41-4c0b-4506-b4c8-abf9abc04f65",
+    "description": "Get employee ID, scan hardware barcode, retrieve status message.",
+    "steps": [
+      {
+        "action": "POSTGRES:query",
+        "parameters": {
+          "query": "SELECT * FROM employees WHERE id = {employeeId}"
+        }
+      },
+      {
+        "action": "POSTGRES:query",
+        "parameters": {
+          "query": "SELECT * FROM hardware WHERE barcode = {hardwareBarcode}"
+        }
+      },
+      {
+        "action": "POSTGRES:query",
+        "parameters": {
+          "query": "SELECT * FROM hardware_status WHERE hardware_id = {hardwareBarcode}"
+        }
+      },
+      {
+        "action": "JIRA:create",
+        "parameters": {
+          "projectKey": "IT",
+          "summary": "Hardware {hardwareBarcode} status is ORANGE",
+          "description": "Employee ID: {employeeId}, Hardware Barcode: {hardwareBarcode}, Status: ORANGE"
+        }
       }
     ]
   }

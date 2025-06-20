@@ -1,203 +1,371 @@
 [
-  {
-    "content": "{ integrationId: 8f828016-dd2e-4f76-bad5-2a0ca9b71d6f } find accounting related documents and send email to test@bla.com",
-    "integrations": [
-      {
-        "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
-        "action": "GDRIVE:search",
-        "provider": "GOOGLE DRIVE",
-        "description": "Search for files in Google Drive",
-        "oauth": {
-          "scope": "https://www.googleapis.com/auth/drive.metadata.readonly",
-          "tokenUrl": "https://oauth2.googleapis.com/token",
-          "clientId": "${GOOGLE_CLIENT_ID}",
-          "clientSecret": "${GOOGLE_CLIENT_SECRET}",
-          "redirectUri": "${GOOGLE_REDIRECT_URI}"
-        },
-        "direction": "OUTGOING",
-        "lib": "mcp",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "The search query to find files in Google Drive."
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      },
-      {
-        "id": "1d49fadb-93e3-43cc-88e4-f3bfc2ea4f0e",
-        "action": "SLACK:search",
-        "provider": "SLACK",
-        "description": "Search for messages in Slack",
-        "oauth": {
-          "scope": "search:read",
-          "tokenUrl": "https://slack.com/api/oauth.v2.access"
-        },
-        "direction": "INCOMING",
-        "lib": "mcp",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "Search term to look for messages or files in Slack."
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      },
-      {
-        "id": "9e35c8d5-df44-44d9-8f9e-b4f4f3b1043d",
-        "action": "DISCORD:search",
-        "provider": "DISCORD",
-        "description": "Search for messages in Discord",
-        "oauth": {
-          "scope": "messages.read",
-          "tokenUrl": "https://discord.com/api/oauth2/token"
-        },
-        "direction": "INCOMING",
-        "lib": "mcp",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "Keyword to search within Discord messages."
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      },
-      {
-        "id": "a0e40e76-1b2a-4a13-947f-939a9ad354b4",
-        "action": "JIRA:search",
-        "provider": "JIRA",
-        "description": "Search for issues in JIRA",
-        "oauth": {
-          "scope": "read:jira-work",
-          "tokenUrl": "https://auth.atlassian.com/oauth/token"
-        },
-        "direction": "OUTGOING",
-        "lib": "mcp",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "JQL or text to search for issues in JIRA."
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      },
-      {
-        "id": "f5e5c6fa-4f1c-4652-98a4-ef3c14467ea2",
-        "action": "GMAIL:send",
-        "provider": "GMAIL",
-        "description": "Send email using Gmail",
-        "oauth": {
-          "scope": "https://www.googleapis.com/auth/gmail.send",
-          "tokenUrl": "https://oauth2.googleapis.com/token",
-          "clientId": "${GOOGLE_CLIENT_ID}",
-          "clientSecret": "${GOOGLE_CLIENT_SECRET}",
-          "redirectUri": "${GOOGLE_REDIRECT_URI}"
-        },
-        "direction": "OUTGOING",
-        "lib": "mcp",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "to": {
-              "type": "string",
-              "description": "Recipient email address."
+    {
+        "responsibilities": [
+            {
+                "id": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
+                "type": "normal",
+                "properties": {
+                    "label": "Google Drive Search",
+                    "icon": "mdi:search",
+                    "integration": {
+                        "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
+                        "action": "GDRIVE:search",
+                        "provider": "GOOGLE DRIVE",
+                        "description": "Search for files in Google Drive",
+                        "oauth": {
+                            "scope": "https://www.googleapis.com/auth/drive.metadata.readonly",
+                            "tokenUrl": "https://oauth2.googleapis.com/token",
+                            "clientId": "${GOOGLE_CLIENT_ID}",
+                            "clientSecret": "${GOOGLE_CLIENT_SECRET}",
+                            "redirectUri": "${GOOGLE_REDIRECT_URI}"
+                        },
+                        "direction": "OUTGOING",
+                        "lib": "mcp",
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {
+                                "query": {
+                                    "type": "string",
+                                    "description": "The search query to find files in Google Drive."
+                                }
+                            },
+                            "required": [
+                                "query"
+                            ]
+                        }
+                    }
+                },
+                "dependencyId": null,
+                "createdAt": "2023-08-05T10:00:00Z",
+                "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
             },
-            "subject": {
-              "type": "string",
-              "description": "Subject of the email."
+            {
+                "id": "a4530c59-a909-4318-8c9b-2dd8a4bd10c0",
+                "type": "normal",
+                "properties": {
+                    "label": "Summarize Documents",
+                    "icon": "mdi:pen"
+                },
+                "dependencyId": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
+                "createdAt": "2023-08-05T10:10:00Z",
+                "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
             },
-            "body": {
-              "type": "string",
-              "description": "Body of the email."
+            {
+                "id": "1a2a1880-4333-4d79-9042-1d043bb869c0",
+                "type": "normal",
+                "properties": {
+                    "label": "Send Mail with Gmail",
+                    "icon": "mdi:mail",
+                    "integration": {
+                        "id": "f5e5c6fa-4f1c-4652-98a4-ef3c14467ea2",
+                        "action": "GMAIL:send",
+                        "provider": "GMAIL",
+                        "description": "Send email using Gmail",
+                        "oauth": {
+                            "scope": "https://www.googleapis.com/auth/gmail.send",
+                            "tokenUrl": "https://oauth2.googleapis.com/token",
+                            "clientId": "${GOOGLE_CLIENT_ID}",
+                            "clientSecret": "${GOOGLE_CLIENT_SECRET}",
+                            "redirectUri": "${GOOGLE_REDIRECT_URI}"
+                        },
+                        "direction": "OUTGOING",
+                        "lib": "mcp",
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {
+                                "to": {
+                                    "type": "string",
+                                    "description": "Recipient email address."
+                                },
+                                "subject": {
+                                    "type": "string",
+                                    "description": "Subject of the email."
+                                },
+                                "body": {
+                                    "type": "string",
+                                    "description": "Body of the email."
+                                }
+                            },
+                            "required": [
+                                "query"
+                            ]
+                        }
+                    }
+                },
+                "dependencyId": "a4530c59-a909-4318-8c9b-2dd8a4bd10c0",
+                "createdAt": "2023-08-05T10:20:00Z",
+                "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
             }
-          },
-          "required": [
-            "query"
-          ]
+        ],
+        "content": "{ integrationId: 8f828016-dd2e-4f76-bad5-2a0ca9b71d6f } find accounting related documents and send email to test@bla.com",
+        "task": {
+            "description": "find accounting related documents and send email to test@bla.com",
+            "steps": [
+                {
+                    "action": "GDRIVE:search",
+                    "parameters": {
+                        "query": "accounting related documents"
+                    }
+                },
+                {
+                    "action": "GMAIL:send",
+                    "parameters": {
+                        "to": "test@bla.com",
+                        "subject": "Accounting Related Documents",
+                        "body": "Here are the accounting related documents"
+                    }
+                }
+            ]
         }
-      },
-      {
-        "id": "fa1eec4e-35c0-4e0c-8b1b-36c0a4ea95ee",
-        "action": "GITHUB:search",
-        "provider": "GITHUB",
-        "description": "Search for repositories on GitHub",
-        "oauth": {
-          "scope": "repo",
-          "tokenUrl": "https://github.com/login/oauth/access_token"
-        },
-        "direction": "OUTGOING",
-        "lib": "mcp",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "Search term to look for repositories on GitHub."
+    },
+    {
+        "responsibilities": [
+            {
+                "id": "f9a19ad7-edd8-423a-b33a-d0f295a49aed",
+                "type": "normal",
+                "properties": {
+                    "label": "Get user info from Google Drive",
+                    "icon": "mdi:search",
+                    "integration": {
+                        "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
+                        "action": "GDRIVE:search",
+                        "provider": "GOOGLE DRIVE",
+                        "description": "Search for files in Google Drive",
+                        "oauth": {
+                            "scope": "https://www.googleapis.com/auth/drive.metadata.readonly",
+                            "tokenUrl": "https://oauth2.googleapis.com/token",
+                            "clientId": "${GOOGLE_CLIENT_ID}",
+                            "clientSecret": "${GOOGLE_CLIENT_SECRET}",
+                            "redirectUri": "${GOOGLE_REDIRECT_URI}"
+                        },
+                        "direction": "OUTGOING",
+                        "lib": "mcp",
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {
+                                "query": {
+                                    "type": "string",
+                                    "description": "The search query to find files in Google Drive."
+                                }
+                            },
+                            "required": [
+                                "query"
+                            ]
+                        }
+                    }
+                },
+                "dependencyId": null,
+                "createdAt": "2023-08-06T11:00:00Z",
+                "responsibilityId": "a9ea3f8f-21cc-4e27-a111-a88e9a497dd8"
+            },
+            {
+                "id": "035f1349-9e1e-4f43-bc71-56409e9aa3b7",
+                "type": "normal",
+                "properties": {
+                    "label": "Retrieve user photos from Google Drive",
+                    "icon": "mdi:search",
+                    "integration": {
+                        "id": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f",
+                        "action": "GDRIVE:search",
+                        "provider": "GOOGLE DRIVE",
+                        "description": "Search for files in Google Drive",
+                        "oauth": {
+                            "scope": "https://www.googleapis.com/auth/drive.metadata.readonly",
+                            "tokenUrl": "https://oauth2.googleapis.com/token",
+                            "clientId": "${GOOGLE_CLIENT_ID}",
+                            "clientSecret": "${GOOGLE_CLIENT_SECRET}",
+                            "redirectUri": "${GOOGLE_REDIRECT_URI}"
+                        },
+                        "direction": "OUTGOING",
+                        "lib": "mcp",
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {
+                                "query": {
+                                    "type": "string",
+                                    "description": "The search query to find files in Google Drive."
+                                }
+                            },
+                            "required": [
+                                "query"
+                            ]
+                        }
+                    }
+                },
+                "dependencyId": "f9a19ad7-edd8-423a-b33a-d0f295a49aed",
+                "createdAt": "2023-08-06T11:10:00Z",
+                "responsibilityId": "a9ea3f8f-21cc-4e27-a111-a88e9a497dd8"
+            },
+            {
+                "id": "918dffa6-e21b-4ff8-8a08-7feb3715c587",
+                "type": "normal",
+                "properties": {
+                    "label": "Response to session",
+                    "icon": "mdi:message-reply-text"
+                },
+                "dependencyId": "035f1349-9e1e-4f43-bc71-56409e9aa3b7",
+                "createdAt": "2023-08-06T11:20:00Z",
+                "responsibilityId": "a9ea3f8f-21cc-4e27-a111-a88e9a497dd8"
             }
-          },
-          "required": [
-            "query"
-          ]
+        ],
+        "content": "Get user info from 'users' folder in Google Drive with 'FIRST_LAST.json', query and retrieve user photos from 'photos/[USER_ID]', and respond to the session.",
+        "task": {
+            "description": "Get user info from 'users' folder in Google Drive with 'FIRST_LAST.json', retrieve user photos from 'photos/[USER_ID]', and respond to the session.",
+            "steps": [
+                {
+                    "action": "GDRIVE:search",
+                    "parameters": {
+                        "query": "users/{USER_NAME} + {USER_LAST_NAME}.json"
+                    }
+                },
+                {
+                    "action": "GDRIVE:search",
+                    "parameters": {
+                        "query": "photos/[USER_ID]"
+                    }
+                },
+                {
+                    "action": "RESPOND:session",
+                    "parameters": {
+                        "message": "Here’s the flow for your request to get user info, retrieve user photos, and respond to the session."
+                    }
+                }
+            ]
         }
-      }
-    ],
-    "response": "Here’s the flow for your request to find accounting-related documents and send an email to test@bla.com",
-    "flow": [
-      {
-        "id": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
-        "type": "normal",
-        "properties": {
-          "label": "Google Drive Search",
-          "icon": "mdi:search",
-          "integrationId": "8f828016-dd2e-4f76-bad5-2a0ca9b71d6f"
-        },
-        "dependencyId": null,
-        "createdAt": "2023-08-05T10:00:00Z",
-        "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
-      },
-      {
-        "id": "a4530c59-a909-4318-8c9b-2dd8a4bd10c0",
-        "type": "normal",
-        "properties": {
-          "label": "Summarize Documents",
-          "icon": "mdi:pen"
-        },
-        "dependencyId": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
-        "createdAt": "2023-08-05T10:10:00Z",
-        "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
-      },
-      {
-        "id": "1a2a1880-4333-4d79-9042-1d043bb869c0",
-        "type": "normal",
-        "properties": {
-          "label": "Send Mail with Gmail",
-          "icon": "mdi:mail",
-          "integrationId": "f5e5c6fa-4f1c-4652-98a4-ef3c14467ea2"
-        },
-        "dependencyId": "a4530c59-a909-4318-8c9b-2dd8a4bd10c0",
-        "createdAt": "2023-08-05T10:20:00Z",
-        "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
-      }
-    ]
-  }
+    },
+    {
+        "responsibilities": [
+            {
+                "id": "b3a7d5c9-4c72-4abc-9c2f-1d2e3f4a5b6c",
+                "type": "normal",
+                "properties": {
+                    "label": "Get Employee ID",
+                    "icon": "mdi:account-card-details",
+                    "integration": {
+                        "id": "b3a7d5c9-4c72-4abc-9c2f-1d2e3f4a5b6c",
+                        "action": "POSTGRES:query",
+                        "provider": "postgres-mcp",
+                        "description": "Query the database.",
+                        "oauth": {
+                            "scope": "user.read",
+                            "tokenUrl": "https://postgres-mcp.example.com/oauth/token"
+                        },
+                        "direction": "OUTGOING",
+                        "lib": "mcp",
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {
+                                "query": {
+                                    "type": "string",
+                                    "description": "The SQL query to the database."
+                                }
+                            }
+                        }
+                    }
+                },
+                "dependencyId": null,
+                "createdAt": "2025-06-19T06:00:00Z",
+                "responsibilityId": "a1e2c3f4-b5d6-7e8f-901a-b2c3d4e5f6a7"
+            },
+            {
+                "id": "d9f8a7b6-5c4d-3e2f-1a0b-9c8d7e6f5a4b",
+                "type": "normal",
+                "properties": {
+                    "label": "Scan Hardware Barcode",
+                    "icon": "mdi:barcode-scan"
+                },
+                "dependencyId": "b3a7d5c9-4c72-4abc-9c2f-1d2e3f4a5b6c",
+                "createdAt": "2025-06-19T06:01:00Z",
+                "responsibilityId": "a1e2c3f4-b5d6-7e8f-901a-b2c3d4e5f6a7"
+            },
+            {
+                "id": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+                "type": "normal",
+                "properties": {
+                    "label": "Get Status Message",
+                    "icon": "mdi:message-text-outline"
+                },
+                "dependencyId": "d9f8a7b6-5c4d-3e2f-1a0b-9c8d7e6f5a4b",
+                "createdAt": "2025-06-19T06:02:00Z",
+                "responsibilityId": "a1e2c3f4-b5d6-7e8f-901a-b2c3d4e5f6a7"
+            },
+            {
+                "id": "e7f6d5c4-b3a2-1908-7e6f-5d4c3b2a1e0f",
+                "type": "normal",
+                "properties": {
+                    "label": "Open JIRA Ticket",
+                    "icon": "mdi:ticket-outline",
+                    "integration": {
+                        "id": "8de1f337-6b54-43c9-8a58-705d680b3852",
+                        "action": "JIRA:create",
+                        "provider": "JIRA",
+                        "description": "Create an issue in JIRA",
+                        "oauth": {
+                            "scope": "create:jira-work",
+                            "tokenUrl": "https://auth.atlassian.com/oauth/token"
+                        },
+                        "direction": "OUTGOING",
+                        "lib": "mcp",
+                        "inputSchema": {
+                            "type": "object",
+                            "properties": {
+                                "projectKey": {
+                                    "type": "string",
+                                    "description": "The JIRA project key."
+                                },
+                                "summary": {
+                                    "type": "string",
+                                    "description": "The issue summary."
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "Detailed issue description."
+                                }
+                            },
+                            "required": [
+                                "projectKey",
+                                "summary",
+                                "description"
+                            ]
+                        }
+                    }
+                },
+                "dependencyId": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+                "createdAt": "2025-06-19T06:03:00Z",
+                "responsibilityId": "a1e2c3f4-b5d6-7e8f-901a-b2c3d4e5f6a7"
+            }
+        ],
+        "content": "Get employee ID, scan hardware barcode, retrieve status message.",
+        "task": {
+            "description": "Get employee ID, scan hardware barcode, retrieve status message.",
+            "steps": [
+                {
+                    "action": "POSTGRES:query",
+                    "parameters": {
+                        "query": "SELECT * FROM employees WHERE id = {employeeId}"
+                    }
+                },
+                {
+                    "action": "POSTGRES:query",
+                    "parameters": {
+                        "query": "SELECT * FROM hardware WHERE barcode = {hardwareBarcode}"
+                    }
+                },
+                {
+                    "action": "POSTGRES:query",
+                    "parameters": {
+                        "query": "SELECT * FROM hardware_status WHERE hardware_id = {hardwareBarcode}"
+                    }
+                },
+                {
+                    "action": "JIRA:create",
+                    "parameters": {
+                        "projectKey": "IT",
+                        "summary": "Hardware {hardwareBarcode} status is ORANGE",
+                        "description": "Employee ID: {employeeId}, Hardware Barcode: {hardwareBarcode}, Status: ORANGE"
+                    }
+                }
+            ]
+        }
+    }
 ]
