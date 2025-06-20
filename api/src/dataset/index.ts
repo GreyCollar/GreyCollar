@@ -2,8 +2,8 @@ import chat from "./train/chat.json";
 import diamond from "./train/diamond.json";
 import policy from "./policy.json";
 import responsibility from "./train/responsibility.json";
+import responsibilityChat from "./train/responsibility-chat.json";
 import responsibilityName from "./train/responsibility-name.json";
-import responsibilityToTask from "./train/responsibility-to-task.json";
 import task from "./train/task.json";
 import teamChat from "./train/team-chat.json";
 
@@ -13,10 +13,10 @@ export default {
     content: JSON.stringify({ policy }),
   },
   train: {
-    responsibilityToTask: {
+    responsibility: {
       role: "system" as const,
       content: JSON.stringify({
-        train: responsibilityToTask,
+        train: responsibility,
       }),
     },
     chat: {
@@ -37,10 +37,10 @@ export default {
         train: teamChat,
       }),
     },
-    responsibility: {
+    responsibilityChat: {
       role: "system" as const,
       content: JSON.stringify({
-        train: responsibility,
+        train: responsibilityChat,
       }),
     },
     responsibilityName: {
@@ -57,4 +57,3 @@ export default {
     },
   },
 };
-

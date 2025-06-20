@@ -353,7 +353,7 @@ async function responsibility({
   content: string;
 }) {
   const response = await generate({
-    dataset: dataset.train.responsibility,
+    dataset: dataset.train.responsibilityChat,
     context: history,
     content,
     json_format: "{ response: <RESPONSE>, flow: [<FLOW>] }",
@@ -407,7 +407,7 @@ async function responsibilityToTask({
   ];
 
   const response = await generate({
-    dataset: dataset.train.responsibilityToTask,
+    dataset: dataset.train.responsibility,
     context,
     content,
     json_format: "{ task: [<TASK>] }",
@@ -451,4 +451,3 @@ export default {
   responsibilityToTask,
   diamond,
 };
-
