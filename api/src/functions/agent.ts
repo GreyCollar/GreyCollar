@@ -381,6 +381,66 @@ async function responsibilityName({
   return response;
 }
 
+async function responsibilityToTask({
+  history,
+  content,
+  knowledge,
+  responsibilities,
+}: {
+  history?: {
+    role: "system" | "user" | "assistant";
+    content: string;
+  }[];
+  content: string;
+  knowledge: Array<[]>;
+  responsibilities: Array<[]>;
+}) {
+  const context = [
+    {
+      role: "system" as const,
+      content: {
+        responsibilities,
+        knowledge,
+        history,
+      },
+    },
+  ];
+
+  const response = await generate({
+    dataset: dataset.train.responsibilityToTask,
+    context,
+    content,
+    json_format: "{ task: [<TASK>] }",
+  });
+  return response;
+}
+
+async function diamond({
+  content,
+  responsibilities,
+}: {
+  content: string;
+  responsibilities: Array<[]>;
+}) {
+  const context = [
+    {
+      role: "system" as const,
+      content: {
+        responsibilities,
+      },
+    },
+  ];
+
+  const response = await generate({
+    dataset: dataset.train.diamond,
+    context,
+    content,
+    json_format:
+      "{ decision: <DECISION>,existing: <EXISTING>,responsibilityId: <RESPONSIBILITY_ID> }",
+  });
+  return response;
+}
+
 export default {
   teamChat,
   chat,
@@ -388,4 +448,7 @@ export default {
   step,
   responsibility,
   responsibilityName,
+  responsibilityToTask,
+  diamond,
 };
+
