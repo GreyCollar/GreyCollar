@@ -1,7 +1,7 @@
 import { AuthenticationError } from "@nucleoidai/platform-express/error";
-import Joi from "joi";
 import Responsibility from "../models/Responsibility";
 import ResponsibilitySchema from "../schemas/Responsibility";
+import agent from "../functions/agent";
 import colleague from "../functions/colleague";
 import express from "express";
 import responsibility from "../functions/responsibility";
@@ -79,6 +79,52 @@ router.delete("/:responsibilityId", async (req, res) => {
   await responsibility.remove({ responsibilityId, withNodes: true });
 
   res.status(200).json({ message: "Responsibility deleted" });
+});
+
+router.post("/task", async (req, res) => {
+  const { body } = req;
+
+  const response = await agent.responsibilityToTask({
+    history: [],
+    knowledge: body.knowledge,
+    content: body.content,
+    responsibilities: body.responsibilities,
+  });
+
+  res.status(200).json(response);
+});
+
+router.post("/diamond", async (req, res) => {
+  const { body } = req;
+
+  const response = await agent.diamond({
+    content: body.content,
+    responsibilities: body.responsibilities,
+  });
+
+  res.status(200).json(response);
+});
+
+router.post("/hybrid", async (req, res) => {
+  const { body } = req;
+
+  const response = await agent.diamond({
+    content: body.content,
+    responsibilities: body.responsibilities,
+  });
+
+  if (response.decision === "RESPONSIBILITY") {
+    const response2 = await agent.responsibilityToTask({
+      history: [],
+      knowledge: body.knowledge,
+      content: body.content,
+      responsibilities: body.responsibilities,
+    });
+
+    return res.status(200).json(response2);
+  } else {
+    return res.status(200).json("I'm checking the knowledge base");
+  }
 });
 
 export default router;
