@@ -5,6 +5,7 @@ import { NotFoundError } from "@nucleoidai/platform-express/error";
 import { Op } from "sequelize";
 import Step from "../models/Step";
 import Task from "../models/Task";
+import { publish } from "../lib/Event";
 import scrapper from "../actions/scrapper";
 async function create({
   teamId,
@@ -68,6 +69,19 @@ async function create({
     colleagueId,
     teamId,
   });
+
+  const knowledgeJson = knowledgeInstance.toJSON();
+  const knowledgeData = {
+    ...knowledgeJson,
+    colleagueId,
+    teamId,
+    url: knowledgeJson.url || null,
+    text: knowledgeJson.text || null,
+    content: knowledgeJson.content || null,
+    taskId: knowledgeJson.taskId || null,
+  };
+
+  publish("KNOWLEDGE_CREATED", knowledgeData);
 
   return knowledgeInstance;
 }
@@ -135,7 +149,7 @@ async function list({
     ],
   });
 
-  return knowledgeInstances
+  const knowledgesInstances = knowledgeInstances
     .map((knowledge) => knowledge.toJSON())
     .map(({ ColleagueKnowledge, ...knowledgeData }) => ({
       ...knowledgeData,
@@ -153,6 +167,10 @@ async function list({
           })),
       },
     }));
+
+  publish("KNOWLEDGES_LOADED", knowledgesInstances);
+
+  return knowledgesInstances;
 }
 
 async function get({

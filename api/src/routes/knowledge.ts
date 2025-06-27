@@ -38,13 +38,13 @@ router.post("/", async (req, res) => {
     }
   }
 
-  await knowledge.create({
+  const createdKnowledge = await knowledge.create({
     teamId,
     colleagueId,
     knowledge: knowledgeBody,
   });
 
-  res.status(201).json(knowledge);
+  res.status(201).json(createdKnowledge);
 });
 
 router.get("/", async (req, res) => {
@@ -128,4 +128,3 @@ router.delete("/:id", async (req, res) => {
 });
 
 export default router;
-
