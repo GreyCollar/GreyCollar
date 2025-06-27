@@ -1,7 +1,8 @@
-import test from "@nucleoidai/platform-express/test";
-import request from "supertest";
+import * as test from "@nucleoidai/platform-express/test";
+
 import app from "../../app";
 import { deepEqual } from "assert";
+import request from "supertest";
 
 describe("Session service", () => {
   beforeEach(async () => test.reset());
@@ -10,7 +11,7 @@ describe("Session service", () => {
     test.project("e6d4744d-a11b-4c75-acad-e24a02903729");
 
     const { body } = await request(app)
-      .post("/sessions/e3fee3eb-02f0-4081-82d1-03e03bacc177")
+      .post("/sessions")
       .send({
         type: "CHAT",
         colleagueId: "72ef5b08-b4a9-42b7-bb0a-22d40e56798b",
@@ -19,9 +20,8 @@ describe("Session service", () => {
 
     deepEqual(body, {
       id: body.id,
-      role: "USER",
-      createdAt: body.createdAt,
-      sessionId: "e3fee3eb-02f0-4081-82d1-03e03bacc177",
+      type: "CHAT",
+      colleagueId: "72ef5b08-b4a9-42b7-bb0a-22d40e56798b",
     });
   });
 
@@ -31,7 +31,6 @@ describe("Session service", () => {
     const { body } = await request(app)
       .post("/sessions/b9901597-8625-43d9-a925-ed5e0ad7b1e4")
       .send({
-        type: "CHAT",
         content: "Thank you for your answer",
       })
       .expect(200);
