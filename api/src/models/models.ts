@@ -1,4 +1,3 @@
-/* eslint disable*/
 async function init() {
   const { Project } = require("@nucleoidai/platform-express/models");
 
@@ -151,15 +150,16 @@ async function init() {
     foreignKey: "responsibilityId",
   });
 
-  ResponsibilityNode.belongsTo(Node, {
-    foreignKey: "dependencyId",
-    as: "Dependency",
-  });
-  ResponsibilityNode.hasMany(Node, {
-    foreignKey: "dependencyId",
-    as: "Dependents",
-  });
+  // TODO - Uncomment and implement the following relationships
+
+  // ResponsibilityNode.belongsTo(Node, {
+  //   foreignKey: "dependencyId",
+  //   as: "Dependency",
+  // });
+  // ResponsibilityNode.hasMany(Node, {
+  //   foreignKey: "dependencyId",
+  //   as: "Dependents",
+  // });
 }
 
 export default { init };
-/* eslint disable*/
