@@ -65,10 +65,10 @@ type CustomText = {
 const EditorContainer = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
-  padding: theme.spacing(1),
+  height: "45px",
   position: "relative",
   display: "flex",
-  alignItems: "flex-end",
+  alignItems: "center",
   "&:focus-within": {
     borderColor: theme.palette.primary.main,
     boxShadow: `0 0 0 2px ${theme.palette.primary.main}22`,
@@ -76,6 +76,7 @@ const EditorContainer = styled(Box)(({ theme }) => ({
 }));
 
 const EditorWrapper = styled(Box)({
+  padding: 5,
   flex: 1,
   marginRight: 8,
   '& [contenteditable="true"]': {
@@ -94,8 +95,9 @@ const SendButton = styled(IconButton)(({ theme }) => ({
   "&:hover": {
     backgroundColor: theme.palette.primary.dark,
   },
-  width: 40,
-  height: 40,
+  width: 32,
+  height: 32,
+  alignSelf: "center",
 }));
 
 const CommandList = styled(List)(({ theme }) => ({
@@ -109,6 +111,7 @@ const CommandList = styled(List)(({ theme }) => ({
 const IntegrationScopeElement = styled(Box)(({ theme }) => ({
   display: "inline-flex",
   alignItems: "center",
+  height: "20px",
   backgroundColor: theme.palette.info.light,
   color: theme.palette.info.contrastText,
   padding: "2px",
@@ -351,6 +354,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         setSelectedIntegration(null);
         setSelectedOptionIndex(0);
         Transforms.move(editor);
+        Transforms.insertText(editor, " ");
         ReactEditor.focus(editor);
       }
     },
@@ -545,7 +549,7 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
             />
           </Slate>
         </EditorWrapper>
-        <SendButton onClick={handleSend} size="small">
+        <SendButton onClick={handleSend} size="small" sx={{ mr: 1 }}>
           <Iconify icon="mdi:send" />
         </SendButton>
       </EditorContainer>

@@ -4,6 +4,7 @@ import { styled } from "@mui/material";
 const IntegrationElement = styled(Box)(({ theme }) => ({
   display: "inline-flex",
   alignItems: "center",
+  height: "24px",
   backgroundColor: theme.palette.primary.light,
   color: theme.palette.primary.contrastText,
   padding: "6px 12px",
@@ -36,6 +37,7 @@ const MentionElement = styled(Box)(({ theme }) => ({
 const IntegrationScopeElement = styled(Box)(({ theme }) => ({
   display: "inline-flex",
   alignItems: "center",
+  height: "20px",
   backgroundColor: theme.palette.info.light,
   color: theme.palette.info.contrastText,
   padding: "2px 4px 2px 2px",

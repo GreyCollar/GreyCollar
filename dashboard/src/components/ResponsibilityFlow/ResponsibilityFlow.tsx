@@ -40,8 +40,8 @@ const getLayoutedElements = (nodes, edges, options = {}) => {
       ...node,
       targetPosition: "top",
       sourcePosition: "bottom",
-      width: 150,
-      height: 50,
+      width: 200,
+      height: 100,
     })),
     edges: edges,
   };
@@ -101,12 +101,12 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
 
   const getDefaultViewport = () => {
     if (isMobile) {
-      return { x: 20, y: 50, zoom: 0.6 };
+      return { x: 20, y: 50, zoom: 1.0 };
     }
     if (isTablet) {
-      return { x: 60, y: 100, zoom: 0.65 };
+      return { x: 60, y: 100, zoom: 1.0 };
     }
-    return { x: 120, y: 150, zoom: 0.75 };
+    return { x: 120, y: 150, zoom: 1.2 };
   };
 
   useEffect(() => {
@@ -207,7 +207,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         defaultViewport={getDefaultViewport()}
         fitView
         fitViewOptions={{
-          padding: isMobile ? 0.1 : 0.2,
+          padding: isMobile ? 0.2 : 0.3,
         }}
       >
         <Background />

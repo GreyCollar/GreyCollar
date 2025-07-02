@@ -120,7 +120,7 @@ const ChatInput = memo(function ChatMessageInput({
         }
         sx={{
           px: 1,
-          height: 56,
+          height: 48,
           flexShrink: 0,
           display: "flex",
           borderTop: (theme) => `solid 1px ${theme.palette.divider}`,
