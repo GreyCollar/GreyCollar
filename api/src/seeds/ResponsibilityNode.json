@@ -44,6 +44,99 @@
             "dependencyId": "1a2a1880-4333-4d79-9042-1d043bb869c0",
             "createdAt": "2023-08-05T10:30:00Z",
             "responsibilityId": "1258bfba-531c-4b19-b432-12fec093b1e2"
+        },
+        {
+            "id": "6428423c-3328-4044-a83e-bfb1807d758a",
+            "type": "standard",
+            "properties": {
+                "label": "Google Drive Search",
+                "icon": "mdi:search"
+            },
+            "dependencyId": null,
+            "responsibilityId": "ed18c47a-a9ed-4782-a0f9-791f208facfa"
+        },
+        {
+            "id": "bb15b968-0c53-4f7d-a5a3-bae5bcd6d4f4",
+            "type": "standard",
+            "properties": {
+                "label": "Summarize Documents",
+                "icon": "mdi:pen"
+            },
+            "dependencyId": "6428423c-3328-4044-a83e-bfb1807d758a",
+            "responsibilityId": "ed18c47a-a9ed-4782-a0f9-791f208facfa"
+        },
+        {
+            "id": "64f621a2-56dc-47bd-a847-fefa02540b2d",
+            "type": "standard",
+            "properties": {
+                "label": "Send Mail with Gmail",
+                "icon": "mdi:mail"
+            },
+            "dependencyId": "bb15b968-0c53-4f7d-a5a3-bae5bcd6d4f4",
+            "responsibilityId": "ed18c47a-a9ed-4782-a0f9-791f208facfa"
+        },
+        {
+            "id": "6aaa80db-9fd8-4db5-9c0a-aae80c2b5b01",
+            "type": "standard",
+            "properties": {
+                "label": "Get user info from Google Drive",
+                "icon": "mdi:search"
+            },
+            "responsibilityId": "c294d225-c8e1-407a-90d2-ef254b5b7ab6",
+            "dependencyId": null
+        },
+        {
+            "id": "0d1a24df-fa76-464b-867f-479863f73e8a",
+            "type": "standard",
+            "properties": {
+                "label": "Retrieve user photos from Google Drive",
+                "icon": "mdi:search"
+            },
+            "responsibilityId": "c294d225-c8e1-407a-90d2-ef254b5b7ab6",
+            "dependencyId": "6aaa80db-9fd8-4db5-9c0a-aae80c2b5b01"
+        },
+        {
+            "id": "b742f060-92e7-4eeb-a9ec-d05df77e7df1",
+            "type": "standard",
+            "properties": {
+                "label": "Response to session",
+                "icon": "mdi:message-reply-text"
+            },
+            "responsibilityId": "c294d225-c8e1-407a-90d2-ef254b5b7ab6",
+            "dependencyId": "0d1a24df-fa76-464b-867f-479863f73e8a"
+        },
+        {
+            "id": "b3a7d5c9-4c72-4abc-9c2f-1d2e3f4a5b6c",
+            "type": "normal",
+            "properties": {
+                "label": "Get Employee ID",
+                "icon": "mdi:account-card-details"
+            },
+            "dependencyId": null,
+            "createdAt": "2025-06-19T06:00:00Z",
+            "responsibilityId": "add26001-b322-4d35-b995-329041d717bd"
+        },
+        {
+            "id": "d9f8a7b6-5c4d-3e2f-1a0b-9c8d7e6f5a4b",
+            "type": "normal",
+            "properties": {
+                "label": "Scan Hardware Barcode",
+                "icon": "mdi:barcode-scan"
+            },
+            "dependencyId": "b3a7d5c9-4c72-4abc-9c2f-1d2e3f4a5b6c",
+            "createdAt": "2025-06-19T06:01:00Z",
+            "responsibilityId": "add26001-b322-4d35-b995-329041d717bd"
+        },
+        {
+            "id": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+            "type": "normal",
+            "properties": {
+                "label": "Get Status Message",
+                "icon": "mdi:message-text-outline"
+            },
+            "dependencyId": "d9f8a7b6-5c4d-3e2f-1a0b-9c8d7e6f5a4b",
+            "createdAt": "2025-06-19T06:02:00Z",
+            "responsibilityId": "add26001-b322-4d35-b995-329041d717bd"
         }
     ]
 }
