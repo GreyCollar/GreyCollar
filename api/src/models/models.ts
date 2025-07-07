@@ -16,7 +16,6 @@ async function init() {
   const Step = require("./Step");
   const Statistics = require("./Statistics");
   const Responsibility = require("./Responsibility");
-  const ResponsibilityNode = require("./ResponsibilityNode");
   const Integration = require("./Integration");
   const Communication = require("./Communication");
 
@@ -141,14 +140,6 @@ async function init() {
     } else if (message.role === "ASSISTANT") {
       message.status = null;
     }
-  });
-
-  Responsibility.hasMany(ResponsibilityNode, {
-    foreignKey: "responsibilityId",
-    as: "Nodes",
-  });
-  ResponsibilityNode.belongsTo(Responsibility, {
-    foreignKey: "responsibilityId",
   });
 }
 

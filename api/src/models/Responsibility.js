@@ -27,6 +27,10 @@ const Responsibility = sequelize.define("Responsibility", {
       key: "id",
     },
   },
+  nodes: {
+    type: DataTypes.JSONB,
+    allowNull: true,
+  },
 });
 
 module.exports = Responsibility;
