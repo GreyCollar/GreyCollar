@@ -10,8 +10,7 @@ type NodeType = {
     icon: string;
   };
   type: string;
-  responsibilityId?: string;
-  dependencyId?: string | null;
+  next?: string[] | null;
 };
 
 async function getWithNodes(id: string) {
@@ -30,6 +29,8 @@ async function getWithNodes(id: string) {
       },
     ],
   });
+
+  console.log(responsibility?.toJSON());
 
   if (!responsibility) {
     throw new NotFoundError();
@@ -88,17 +89,17 @@ async function upsert(
               icon: "",
             },
         responsibilityId: responsibility.id,
-        dependencyId: null,
+        next: [] as string[],
       };
     });
-
+    console.log(nodesToCreate);
     nodesToCreate.forEach((node) => {
       const originalNode = nodes.find(
         (n: NodeType) => idMap.get(n.id) === node.id
       );
 
-      if (originalNode && originalNode.dependencyId) {
-        node.dependencyId = idMap.get(originalNode.dependencyId);
+      if (originalNode && originalNode.next) {
+        node.next = originalNode.next;
       }
     });
 

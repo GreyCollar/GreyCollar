@@ -30,6 +30,12 @@
       "title": "Employee Hardware Status Check",
       "description": "Get employee ID, scan hardware barcode, and retrieve status message.",
       "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+    },
+    {
+      "id": "ba6f7911-e232-469d-9060-2881852f6e59",
+      "title": "Product Order",
+      "description": "Check product availability, if not exist, create order.",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
     }
   ]
 }

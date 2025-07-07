@@ -150,15 +150,6 @@ async function init() {
   ResponsibilityNode.belongsTo(Responsibility, {
     foreignKey: "responsibilityId",
   });
-
-  ResponsibilityNode.belongsTo(Node, {
-    foreignKey: "dependencyId",
-    as: "Dependency",
-  });
-  ResponsibilityNode.hasMany(Node, {
-    foreignKey: "dependencyId",
-    as: "Dependents",
-  });
 }
 
 export default { init };

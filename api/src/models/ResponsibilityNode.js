@@ -18,17 +18,13 @@ const ResponsibilityNode = sequelize.define("ResponsibilityNode", {
     type: DataTypes.JSONB,
     allowNull: true,
   },
-  dependencyId: {
-    type: DataTypes.UUID,
+  next: {
+    type: DataTypes.JSONB,
     allowNull: true,
-    references: {
-      model: "ResponsibilityNode",
-      key: "id",
-    },
   },
   responsibilityId: {
     type: DataTypes.UUID,
-    allowNull: false,
+    allowNull: true,
     references: {
       model: "Responsibility",
       key: "id",
