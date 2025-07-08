@@ -24,6 +24,9 @@ const templateConfig = {
     icon: "https://cdn.nucleoid.com/greycollar/media/icon.png",
     largeIcon: "https://cdn.nucleoid.com/greycollar/media/icon.png",
   },
+  projectBar: {
+    label: "Team",
+  },
 };
 
 export default templateConfig;
