@@ -71,7 +71,7 @@
             "label": "Summarize Documents",
             "icon": "mdi:pen"
           },
-          "next": ["6428423c-3328-4044-a83e-bfb1807d758a"]
+          "next": [null]
         },
         {
           "id": "64f621a2-56dc-47bd-a847-fefa02540b2d",
@@ -80,7 +80,7 @@
             "label": "Send Mail with Gmail",
             "icon": "mdi:mail"
           },
-          "next": null
+          "next": ["bb15b968-0c53-4f7d-a5a3-bae5bcd6d4f4"]
         }
       ]
     },
@@ -97,7 +97,7 @@
             "label": "Get user info from Google Drive",
             "icon": "mdi:search"
           },
-          "next":["0d1a24df-fa76-464b-867f-479863f73e8a"] 
+          "next": ["0d1a24df-fa76-464b-867f-479863f73e8a"]
         },
         {
           "id": "0d1a24df-fa76-464b-867f-479863f73e8a",
