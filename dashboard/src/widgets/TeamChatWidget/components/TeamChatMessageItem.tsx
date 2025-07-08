@@ -53,7 +53,7 @@ function TeamChatMessageItem({
                 display: "inline-flex",
                 flexDirection: "row",
                 alignItems: "center",
-                height: "22px",
+                height: theme.spacing(2.75),
               }}
             >
               {name}

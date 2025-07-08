@@ -65,7 +65,7 @@ type CustomText = {
 const EditorContainer = styled(Box)(({ theme }) => ({
   border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
-  height: "45px",
+  height: theme.spacing(6),
   position: "relative",
   display: "flex",
   alignItems: "center",
