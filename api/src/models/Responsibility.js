@@ -3,6 +3,7 @@ const {
   Postgres: { sequelize },
 } = platform.module();
 const { DataTypes } = platform.require("sequelize");
+const Node = require("../schemas/Node");
 
 const Responsibility = sequelize.define("Responsibility", {
   id: {
@@ -30,6 +31,17 @@ const Responsibility = sequelize.define("Responsibility", {
   nodes: {
     type: DataTypes.JSONB,
     allowNull: true,
+    validate: {
+      isValidNodes(value) {
+        for (const node of value) {
+          const validatedNode = Node.default.parse(node);
+
+          if (validatedNode.error) {
+            throw new Error(validatedNode.error.message);
+          }
+        }
+      },
+    },
   },
 });
 
