@@ -50,7 +50,7 @@ function useResponsibility() {
 
     if (data) {
       console.log("Responsibility data:", data);
-      result = convertToNodesAndEdges(data.Nodes);
+      result = convertToNodesAndEdges(data.nodes);
 
       publish("RESPONSIBILITY_NODES_LOADED", {
         responsibilityNodes: result,
