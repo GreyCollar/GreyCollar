@@ -1,7 +1,8 @@
-import test from "@nucleoidai/platform-express/test";
-import request from "supertest";
+import * as test from "@nucleoidai/platform-express/test";
+
 import app from "../../app";
 import { deepEqual } from "assert";
+import request from "supertest";
 
 describe("Organization Colleagues", () => {
   beforeEach(async () => test.reset());

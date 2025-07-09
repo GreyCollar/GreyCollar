@@ -1,9 +1,10 @@
-import express from "express";
-import Joi from "joi";
-import schemas from "../schemas";
 import Colleague from "../models/Colleague";
 import Conversation from "../models/Conversation";
+import Joi from "joi";
 import Supervising from "../models/Supervising";
+import express from "express";
+import { publish } from "../lib/Event";
+import schemas from "../schemas";
 import supervising from "../functions/supervising";
 
 const router = express.Router();
@@ -32,20 +33,27 @@ router.post("/", async (req, res) => {
     res.status(404);
   }
 
-  await supervising.create({
+  const createdSupervising = await supervising.create({
     sessionId,
     conversationId,
     question: conversation.content,
     colleagueId,
   });
 
-  res.status(201).json(supervising);
+  res.status(201).json(createdSupervising);
 });
 
 router.get("/", async (req, res) => {
   const teamId = req.session.projectId;
+  const { status } = req.query;
+
+  const whereClause: any = {};
+  if (status) {
+    whereClause.status = status;
+  }
 
   const supervisings = await Supervising.findAll({
+    where: whereClause,
     include: [
       {
         model: Colleague,
@@ -54,6 +62,20 @@ router.get("/", async (req, res) => {
       },
     ],
   });
+
+  if (status && supervisings.length === 1) {
+    const supervisingData = supervisings[0].dataValues;
+
+    const formattedData = {
+      ...supervisingData,
+      createdAt: supervisingData.createdAt?.toISOString(),
+    };
+    publish("SUPERVISING_LOADED", formattedData);
+  } else if (status && supervisings.length === 0) {
+    publish("SUPERVISING_LOADED", null);
+  } else {
+    publish("SUPERVISING_LOADED", supervisings);
+  }
 
   res.status(200).json(supervisings);
 });
@@ -89,8 +111,10 @@ router.get("/:id", async (req, res) => {
     // eslint-disable-next-line no-unused-vars
     const { Colleague, ...rest } = dataValues;
     res.status(200).json(rest);
+    publish("SUPERVISING_LOADED", rest);
   } else {
     res.status(200).json(dataValues);
+    publish("SUPERVISING_LOADED", dataValues);
   }
 });
 

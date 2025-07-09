@@ -152,24 +152,46 @@ async function list({
     knowledgePromise,
   ]);
 
-  return [
-    ...messages,
-    ...supervisings.map((supervising) => ({
-      mode: "SUPERVISING",
-      role: "SYSTEM",
-      ...supervising.toJSON(),
-    })),
-    ...tasks.map((task) => ({
-      mode: "TASK",
-      role: "SYSTEM",
-      ...task.toJSON(),
-    })),
-    ...knowledges.map((knowledge) => ({
-      mode: "KNOWLEDGE",
-      role: "SYSTEM",
-      ...knowledge.toJSON(),
-    })),
+  const result = [
+    ...messages.map((message) => {
+      const messageJson = message.toJSON();
+      return {
+        ...messageJson,
+        createdAt: messageJson.createdAt.toISOString(),
+      };
+    }),
+    ...supervisings.map((supervising) => {
+      const supervisingJson = supervising.toJSON();
+      return {
+        mode: "SUPERVISING",
+        role: "SYSTEM",
+        ...supervisingJson,
+        createdAt: supervisingJson.createdAt.toISOString(),
+      };
+    }),
+    ...tasks.map((task) => {
+      const taskJson = task.toJSON();
+      return {
+        mode: "TASK",
+        role: "SYSTEM",
+        ...taskJson,
+        createdAt: taskJson.createdAt.toISOString(),
+      };
+    }),
+    ...knowledges.map((knowledge) => {
+      const knowledgeJson = knowledge.toJSON();
+      return {
+        mode: "KNOWLEDGE",
+        role: "SYSTEM",
+        ...knowledgeJson,
+        createdAt: knowledgeJson.createdAt.toISOString(),
+      };
+    }),
   ];
+
+  publish("MESSAGES_LOADED", result);
+
+  return result;
 }
 
 export default { create, list, listMessages };
