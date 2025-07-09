@@ -6,13 +6,11 @@ const ConditionNode = z.object({
   true: z
     .array(z.string().uuid().nullable())
     .nullable()
-    .describe("True node id")
-    .nullable(),
+    .describe("True node id"),
   false: z
     .array(z.string().uuid().nullable())
     .nullable()
-    .describe("False node id")
-    .nullable(),
+    .describe("False node id"),
   properties: z.object({
     label: z.string(),
     icon: z.string(),
