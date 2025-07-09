@@ -219,7 +219,7 @@ async function chat({
       content: answer,
     });
   } else {
-    await session.addConversation({
+    const conversation = await session.addConversation({
       sessionId,
       colleagueId,
       role: "ASSISTANT",
@@ -228,7 +228,7 @@ async function chat({
 
     await supervising.create({
       sessionId,
-      conversationId,
+      conversationId: conversation.id,
       question: content,
       colleagueId,
     });

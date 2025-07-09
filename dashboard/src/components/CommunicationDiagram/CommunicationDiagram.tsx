@@ -167,39 +167,43 @@ function CommunicationDiagram(props) {
                 )
               )}
 
-            {rightNodes.map((node) =>
-              renderResponsibilityNode ? (
-                renderResponsibilityNode(node)
-              ) : (
-                <Card
-                  key={node.id}
-                  sx={{
-                    position: "absolute",
-                    width: nodeWidth,
-                    height: nodeHeight,
-                    top: node.y,
-                    left: node.x,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: 3,
-                    borderRadius: 2,
-                    bgcolor: theme.palette.background.paper,
-                  }}
-                >
-                  {showRightIcons && (
-                    <Icon icon={node.icon} width="36" height="36" />
-                  )}
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ mt: 1, textAlign: "center" }}
-                  >
-                    {node.title}
-                  </Typography>
-                </Card>
+            {rightNodes
+              .filter((node) =>
+                (connections || []).some((c) => c.right === node.id)
               )
-            )}
+              .map((node) =>
+                renderResponsibilityNode ? (
+                  renderResponsibilityNode(node)
+                ) : (
+                  <Card
+                    key={node.id}
+                    sx={{
+                      position: "absolute",
+                      width: nodeWidth,
+                      height: nodeHeight,
+                      top: node.y,
+                      left: node.x,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: 3,
+                      borderRadius: 2,
+                      bgcolor: theme.palette.background.paper,
+                    }}
+                  >
+                    {showRightIcons && (
+                      <Icon icon={node.icon} width="36" height="36" />
+                    )}
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ mt: 1, textAlign: "center" }}
+                    >
+                      {node.title}
+                    </Typography>
+                  </Card>
+                )
+              )}
 
             <svg
               style={{
