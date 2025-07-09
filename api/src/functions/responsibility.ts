@@ -22,8 +22,6 @@ async function getWithNodes(id: string) {
     },
   });
 
-  console.log(responsibility?.toJSON());
-
   if (!responsibility) {
     throw new NotFoundError();
   }
