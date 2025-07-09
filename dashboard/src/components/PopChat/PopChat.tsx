@@ -1,5 +1,6 @@
 import Draggable from "react-draggable";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
+import ResponsibilitySelector from "../ResponsibilitySelector";
 import { Scrollbar } from "@nucleoidai/platform/minimal/components";
 import Stack from "@mui/material/Stack";
 import { alpha } from "@mui/material/styles";
@@ -30,6 +31,9 @@ const PopChat = ({
   readOnly,
   closeButton,
   sound,
+  responsibilities,
+  selectedResponsibility,
+  onResponsibilityChange,
   //eslint-disable-next-line
   sx,
 }) => {
@@ -139,6 +143,14 @@ const PopChat = ({
           handleClose={handleClose}
           readOnly={readOnly}
         />
+
+        {responsibilities.length > 0 && !readOnly && (
+          <ResponsibilitySelector
+            responsibilities={responsibilities}
+            selectedResponsibility={selectedResponsibility}
+            onResponsibilityChange={onResponsibilityChange}
+          />
+        )}
 
         <Stack
           sx={{

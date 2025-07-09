@@ -1,4 +1,3 @@
-/* eslint disable*/
 async function init() {
   const { Project } = require("@nucleoidai/platform-express/models");
 
@@ -16,7 +15,6 @@ async function init() {
   const Step = require("./Step");
   const Statistics = require("./Statistics");
   const Responsibility = require("./Responsibility");
-  const ResponsibilityNode = require("./ResponsibilityNode");
   const Integration = require("./Integration");
   const Communication = require("./Communication");
 
@@ -142,24 +140,6 @@ async function init() {
       message.status = null;
     }
   });
-
-  Responsibility.hasMany(ResponsibilityNode, {
-    foreignKey: "responsibilityId",
-    as: "Nodes",
-  });
-  ResponsibilityNode.belongsTo(Responsibility, {
-    foreignKey: "responsibilityId",
-  });
-
-  ResponsibilityNode.belongsTo(Node, {
-    foreignKey: "dependencyId",
-    as: "Dependency",
-  });
-  ResponsibilityNode.hasMany(Node, {
-    foreignKey: "dependencyId",
-    as: "Dependents",
-  });
 }
 
 export default { init };
-/* eslint disable*/

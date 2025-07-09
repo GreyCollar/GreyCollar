@@ -142,6 +142,7 @@ const Communication = () => {
           channels={channels}
           responsibilities={responsibilities}
           availableChannels={availableChannels}
+          connections={connections}
           onAddChannel={handleAddChannel}
           onDeleteChannel={handleDeleteChannel}
           onConnect={handleConnect}

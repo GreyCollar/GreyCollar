@@ -1,0 +1,87 @@
+[
+    {
+        "content": "{ integrationId: 8f828016-dd2e-4f76-bad5-2a0ca9b71d6f } find accounting related documents and send email to test@bla.com",
+        "decision": "RESPONSIBILITY",
+        "responsibility": {
+            "id": "ed18c47a-a9ed-4782-a0f9-791f208facfa",
+            "title": "Find Accounting Related Documents",
+            "description": "Find accounting related documents and send email to test@bla.com without summarizing the documents.",
+            "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+        },
+        "existing": false
+    },
+    {
+        "content": "Get user info from 'users' folder in Google Drive with 'FIRST_LAST.json', query and retrieve user photos from 'photos/[USER_ID]', and respond to the session.",
+        "decision": "RESPONSIBILITY",
+        "responsibility": {
+            "id": "add26001-b322-4d35-b995-329041d717bd",
+            "title": "Employee Hardware Status Check",
+            "description": "Get employee ID, scan hardware barcode, and retrieve status message.",
+            "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+        },
+        "existing": false
+    },
+    {
+        "content": "Get user info from 'users' folder in Google Drive with 'FIRST_LAST.json', query and retrieve user photos from 'photos/[USER_ID]', and respond to the session.",
+        "decision": "RESPONSIBILITY",
+        "responsibility": {
+            "id": "c294d225-c8e1-407a-90d2-ef254b5b7ab6",
+            "title": "Retrieve User Info and Photos",
+            "description": "Get user info from 'users' folder in Google Drive with 'FIRST_LAST.json', query and retrieve user photos from 'photos/[USER_ID]', and respond to the session.",
+            "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+        },
+        "existing": false
+    },
+    {
+        "content": "Do you have a parking lot at your bank?",
+        "decision": "KNOWLEDGE"
+    },
+    {
+        "content": "Get employee ID, scan hardware barcode, get status message.",
+        "decision": "RESPONSIBILITY",
+        "responsibility": {
+            "id": "add26001-b322-4d35-b995-329041d717bd",
+            "title": "Employee Hardware Status Check",
+            "description": "Get employee ID, scan hardware barcode, and retrieve status message.",
+            "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+        },
+        "existing": false
+    },
+    {
+        "content": "List emails from example.com website",
+        "decision": "RESPONSIBILITY",
+        "responsibility": {
+            "id": "1258bfba-531c-4b19-b432-12fec093b1e2",
+            "title": "Integrate data with other systems",
+            "description": "Integrate data from various back-end services and databases and ensure everything is running smoothly",
+            "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+        },
+        "existing": true,
+        "task": {
+            "id": "f66cbb2c-d758-4f1f-976c-e7bf5bffb095",
+            "description": "List emails from example.com website",
+            "steps": [
+                {
+                    "action": "PLATFORM:scrape_website",
+                    "parameters": {
+                        "url": "http://www.example.com"
+                    },
+                    "result": "Example Coffee Shop - We are a coffee shop in the heart of the city. We serve the best coffee in town. Come and visit us today! or contact us at amy@example.com",
+                    "comment": "Scrapping example.com website"
+                },
+                {
+                    "action": "PLATFORM:llm",
+                    "parameters": {
+                        "message": "Find all emails in the scraped website"
+                    },
+                    "comment": "Finding all emails",
+                    "result": "amy@example.com"
+                },
+                {
+                    "action": "COMPLETE",
+                    "comment": "Completing task"
+                }
+            ]
+        }
+    }
+]
