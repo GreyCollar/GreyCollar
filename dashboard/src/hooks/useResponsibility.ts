@@ -49,7 +49,6 @@ function useResponsibility() {
     let result;
 
     if (data) {
-      console.log("Responsibility data:", data);
       result = convertToNodesAndEdges(data.nodes);
 
       publish("RESPONSIBILITY_NODES_LOADED", {

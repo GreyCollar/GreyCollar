@@ -27,12 +27,28 @@ const elkOptions = {
   "elk.spacing.nodeNode": "80",
 };
 
+type Node = {
+  id: string;
+  position: { x: number; y: number };
+  data: { label: string; icon: string };
+  type: string;
+};
+type Edge = {
+  id: string;
+  source: string;
+  target: string;
+  style?: { strokeDasharray: string };
+};
+
 const nodeTypes = {
   custom: CustomNode,
   aiResponse: AIResponseNode,
 };
 
-const addStartNode = (nodes, edges) => {
+const addStartNode = (
+  nodes: Node[],
+  edges: Edge[]
+): { nodes: Node[]; edges: Edge[] } => {
   const START_NODE_ID = "start-node";
 
   const startNode = {
