@@ -82,7 +82,9 @@ const PopupChatWidget = ({
         readOnly={readOnly}
         selectedConversationId={conversationId || null}
         sound={sound}
-        responsibilities={responsibility}
+        responsibilities={
+          Array.isArray(responsibility) ? responsibility : [responsibility]
+        }
         selectedResponsibility={selectedResponsibility}
         onResponsibilityChange={setSelectedResponsibility}
         sx={{}}
