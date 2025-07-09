@@ -27,9 +27,54 @@ const elkOptions = {
   "elk.spacing.nodeNode": "80",
 };
 
+type Node = {
+  id: string;
+  position: { x: number; y: number };
+  data: { label: string; icon: string };
+  type: string;
+};
+type Edge = {
+  id: string;
+  source: string;
+  target: string;
+  style?: { strokeDasharray: string };
+};
+
 const nodeTypes = {
   custom: CustomNode,
   aiResponse: AIResponseNode,
+};
+
+const addStartNode = (
+  nodes: Node[],
+  edges: Edge[]
+): { nodes: Node[]; edges: Edge[] } => {
+  const START_NODE_ID = "start-node";
+
+  const startNode = {
+    id: START_NODE_ID,
+    position: { x: 0, y: 0 },
+    data: {
+      label: "Start",
+      icon: "mdi:play-circle",
+    },
+    type: "custom",
+  };
+
+  const targetNodeIds = edges.map((edge) => edge.target);
+  const firstNodes = nodes.filter((node) => !targetNodeIds.includes(node.id));
+
+  const startEdges = firstNodes.map((node, index) => ({
+    id: `start-edge-${index}`,
+    source: START_NODE_ID,
+    target: node.id,
+    style: { strokeDasharray: "5,5" },
+  }));
+
+  return {
+    nodes: [startNode, ...nodes],
+    edges: [...startEdges, ...edges],
+  };
 };
 
 const getLayoutedElements = (nodes, edges, options = {}) => {
@@ -106,7 +151,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
     if (isTablet) {
       return { x: 60, y: 100, zoom: 0.65 };
     }
-    return { x: 120, y: 150, zoom: 0.75 };
+    return { x: 120, y: 150, zoom: 1 };
   };
 
   useEffect(() => {
@@ -128,7 +173,12 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         style: { strokeDasharray: "5,5" },
       }));
 
-      getLayoutedElements(formattedNodes, formattedEdges, {
+      const { nodes: nodesWithStart, edges: edgesWithStart } = addStartNode(
+        formattedNodes,
+        formattedEdges
+      );
+
+      getLayoutedElements(nodesWithStart, edgesWithStart, {
         "elk.direction": "DOWN",
         ...elkOptions,
       }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
@@ -167,12 +217,17 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         style: { strokeDasharray: "5,5" },
       }));
 
-      getLayoutedElements(formattedNodes, formattedEdges, {
+      const { nodes: nodesWithStart, edges: edgesWithStart } = addStartNode(
+        formattedNodes,
+        formattedEdges
+      );
+
+      getLayoutedElements(nodesWithStart, edgesWithStart, {
         "elk.direction": "DOWN",
         ...elkOptions,
-      }).then(({ nodes: formattedNodes, edges: formattedEdges }) => {
-        setNodes((prev) => [...prev, ...formattedNodes]);
-        setEdges((prev) => [...prev, ...formattedEdges]);
+      }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
+        setNodes((prev) => [...prev, ...layoutedNodes]);
+        setEdges((prev) => [...prev, ...layoutedEdges]);
         setIsLoading(false);
       });
     }

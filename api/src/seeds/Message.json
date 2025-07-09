@@ -112,7 +112,7 @@
             "userId": "1001",
             "content": "Thank you !",
             "createdAt": "2023-08-05T13:00:00Z",
-            "status": "RECIEVED",
+            "status": "RECEIVED",
             "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729"
         },
         {
@@ -121,7 +121,7 @@
             "userId": "1001",
             "content": "Have a good day",
             "createdAt": "2023-08-05T13:10:00Z",
-            "status": "RECIEVED",
+            "status": "RECEIVED",
             "teamId": "e6d4744d-a11b-4c75-acad-e24a02903729"
         }
     ]

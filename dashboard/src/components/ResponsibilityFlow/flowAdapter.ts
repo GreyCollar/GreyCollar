@@ -8,13 +8,20 @@ function convertToNodesAndEdges(data) {
   });
 
   const edges = [];
+  let edgeIdCounter = 0;
 
-  data.forEach((item, index) => {
-    if (item.dependencyId) {
-      edges.push({
-        id: index,
-        source: item.dependencyId,
-        target: item.id,
+  data.forEach((item) => {
+    if (item.next) {
+      const nextNodes = Array.isArray(item.next) ? item.next : [item.next];
+
+      nextNodes.forEach((targetId) => {
+        if (targetId) {
+          edges.push({
+            id: `edge-${edgeIdCounter++}`,
+            source: item.id,
+            target: targetId,
+          });
+        }
       });
     }
   });

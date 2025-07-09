@@ -76,7 +76,7 @@ router.delete("/:responsibilityId", async (req, res) => {
     }
   }
 
-  await responsibility.remove({ responsibilityId, withNodes: true });
+  await responsibility.remove({ responsibilityId });
 
   res.status(200).json({ message: "Responsibility deleted" });
 });
