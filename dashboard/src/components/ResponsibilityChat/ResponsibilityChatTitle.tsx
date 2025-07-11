@@ -338,6 +338,7 @@ const ResponsibilityChatTitle = ({
               <IconButton
                 onClick={handleEditClick}
                 size="small"
+                aria-label={title ? "Edit title" : "Add title"}
                 sx={{
                   backgroundColor: theme.palette.primary.main + "10",
                   border: `1px solid ${theme.palette.primary.main}20`,

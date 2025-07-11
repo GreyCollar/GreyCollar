@@ -14,6 +14,7 @@ type Edge = {
   source: string;
   target: string;
   style?: { strokeDasharray: string };
+  data?: { conditionResult?: string };
 };
 
 export const addStartNode = (
@@ -48,7 +49,7 @@ export const addStartNode = (
   };
 };
 
-export const getOptimizedElkOptions = (nodes, edges) => {
+export const getOptimizedElkOptions = (nodes: Node[], edges: Edge[]) => {
   const incomingEdgesCount: { [key: string]: number } = {};
   const outgoingEdgesCount: { [key: string]: number } = {};
   const parentNodesByChild: { [key: string]: string[] } = {};
