@@ -8,7 +8,6 @@ import ListItemText from "@mui/material/ListItemText";
 import Popover from "@mui/material/Popover";
 import { ResponsibilityCommands } from "../../components/ChatInput/chat.config";
 import SourcedAvatar from "../../components/SourcedAvatar/SourcedAvatar";
-import { styled } from "@mui/material/styles";
 import useColleagues from "../../hooks/useColleagues";
 import { withHistory } from "slate-history";
 
@@ -33,6 +32,7 @@ import {
   IntegrationElement,
   MentionElement,
 } from "../../components/ResponsibilityChat/IntegrationElement";
+import { styled, useTheme } from "@mui/material/styles";
 import { useCallback, useMemo, useState } from "react";
 
 const ELEMENT_TYPES = {
@@ -63,20 +63,27 @@ type CustomText = {
 };
 
 const EditorContainer = styled(Box)(({ theme }) => ({
+  background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default}80 100%)`,
   border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius,
+  borderRadius: 12,
   height: theme.spacing(6),
   position: "relative",
   display: "flex",
   alignItems: "center",
+  backdropFilter: "blur(10px)",
+  transition: "all 0.2s ease-in-out",
   "&:focus-within": {
     borderColor: theme.palette.primary.main,
     boxShadow: `0 0 0 2px ${theme.palette.primary.main}22`,
+    background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.primary.main}05 100%)`,
+  },
+  "&:hover": {
+    borderColor: theme.palette.primary.main + "60",
   },
 }));
 
 const EditorWrapper = styled(Box)({
-  padding: 5,
+  padding: "8px 12px",
   flex: 1,
   marginRight: 8,
   '& [contenteditable="true"]': {
@@ -86,26 +93,52 @@ const EditorWrapper = styled(Box)({
     background: "transparent",
     padding: 0,
     margin: 0,
+    minHeight: "20px",
+    fontSize: "0.875rem",
+    lineHeight: 1.5,
   },
 });
 
 const SendButton = styled(IconButton)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
+  background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
   color: theme.palette.primary.contrastText,
+  border: `1px solid ${theme.palette.primary.main}20`,
   "&:hover": {
-    backgroundColor: theme.palette.primary.dark,
+    background: `linear-gradient(45deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
+    borderColor: theme.palette.primary.main + "40",
   },
-  width: 32,
-  height: 32,
+  "&:disabled": {
+    background: theme.palette.action.disabledBackground,
+    color: theme.palette.action.disabled,
+  },
+  width: 36,
+  height: 36,
   alignSelf: "center",
+  borderRadius: 2,
+  transition: "all 0.2s ease-in-out",
 }));
 
 const CommandList = styled(List)(({ theme }) => ({
   maxHeight: 200,
-  width: 200,
+  width: 250,
   backgroundColor: theme.palette.background.paper,
-  boxShadow: theme.shadows[1],
-  borderRadius: theme.shape.borderRadius,
+  backdropFilter: "blur(10px)",
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: 12,
+  overflow: "hidden",
+  "& .MuiListItem-root": {
+    borderRadius: 0,
+    transition: "all 0.15s ease-in-out",
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main + "08",
+    },
+    "&.Mui-selected": {
+      backgroundColor: theme.palette.primary.main + "12",
+      "&:hover": {
+        backgroundColor: theme.palette.primary.main + "16",
+      },
+    },
+  },
 }));
 
 const IntegrationScopeElement = styled(Box)(({ theme }) => ({
@@ -157,6 +190,7 @@ interface InlineChatInputProps {
 }
 
 const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
+  const theme = useTheme();
   const [value, setValue] = useState<Descendant[]>(initialValue);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showCommands, setShowCommands] = useState(false);
@@ -533,8 +567,26 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
     }
   }, []);
 
+  const getIsEmpty = () => {
+    return value.every((node) => {
+      if (Element.isElement(node) && node.type === ELEMENT_TYPES.PARAGRAPH) {
+        return node.children.every(
+          (child) => Text.isText(child) && child.text.trim() === ""
+        );
+      }
+      return false;
+    });
+  };
+
   return (
-    <Box sx={{ width: "100%", maxWidth: 1000, mx: "auto", p: 2 }}>
+    <Box
+      sx={{
+        width: "100%",
+        maxWidth: "100%",
+        mx: "auto",
+        p: { xs: 1, sm: 1.5, md: 2 },
+      }}
+    >
       <EditorContainer>
         <EditorWrapper>
           <Slate
@@ -545,11 +597,19 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
             <Editable
               renderElement={renderElement}
               onKeyDown={handleKeyDown}
-              placeholder="Type a message"
+              placeholder="Type a message..."
+              style={{
+                color: theme.palette.text.primary,
+              }}
             />
           </Slate>
         </EditorWrapper>
-        <SendButton onClick={handleSend} size="small" sx={{ mr: 1 }}>
+        <SendButton
+          onClick={handleSend}
+          size="small"
+          sx={{ mr: 1 }}
+          disabled={getIsEmpty()}
+        >
           <Iconify icon="mdi:send" />
         </SendButton>
       </EditorContainer>
@@ -572,6 +632,14 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         }}
         disableAutoFocus={true}
         disableEnforceFocus={true}
+        slotProps={{
+          paper: {
+            sx: {
+              background: "transparent",
+              boxShadow: "none",
+            },
+          },
+        }}
       >
         <CommandList>
           {ResponsibilityCommands.map((command, index) => (
@@ -587,6 +655,13 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
               <ListItemText
                 primary={command.label}
                 secondary={command.description}
+                primaryTypographyProps={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                }}
+                secondaryTypographyProps={{
+                  fontSize: "0.75rem",
+                }}
               />
             </ListItem>
           ))}
@@ -612,6 +687,14 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         }}
         disableAutoFocus={true}
         disableEnforceFocus={true}
+        slotProps={{
+          paper: {
+            sx: {
+              background: "transparent",
+              boxShadow: "none",
+            },
+          },
+        }}
       >
         <CommandList>
           {selectedCommand?.next?.list.map((integration, index) => (
@@ -624,7 +707,13 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
               <ListItemIcon>
                 <Iconify icon={integration.icon} />
               </ListItemIcon>
-              <ListItemText primary={integration.name} />
+              <ListItemText
+                primary={integration.name}
+                primaryTypographyProps={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                }}
+              />
             </ListItem>
           ))}
         </CommandList>
@@ -650,6 +739,14 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
         }}
         disableAutoFocus={true}
         disableEnforceFocus={true}
+        slotProps={{
+          paper: {
+            sx: {
+              background: "transparent",
+              boxShadow: "none",
+            },
+          },
+        }}
       >
         <CommandList>
           {selectedIntegration?.next?.list.map((scope, index) => (
@@ -662,7 +759,13 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
               <ListItemIcon>
                 <Iconify icon={scope.icon} />
               </ListItemIcon>
-              <ListItemText primary={scope.name} />
+              <ListItemText
+                primary={scope.name}
+                primaryTypographyProps={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                }}
+              />
             </ListItem>
           ))}
         </CommandList>
@@ -684,6 +787,14 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
           vertical: "bottom",
           horizontal: "left",
         }}
+        slotProps={{
+          paper: {
+            sx: {
+              background: "transparent",
+              boxShadow: "none",
+            },
+          },
+        }}
       >
         <CommandList>
           {colleagues.map((colleague, index) => (
@@ -704,6 +815,13 @@ const InlineChatInput = ({ onSend }: InlineChatInputProps) => {
               <ListItemText
                 primary={colleague.name}
                 secondary={colleague.role}
+                primaryTypographyProps={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                }}
+                secondaryTypographyProps={{
+                  fontSize: "0.75rem",
+                }}
               />
             </ListItem>
           ))}
