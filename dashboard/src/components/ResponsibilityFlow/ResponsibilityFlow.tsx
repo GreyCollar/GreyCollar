@@ -3,7 +3,6 @@ import "./flow.css";
 
 import AIResponseNode from "./AIResponseNode";
 import CustomNode from "./CustomNode";
-import ELK from "elkjs/lib/elk.bundled.js";
 import { convertToNodesAndEdges } from "../../components/ResponsibilityFlow/flowAdapter";
 import useResponsibility from "../../hooks/useResponsibility";
 
@@ -16,100 +15,16 @@ import {
   useNodesState,
 } from "@xyflow/react";
 import React, { useCallback, useEffect, useState } from "react";
+import {
+  addStartNode,
+  getLayoutedElements,
+  getOptimizedElkOptions,
+} from "../../utils/flowLayout";
 import { useMediaQuery, useTheme } from "@mui/material";
-
-const elk = new ELK();
-
-// ELK layout options
-const elkOptions = {
-  "elk.algorithm": "layered",
-  "elk.layered.spacing.nodeNodeBetweenLayers": "100",
-  "elk.spacing.nodeNode": "80",
-};
-
-type Node = {
-  id: string;
-  position: { x: number; y: number };
-  data: { label: string; icon: string };
-  type: string;
-};
-type Edge = {
-  id: string;
-  source: string;
-  target: string;
-  style?: { strokeDasharray: string };
-};
 
 const nodeTypes = {
   custom: CustomNode,
   aiResponse: AIResponseNode,
-};
-
-const addStartNode = (
-  nodes: Node[],
-  edges: Edge[]
-): { nodes: Node[]; edges: Edge[] } => {
-  const START_NODE_ID = "start-node";
-
-  const startNode = {
-    id: START_NODE_ID,
-    position: { x: 0, y: 0 },
-    data: {
-      label: "Start",
-      icon: "mdi:play-circle",
-    },
-    type: "custom",
-  };
-
-  const targetNodeIds = edges.map((edge) => edge.target);
-  const firstNodes = nodes.filter((node) => !targetNodeIds.includes(node.id));
-
-  const startEdges = firstNodes.map((node, index) => ({
-    id: `start-edge-${index}`,
-    source: START_NODE_ID,
-    target: node.id,
-    style: { strokeDasharray: "5,5" },
-  }));
-
-  return {
-    nodes: [startNode, ...nodes],
-    edges: [...startEdges, ...edges],
-  };
-};
-
-const getLayoutedElements = (nodes, edges, options = {}) => {
-  const graph = {
-    id: "root",
-    layoutOptions: options,
-    children: nodes.map((node) => ({
-      ...node,
-      targetPosition: "top",
-      sourcePosition: "bottom",
-      width: 200,
-      height: 100,
-    })),
-    edges: edges,
-  };
-
-  return elk
-    .layout(graph)
-    .then((layoutedGraph) => ({
-      nodes: layoutedGraph.children.map((node) => ({
-        ...node,
-        position: { x: node.x, y: node.y },
-      })),
-      edges: layoutedGraph.edges,
-    }))
-    .catch((error) => {
-      console.error(error);
-      return {
-        nodes: nodes.map((node) => ({
-          ...node,
-          position: node.position || { x: 0, y: 0 },
-        })),
-        edges: edges,
-      };
-    });
 };
 
 function ResponsibilityFlow({ aiResponse, responsibility }) {
@@ -129,29 +44,19 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
     if (isMobile) {
       return {
         width: "100%",
-        height: "40vh",
+        height: "100%",
       };
     }
     if (isTablet) {
       return {
         width: "100%",
-        height: "50vh",
+        height: "100%",
       };
     }
     return {
       width: "100%",
-      height: "95vh",
+      height: "100%",
     };
-  };
-
-  const getDefaultViewport = () => {
-    if (isMobile) {
-      return { x: 20, y: 50, zoom: 1.0 };
-    }
-    if (isTablet) {
-      return { x: 60, y: 100, zoom: 1.0 };
-    }
-    return { x: 120, y: 150, zoom: 1.2 };
   };
 
   useEffect(() => {
@@ -162,6 +67,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         data: {
           label: node.label,
           icon: node.icon,
+          type: node.type,
         },
         type: "custom",
       }));
@@ -170,7 +76,8 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         id: `e${edge.source}-${edge.target}`,
         source: edge.source.toString(),
         target: edge.target.toString(),
-        style: { strokeDasharray: "5,5" },
+        style: edge.style || { strokeDasharray: "5,5" },
+        data: edge.data,
       }));
 
       const { nodes: nodesWithStart, edges: edgesWithStart } = addStartNode(
@@ -178,10 +85,11 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         formattedEdges
       );
 
-      getLayoutedElements(nodesWithStart, edgesWithStart, {
-        "elk.direction": "DOWN",
-        ...elkOptions,
-      }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
+      getLayoutedElements(
+        nodesWithStart,
+        edgesWithStart,
+        getOptimizedElkOptions(nodesWithStart, edgesWithStart)
+      ).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
         setIsLoading(false);
@@ -206,6 +114,7 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         data: {
           label: node.label,
           icon: node.icon,
+          type: node.type,
         },
         type: "custom",
       }));
@@ -214,7 +123,8 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         id: `e${edge.source}-${edge.target}`,
         source: edge.source.toString(),
         target: edge.target.toString(),
-        style: { strokeDasharray: "5,5" },
+        style: edge.style || { strokeDasharray: "5,5" },
+        data: edge.data,
       }));
 
       const { nodes: nodesWithStart, edges: edgesWithStart } = addStartNode(
@@ -222,10 +132,11 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         formattedEdges
       );
 
-      getLayoutedElements(nodesWithStart, edgesWithStart, {
-        "elk.direction": "DOWN",
-        ...elkOptions,
-      }).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
+      getLayoutedElements(
+        nodesWithStart,
+        edgesWithStart,
+        getOptimizedElkOptions(nodesWithStart, edgesWithStart)
+      ).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
         setNodes((prev) => [...prev, ...layoutedNodes]);
         setEdges((prev) => [...prev, ...layoutedEdges]);
         setIsLoading(false);
@@ -249,7 +160,8 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
       style={{
         width: flowDimensions.width,
         height: flowDimensions.height,
-        minHeight: isMobile ? "300px" : "400px",
+        minHeight: isMobile ? "250px" : isTablet ? "300px" : "350px",
+        maxHeight: "100%",
       }}
     >
       <ReactFlow
@@ -259,10 +171,9 @@ function ResponsibilityFlow({ aiResponse, responsibility }) {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         nodeTypes={nodeTypes}
-        defaultViewport={getDefaultViewport()}
         fitView
         fitViewOptions={{
-          padding: isMobile ? 0.2 : 0.3,
+          padding: nodes.length < 5 ? 0.7 : 0.1,
         }}
       >
         <Background />
