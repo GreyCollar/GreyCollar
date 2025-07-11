@@ -18,6 +18,9 @@ const MainContainer = styled("div")(({ theme }) => ({
   position: "relative",
   overflow: "hidden",
   minWidth: "120px",
+  minHeight: "120px",
+  maxWidth: "160px",
+  maxHeight: "160px",
   background: `linear-gradient(135deg, ${alpha(
     theme.palette.secondary.light,
     0.2
