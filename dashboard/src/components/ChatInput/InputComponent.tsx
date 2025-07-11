@@ -220,7 +220,7 @@ const InputComponent = ({
         flex-direction: row;
         align-items: center;
         margin-right: 0.3rem;
-        height: 37px;
+        height: 22px;
       `}
     >
       <InlineChromiumBugfix />
@@ -243,6 +243,9 @@ const InputComponent = ({
           width: "150px",
           marginLeft: "0.5rem",
           marginRight: "-8px",
+          "& .MuiInputBase-hiddenLabel": {
+            height: "20px",
+          },
         }}
         size="small"
         onChange={handleInputChange}

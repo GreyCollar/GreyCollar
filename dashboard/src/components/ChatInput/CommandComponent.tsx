@@ -15,6 +15,7 @@ const CommandComponent = ({ attributes, children }) => {
         flex-direction: row;
         align-items: center;
         font-size: 1.51em;
+        height: 22px;
       `}
     >
       <InlineChromiumBugfix />

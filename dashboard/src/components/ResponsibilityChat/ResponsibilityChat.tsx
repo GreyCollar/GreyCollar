@@ -1,27 +1,47 @@
 import Box from "@mui/material/Box";
 import InlineChatInput from "../../widgets/ChatInput/InlineChatInput";
+import React from "react";
 import ResponsibilityChatContent from "./ResponsibilityChatContent";
 import http from "../../http";
 import { publish } from "@nucleoidai/react-event";
 import { useParams } from "react-router-dom";
 import useResponsibility from "../../hooks/useResponsibility";
-import { useState } from "react";
+
+import { Card, CardContent, useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
 
 function ResponsibilityChat({
   setAiResponse,
   selectedItem,
   aiResponse,
   setSelectedItem,
+  onTitleChange,
+  onDescriptionChange,
+  onCreateResponsibility,
+  onMessagesChange,
 }) {
   const { colleagueId } = useParams();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
-  const [title, setTitle] = useState(selectedItem?.title);
-  const [description, setDescription] = useState(selectedItem?.description);
   const { upsertResponsibility, getResponsibilityWithNode } =
     useResponsibility();
   const { responsibilityNodes } = getResponsibilityWithNode(selectedItem?.id);
+  const theme = useTheme();
+
+  useEffect(
+    () => {
+      if (onCreateResponsibility) {
+        onCreateResponsibility(handleCreateResponsibility);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onCreateResponsibility]
+  );
+
+  useEffect(() => {
+    if (onMessagesChange) onMessagesChange(messages);
+  }, [messages, onMessagesChange]);
 
   const handleCreateResponsibility = async (title, description) => {
     const response = await upsertResponsibility(
@@ -32,11 +52,6 @@ function ResponsibilityChat({
     );
 
     setSelectedItem(response.responsibility);
-
-    if (response.responsibility) {
-      setTitle(response.responsibility.title);
-      setDescription(response.responsibility.description);
-    }
   };
 
   const addMessage = async (message, role = "user") => {
@@ -94,8 +109,9 @@ function ResponsibilityChat({
           }
         );
 
-        setTitle(responsibilityNameData.title);
-        setDescription(responsibilityNameData.description);
+        if (onTitleChange) onTitleChange(responsibilityNameData.title);
+        if (onDescriptionChange)
+          onDescriptionChange(responsibilityNameData.description);
 
         const response = await upsertResponsibility(
           selectedItem?.id,
@@ -130,64 +146,82 @@ function ResponsibilityChat({
   };
 
   return (
-    <Box
+    <Card
+      elevation={0}
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        backgroundColor: (theme) => theme.palette.background.paper,
-        paddingTop: {
-          xs: "8px",
-          sm: "10px",
-          md: "10px",
-        },
         height: "100%",
         width: {
           xs: "100%",
           sm: "100%",
           md: "100%",
-          lg: 820,
-          xl: 820,
+          lg: "100%",
+          xl: "100%",
         },
         maxWidth: "100%",
-        padding: {
-          xs: 1,
-          sm: 1.5,
-          md: 2,
-        },
+        background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default}80 100%)`,
+        backdropFilter: "blur(10px)",
+        border: `1px solid ${theme.palette.divider}`,
+        borderRadius: 2,
+        overflow: "hidden",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      <ResponsibilityChatContent
-        loading={loading}
-        messages={messages}
-        title={title}
-        description={description}
-        setTitle={setTitle}
-        handleCreateResponsibility={handleCreateResponsibility}
-      />
-      {error && (
+      <CardContent
+        sx={{
+          p: 0,
+          "&:last-child": { pb: 0 },
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+        }}
+      >
         <Box
           sx={{
-            color: "error.main",
-            my: 1,
-            fontSize: {
-              xs: "0.75rem",
-              sm: "0.825rem",
-              md: "0.875rem",
+            flex: 1,
+            paddingTop: {
+              xs: "8px",
+              sm: "10px",
+              md: "10px",
             },
-            padding: {
-              xs: "6px",
-              sm: "7px",
-              md: "8px",
-            },
-            backgroundColor: "error.light",
-            borderRadius: "4px",
+            display: "flex",
+            flexDirection: "column",
+            minHeight: 0,
           }}
         >
-          {error}
+          <ResponsibilityChatContent loading={loading} messages={messages} />
+          {error && (
+            <Box
+              sx={{
+                color: "error.main",
+                my: 1,
+                mx: 2,
+                fontSize: {
+                  xs: "0.75rem",
+                  sm: "0.825rem",
+                  md: "0.875rem",
+                },
+                padding: {
+                  xs: "8px",
+                  sm: "10px",
+                  md: "12px",
+                },
+                backgroundColor: "error.light",
+                borderRadius: 2,
+                border: `1px solid ${theme.palette.error.main}20`,
+              }}
+            >
+              {error}
+            </Box>
+          )}
         </Box>
-      )}
-      <InlineChatInput onSend={(message) => addMessage(message)} />
-    </Box>
+        <Box sx={{ borderTop: `1px solid ${theme.palette.divider}20`, mt: 1 }}>
+          <InlineChatInput onSend={(message) => addMessage(message)} />
+        </Box>
+      </CardContent>
+    </Card>
   );
 }
 

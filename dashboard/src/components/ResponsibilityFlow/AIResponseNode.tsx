@@ -1,8 +1,11 @@
 import { Handle, Position } from "@xyflow/react";
 import React, { CSSProperties, useEffect, useState } from "react";
+import { alpha, useTheme } from "@mui/material/styles";
 
 const AIResponseNode = ({ data }) => {
+  const theme = useTheme();
   const [animationStage, setAnimationStage] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const timers = [
@@ -21,14 +24,25 @@ const AIResponseNode = ({ data }) => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      backgroundColor: "#f0f0f0",
-      color: "#333",
-      borderRadius: "8px",
-      padding: "10px",
-      boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+      background: isHovered
+        ? `linear-gradient(135deg, ${alpha(
+            theme.palette.primary.main,
+            0.3
+          )}, ${alpha(theme.palette.secondary.light, 0.2)})`
+        : `linear-gradient(135deg, ${alpha(
+            theme.palette.secondary.light,
+            0.2
+          )}, ${alpha(theme.palette.primary.main, 0.3)})`,
+      color: "#ffffff",
+      borderRadius: "16px",
+      padding: "16px 20px",
+      border: "1px solid rgba(255, 255, 255, 0.2)",
+      backdropFilter: "blur(10px)",
       transition: "all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)",
       position: "relative",
       overflow: "hidden",
+      cursor: "pointer",
+      minWidth: "120px",
     };
 
     switch (animationStage) {
@@ -44,14 +58,14 @@ const AIResponseNode = ({ data }) => {
           ...baseStyle,
           opacity: 0.7,
           transform: "scale(0.5) translateY(10px)",
-          boxShadow: "0 0 15px rgba(66, 153, 225, 0.5)",
+          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
         };
       case 2:
         return {
           ...baseStyle,
           opacity: 0.9,
           transform: "scale(1.1)",
-          boxShadow: "0 0 25px rgba(66, 153, 225, 0.8)",
+          boxShadow: "0 3px 15px rgba(0, 0, 0, 0.25)",
         };
       case 3:
       case 4:
@@ -59,7 +73,9 @@ const AIResponseNode = ({ data }) => {
           ...baseStyle,
           opacity: 1,
           transform: "scale(1)",
-          boxShadow: "0 0 15px rgba(66, 153, 225, 0.6)",
+          boxShadow: isHovered
+            ? "0 4px 20px rgba(0, 0, 0, 0.3)"
+            : "0 2px 10px rgba(0, 0, 0, 0.2)",
         };
       case 5:
       default:
@@ -67,44 +83,70 @@ const AIResponseNode = ({ data }) => {
           ...baseStyle,
           opacity: 1,
           transform: "scale(1)",
-          boxShadow: "0 3px 10px rgba(0, 0, 0, 0.2)",
+          boxShadow: isHovered
+            ? "0 4px 20px rgba(0, 0, 0, 0.3)"
+            : "0 2px 10px rgba(0, 0, 0, 0.2)",
         };
     }
   };
 
-  const getIconClass = () => {
-    if (animationStage === 0) return "hidden-icon";
-    if (animationStage === 1) return "spin-icon";
-    if (animationStage === 2) return "bounce-icon";
-    return "settled-icon";
+  const getIconTransform = () => {
+    if (animationStage === 0) return "rotate(-90deg) scale(0.8)";
+    if (animationStage === 1) return "rotate(180deg) scale(0.9)";
+    if (animationStage === 2) return "rotate(360deg) scale(1.1)";
+    if (animationStage >= 3) {
+      return "rotate(0deg) scale(1)";
+    }
+    return "rotate(0deg) scale(1)";
   };
 
   return (
-    <div style={{ ...getNodeStyle() }}>
-      {animationStage >= 2 && animationStage < 5 && (
-        <div className="node-ripple-effect" />
-      )}
-
-      <img
-        src={data.icon}
-        alt={data.label}
-        width={24}
-        height={24}
-        className={getIconClass()}
+    <div
+      style={{ ...getNodeStyle() }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Icon container with modern styling */}
+      <div
         style={{
-          marginBottom: "5px",
+          backgroundColor: isHovered
+            ? "rgba(255, 255, 255, 0.15)"
+            : "rgba(255, 255, 255, 0.1)",
+          borderRadius: "12px",
+          padding: "8px",
+          marginBottom: "12px",
+          transition: "all 0.4s ease",
+          backdropFilter: "blur(5px)",
+          border: "1px solid rgba(255, 255, 255, 0.3)",
           position: "relative",
           zIndex: 2,
         }}
-      />
+      >
+        <img
+          src={data.icon}
+          alt={data.label}
+          width={28}
+          height={28}
+          style={{
+            transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+            transform: getIconTransform(),
+            filter: "none",
+            opacity: animationStage >= 1 ? 1 : 0,
+          }}
+        />
+      </div>
+
       <div
         style={{
-          fontWeight: "bold",
-          fontSize: "14px",
-          marginBottom: "5px",
+          fontWeight: "600",
+          fontSize: "13px",
+          letterSpacing: "0.5px",
+          textAlign: "center",
           opacity: animationStage >= 4 ? 1 : 0,
           transform: animationStage >= 4 ? "translateY(0)" : "translateY(10px)",
-          transition: "all 0.4s ease-in-out",
+          transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+          textShadow: "none",
+          lineHeight: "1.4",
           position: "relative",
           zIndex: 2,
         }}
@@ -112,18 +154,29 @@ const AIResponseNode = ({ data }) => {
         {data.label}
       </div>
 
+      {/* Modern handle styling */}
       <Handle
         type="source"
         position={Position.Bottom}
         style={{
-          opacity: 0,
+          width: "12px",
+          height: "12px",
+          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+          border: "2px solid rgba(255, 255, 255, 0.8)",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.3)",
+          opacity: 0.8,
         }}
       />
       <Handle
         type="target"
         position={Position.Top}
         style={{
-          opacity: 0,
+          width: "12px",
+          height: "12px",
+          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+          border: "2px solid rgba(255, 255, 255, 0.8)",
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.3)",
+          opacity: 0.8,
         }}
       />
     </div>

@@ -3,7 +3,7 @@ import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
 import { findIntegrationById } from "../ChatInput/chat.config";
 import useColleagueV2 from "../../hooks/useColleagueV2";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Card, CardContent, Typography, useTheme } from "@mui/material";
 import {
   IntegrationElement,
   IntegrationScopeElement,
@@ -12,6 +12,8 @@ import {
 
 function ResponsibilityMessageBox({ message }) {
   const { getColleague } = useColleagueV2();
+  const theme = useTheme();
+
   const renderContent = () => {
     try {
       const parts = [];
@@ -110,6 +112,8 @@ function ResponsibilityMessageBox({ message }) {
     }
   };
 
+  const isUser = message.role === "user";
+
   return (
     <Box
       data-cy="message-box"
@@ -120,29 +124,81 @@ function ResponsibilityMessageBox({ message }) {
           sm: "16px",
           md: "20px",
         },
-        padding: "10px",
-        borderRadius: "10px",
-        textAlign: "left",
         display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        userSelect: "text",
+        justifyContent: isUser ? "flex-end" : "flex-start",
       }}
     >
-      <Typography
-        variant="subtitle2"
-        sx={{ fontWeight: "bold", marginBottom: "8px", userSelect: "text" }}
-        data-cy="message-role"
+      <Card
+        elevation={0}
+        sx={{
+          maxWidth: "85%",
+          background: isUser
+            ? `linear-gradient(135deg, ${theme.palette.primary.main}08 0%, ${theme.palette.primary.light}08 100%)`
+            : `linear-gradient(135deg, ${theme.palette.secondary.main}08 0%, ${theme.palette.secondary.light}08 100%)`,
+          backdropFilter: "blur(10px)",
+          border: `1px solid ${
+            isUser
+              ? theme.palette.primary.main + "20"
+              : theme.palette.secondary.main + "20"
+          }`,
+          borderRadius: 2,
+          overflow: "visible",
+          position: "relative",
+          transition: "all 0.2s ease-in-out",
+          "&:hover": {
+            border: `1px solid ${
+              isUser
+                ? theme.palette.primary.main + "40"
+                : theme.palette.secondary.main + "40"
+            }`,
+            background: isUser
+              ? `linear-gradient(135deg, ${theme.palette.primary.main}12 0%, ${theme.palette.primary.light}12 100%)`
+              : `linear-gradient(135deg, ${theme.palette.secondary.main}12 0%, ${theme.palette.secondary.light}12 100%)`,
+          },
+        }}
       >
-        {message.role === "user" ? "You" : "Assistant"}
-      </Typography>
-      <Typography
-        variant="body1"
-        sx={{ userSelect: "text" }}
-        data-cy="message-content"
-      >
-        {renderContent()}
-      </Typography>
+        <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+            }}
+          >
+            <Typography
+              variant="subtitle2"
+              sx={{
+                fontWeight: 600,
+                color: isUser
+                  ? theme.palette.primary.main
+                  : theme.palette.secondary.main,
+                fontSize: "0.75rem",
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+                mb: 0.5,
+              }}
+              data-cy="message-role"
+            >
+              {isUser ? "You" : "Assistant"}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                userSelect: "text",
+                lineHeight: 1.6,
+                display: "flex",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 0.5,
+                color: theme.palette.text.primary,
+              }}
+              data-cy="message-content"
+            >
+              {renderContent()}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Card>
     </Box>
   );
 }

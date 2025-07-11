@@ -1,17 +1,9 @@
-import ResponsibilityChatTitle from "./ResponsibilityChatTitle";
 import ResponsibilityMessageBox from "../ResponsibilityMessageBox/ResponsibilityMessageBox";
 import ResponsibilityWelcomeMessage from "./ResponsibilityWelcomeMessage";
 
 import { Box, CircularProgress, useTheme } from "@mui/material";
 
-const ResponsibilityChatContent = ({
-  loading,
-  messages,
-  title,
-  description,
-  handleCreateResponsibility,
-  setTitle,
-}) => {
+const ResponsibilityChatContent = ({ loading, messages }) => {
   const theme = useTheme();
 
   return (
@@ -22,19 +14,26 @@ const ResponsibilityChatContent = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: theme.palette.background.paper,
-        paddingX: { xs: "8px", sm: "16px", md: "20px" },
-        paddingTop: "5px",
+        backgroundColor: "transparent",
+        paddingX: { xs: "12px", sm: "16px", md: "20px" },
+        paddingTop: "8px",
+        paddingBottom: "8px",
+        minHeight: 0,
+        "&::-webkit-scrollbar": {
+          width: "6px",
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "transparent",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: theme.palette.divider,
+          borderRadius: "3px",
+          "&:hover": {
+            background: theme.palette.text.disabled,
+          },
+        },
       }}
     >
-      <ResponsibilityChatTitle
-        title={title}
-        description={description}
-        messages={messages}
-        handleCreateResponsibility={handleCreateResponsibility}
-        setTitle={setTitle}
-      />
-
       {messages.length === 0 && <ResponsibilityWelcomeMessage />}
 
       {messages.map((message, index) => (
@@ -42,11 +41,22 @@ const ResponsibilityChatContent = ({
       ))}
 
       {loading && (
-        <CircularProgress
+        <Box
           sx={{
-            color: theme.palette.grey[500],
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            py: 2,
           }}
-        />
+        >
+          <CircularProgress
+            size={24}
+            thickness={4}
+            sx={{
+              color: theme.palette.primary.main,
+            }}
+          />
+        </Box>
       )}
     </Box>
   );

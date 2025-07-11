@@ -19,7 +19,7 @@ const CommandText = (props) => {
         display: inline-flex;
         flex-direction: row;
         align-items: center;
-        height: 37px;
+        height: 22px;
       `}
     >
       <InlineChromiumBugfix />

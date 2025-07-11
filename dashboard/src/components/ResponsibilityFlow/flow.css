@@ -91,3 +91,7 @@
   z-index: 1;
   animation: ripple 2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
+
+.react-flow__attribution {
+  display: none !important;
+}
