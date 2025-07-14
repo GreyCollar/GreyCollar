@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 const ResponsibilityWelcomeMessage = () => {
   return (
@@ -18,12 +18,6 @@ const ResponsibilityWelcomeMessage = () => {
         alt="GreyCollar logo"
         style={{ width: "50px", height: "50px" }}
       />
-      <Typography variant="h4" gutterBottom sx={{ marginBottom: "4px" }}>
-        GreyCollar
-      </Typography>
-      <Typography sx={{ fontStyle: "italic" }}>
-        Build your logical context
-      </Typography>
     </Box>
   );
 };

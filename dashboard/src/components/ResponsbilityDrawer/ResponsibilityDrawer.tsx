@@ -1,6 +1,6 @@
 import CloseIcon from "@mui/icons-material/Close";
-import React from "react";
 import ResponsibilityChat from "../ResponsibilityChat/ResponsibilityChat";
+import ResponsibilityChatTitle from "../ResponsibilityChat/ResponsibilityChatTitle";
 import ResponsibilityFlow from "../ResponsibilityFlow/ResponsibilityFlow";
 
 import {
@@ -11,6 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
 
 const ResponsibilityDrawer = ({
   drawerOpen,
@@ -41,6 +42,33 @@ const ResponsibilityDrawer = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [title, setTitle] = useState(selectedItem?.title);
+  const [description, setDescription] = useState(selectedItem?.description);
+  const [createResponsibilityHandler, setCreateResponsibilityHandler] =
+    useState(null);
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    setTitle(selectedItem?.title);
+    setDescription(selectedItem?.description);
+  }, [selectedItem]);
+
+  const handleTitleChange = useCallback((newTitle) => {
+    setTitle(newTitle);
+  }, []);
+
+  const handleDescriptionChange = useCallback((newDescription) => {
+    setDescription(newDescription);
+  }, []);
+
+  const handleCreateResponsibility = useCallback((handler) => {
+    setCreateResponsibilityHandler(() => handler);
+  }, []);
+
+  const handleMessagesChange = useCallback((newMessages) => {
+    setMessages(newMessages);
+  }, []);
 
   const getDrawerWidth = () => {
     if (isMobile) return "100vw";
@@ -86,31 +114,85 @@ const ResponsibilityDrawer = ({
           </IconButton>
         )}
 
-        <Grid container sx={{ flex: 1 }} spacing={getSpacing()}>
+        <Grid container sx={{ flex: 1, height: "100%" }} spacing={getSpacing()}>
           <Grid
             item
             xs={12}
             sm={12}
-            md={8}
-            lg={8}
-            xl={8}
+            md={7}
+            lg={7}
+            xl={7}
             sx={{
               display: "flex",
               flexDirection: "column",
-              position: "relative",
+              height: "100%",
+              maxHeight: "100vh",
             }}
           >
             <Box
               sx={{
                 flex: 1,
-                borderRight: {
+                padding: {
+                  xs: 1,
+                  sm: 1.5,
+                  md: 2,
+                },
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                minHeight: 0,
+              }}
+            >
+              <Box sx={{ flexShrink: 0 }}>
+                <ResponsibilityChatTitle
+                  title={title}
+                  description={description}
+                  messages={messages}
+                  handleCreateResponsibility={createResponsibilityHandler}
+                  setTitle={setTitle}
+                />
+              </Box>
+              <Box
+                sx={{
+                  flex: 1,
+                  minHeight: 0,
+                  overflow: "hidden",
+                }}
+              >
+                <ResponsibilityFlow
+                  responsibility={selectedItem}
+                  aiResponse={aiResponse}
+                  chatVisible={true}
+                />
+              </Box>
+            </Box>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={5}
+            lg={5}
+            xl={5}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              position: "relative",
+              height: "100%",
+              maxHeight: "100vh",
+            }}
+          >
+            <Box
+              sx={{
+                flex: 1,
+                borderLeft: {
                   xs: "none",
                   sm: "none",
-                  md: `1px solid ${theme.palette.divider}`,
+                  md: `2px solid ${theme.palette.divider}`,
                 },
-                borderBottom: {
-                  xs: `1px solid ${theme.palette.divider}`,
-                  sm: `1px solid ${theme.palette.divider}`,
+                borderTop: {
+                  xs: `2px solid ${theme.palette.divider}`,
+                  sm: "2px solid ${theme.palette.divider}",
                   md: "none",
                 },
                 padding: {
@@ -118,17 +200,14 @@ const ResponsibilityDrawer = ({
                   sm: 1.5,
                   md: 2,
                 },
-                minHeight: {
-                  xs: "50vh",
-                  sm: "50vh",
-                  md: "auto",
-                },
+                height: "100%",
+                minHeight: 0,
               }}
             >
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "stretch",
                   justifyContent: "center",
                   height: "100%",
                 }}
@@ -138,39 +217,10 @@ const ResponsibilityDrawer = ({
                   setAiResponse={setAiResponse}
                   aiResponse={aiResponse}
                   setSelectedItem={setSelectedItem}
-                />
-              </Box>
-            </Box>
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={4}
-            lg={4}
-            xl={4}
-            sx={{ display: "flex", flexDirection: "column" }}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                padding: {
-                  xs: 1,
-                  sm: 1.5,
-                  md: 2,
-                },
-                overflowY: "auto",
-                minHeight: {
-                  xs: "40vh",
-                  sm: "40vh",
-                  md: "auto",
-                },
-              }}
-            >
-              <Box>
-                <ResponsibilityFlow
-                  responsibility={selectedItem}
-                  aiResponse={aiResponse}
+                  onTitleChange={handleTitleChange}
+                  onDescriptionChange={handleDescriptionChange}
+                  onCreateResponsibility={handleCreateResponsibility}
+                  onMessagesChange={handleMessagesChange}
                 />
               </Box>
             </Box>
