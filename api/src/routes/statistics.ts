@@ -1,6 +1,6 @@
 import Statistics from "../models/Statistics";
 import express from "express";
-import platform from "@nucleoidai/platform-express";
+import platform from "@canmingir/link-express";
 import { v4 as uuid } from "uuid";
 const router = express.Router();
 

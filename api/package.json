@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.35.0",
-    "@nucleoidai/platform": "^1.0.44",
-    "@nucleoidai/platform-express": "^1.5.48",
+    "@canmingir/link": "^1.1.1",
+    "@canmingir/link-express": "^1.6.0",
     "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.79.4",

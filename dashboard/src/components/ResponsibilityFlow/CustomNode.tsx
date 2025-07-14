@@ -1,4 +1,4 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 
 import { Handle, Position } from "@xyflow/react";
 import React, { useEffect, useState } from "react";

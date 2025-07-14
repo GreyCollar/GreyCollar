@@ -1,8 +1,8 @@
-import platform from "@nucleoidai/platform-express";
-import express from "express";
-const router = express.Router();
 import Colleague from "../models/Colleague";
-import { Project } from "@nucleoidai/platform-express/models";
+import { Project } from "@canmingir/link-express/models";
+import express from "express";
+import platform from "@canmingir/link-express";
+const router = express.Router();
 
 router.get("/:id", async (req, res) => {
   const { organizationId } = req.session;

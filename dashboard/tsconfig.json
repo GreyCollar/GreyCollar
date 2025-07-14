@@ -22,7 +22,7 @@
     }
   },
   "include": ["src"],
-  "types": ["@nucleoidai/platform/types", "cypress"],
+  "types": ["@canmingir/link/types", "cypress"],
   "exclude": ["node_modules", "build", "dist", "**/*.spec.ts", "**/*.test.ts"],
   "references": [
     {

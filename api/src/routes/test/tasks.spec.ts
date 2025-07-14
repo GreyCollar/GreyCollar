@@ -1,9 +1,9 @@
-import * as test from "@nucleoidai/platform-express/test";
-import { subscribe } from "../../lib/Event";
+import * as test from "@canmingir/link-express/test";
 
 import app from "../../app";
 import { deepEqual } from "assert";
 import request from "supertest";
+import { subscribe } from "../../lib/Event";
 
 describe("Tasks service", () => {
   beforeEach(async () => test.reset());

@@ -5,7 +5,7 @@ import {
   CustomPopover,
   Iconify,
   usePopover,
-} from "@nucleoidai/platform/minimal/components";
+} from "@canmingir/link/minimal/components";
 
 function MoreVertButton({ handleEdit, handleDelete, isEditable }) {
   const popover = usePopover();

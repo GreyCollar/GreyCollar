@@ -1,5 +1,5 @@
-import FlowReact from "./ResponsibilityFlow";
 import React from "react";
+import WrappedResponsibilityFlow from "./ResponsibilityFlow";
 
 import {
   Button,
@@ -16,11 +16,14 @@ const ResponsibilityFlowDialog = ({
   aiResponse,
 }) => {
   return (
-    <Dialog open={flowDialogOpen} onClose={handleFlowDialogClose}>
+    <Dialog open={flowDialogOpen} onClose={handleFlowDialogClose} maxWidth="lg">
       <DialogTitle>Flow Chart</DialogTitle>
       <DialogContent>
         {selectedItem && (
-          <FlowReact responsibility={selectedItem} aiResponse={aiResponse} />
+          <WrappedResponsibilityFlow
+            aiResponse={aiResponse}
+            responsibility={selectedItem}
+          />
         )}
       </DialogContent>
       <DialogActions>
