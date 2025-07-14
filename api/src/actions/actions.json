@@ -10,7 +10,9 @@
           "description": "The message to be sent to the LLM."
         }
       },
-      "required": ["message"]
+      "required": [
+        "message"
+      ]
     }
   },
   {
@@ -24,7 +26,35 @@
           "description": "The URL of the website to scrape."
         }
       },
-      "required": ["url"]
+      "required": [
+        "url"
+      ]
+    }
+  },
+  {
+    "action": "PLATFORM:decision",
+    "lib": "decision",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "string",
+          "description": "The condition to be checked."
+        },
+        "true": {
+          "type": "array",
+          "description": "The actions to be executed if the condition is true."
+        },
+        "false": {
+          "type": "array",
+          "description": "The actions to be executed if the condition is false."
+        }
+      },
+      "required": [
+        "condition",
+        "true",
+        "false"
+      ]
     }
   },
   {
