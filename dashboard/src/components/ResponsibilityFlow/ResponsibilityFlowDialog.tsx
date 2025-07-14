@@ -16,9 +16,19 @@ const ResponsibilityFlowDialog = ({
   aiResponse,
 }) => {
   return (
-    <Dialog open={flowDialogOpen} onClose={handleFlowDialogClose} maxWidth="lg">
+    <Dialog
+      open={flowDialogOpen}
+      onClose={handleFlowDialogClose}
+      maxWidth="md"
+      fullWidth
+    >
       <DialogTitle>Flow Chart</DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          width: "100%",
+          height: "600px",
+        }}
+      >
         {selectedItem && (
           <WrappedResponsibilityFlow
             aiResponse={aiResponse}
