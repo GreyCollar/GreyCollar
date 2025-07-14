@@ -2,173 +2,27 @@
   "sequence": 20,
   "seed": [
     {
-      "id": "1258bfba-531c-4b19-b432-12fec093b1e2",
-      "title": "Integrate data with other systems",
-      "description": "Integrate data from various back-end services and databases and ensure everything is running smoothly",
-      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
-      "nodes": [
-        {
-          "id": "25ffd2f7-a2d5-4ff5-9da9-686fd4a15a73",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Start",
-            "icon": "mdi:play"
-          },
-          "next": ["a4530c59-a909-4318-8c9b-2dd8a4bd10c0"],
-          "createdAt": "2023-08-05T10:00:00Z"
-        },
-        {
-          "id": "a4530c59-a909-4318-8c9b-2dd8a4bd10c0",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Process",
-            "icon": "mdi:build"
-          },
-          "next": ["1a2a1880-4333-4d79-9042-1d043bb869c0"],
-          "createdAt": "2023-08-05T10:10:00Z"
-        },
-        {
-          "id": "1a2a1880-4333-4d79-9042-1d043bb869c0",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Decision",
-            "icon": "mdi:arrow-decision"
-          },
-          "next": ["6253d144-c820-48e4-9898-1a3e3f201a2b"],
-          "createdAt": "2023-08-05T10:20:00Z"
-        },
-        {
-          "id": "6253d144-c820-48e4-9898-1a3e3f201a2b",
-          "type": "NORMAL",
-          "properties": {
-            "label": "End",
-            "icon": "mdi:stop"
-          },
-          "next": null,
-          "createdAt": "2023-08-05T10:30:00Z"
-        }
-      ]
-    },
-    {
-      "id": "ed18c47a-a9ed-4782-a0f9-791f208facfa",
-      "title": "Find Accounting Related Documents",
-      "description": "Find accounting related documents and send email to test@bla.com without summarizing the documents.",
-      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
-      "nodes": [
-        {
-          "id": "6428423c-3328-4044-a83e-bfb1807d758a",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Google Drive Search",
-            "icon": "mdi:search"
-          },
-          "next": ["bb15b968-0c53-4f7d-a5a3-bae5bcd6d4f4"]
-        },
-        {
-          "id": "bb15b968-0c53-4f7d-a5a3-bae5bcd6d4f4",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Summarize Documents",
-            "icon": "mdi:pen"
-          },
-          "next": [null]
-        },
-        {
-          "id": "64f621a2-56dc-47bd-a847-fefa02540b2d",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Send Mail with Gmail",
-            "icon": "mdi:mail"
-          },
-          "next": ["bb15b968-0c53-4f7d-a5a3-bae5bcd6d4f4"]
-        }
-      ]
-    },
-    {
-      "id": "c294d225-c8e1-407a-90d2-ef254b5b7ab6",
-      "title": "Retrieve User Info and Photos",
-      "description": "Get user info from 'users' folder in Google Drive with 'FIRST_LAST.json', query and retrieve user photos from 'photos/[USER_ID]', and respond to the session.",
-      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
-      "nodes": [
-        {
-          "id": "6aaa80db-9fd8-4db5-9c0a-aae80c2b5b01",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Get user info from Google Drive",
-            "icon": "mdi:search"
-          },
-          "next": ["0d1a24df-fa76-464b-867f-479863f73e8a"]
-        },
-        {
-          "id": "0d1a24df-fa76-464b-867f-479863f73e8a",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Retrieve user photos from Google Drive",
-            "icon": "mdi:search"
-          },
-          "next": ["b742f060-92e7-4eeb-a9ec-d05df77e7df1"]
-        },
-        {
-          "id": "b742f060-92e7-4eeb-a9ec-d05df77e7df1",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Response to session",
-            "icon": "mdi:message-reply-text"
-          },
-          "next": null
-        }
-      ]
-    },
-    {
-      "id": "add26001-b322-4d35-b995-329041d717bd",
-      "title": "Employee Hardware Status Check",
-      "description": "Get employee ID, scan hardware barcode, and retrieve status message.",
-      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
-      "nodes": [
-        {
-          "id": "b3a7d5c9-4c72-4abc-9c2f-1d2e3f4a5b6c",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Get Employee ID",
-            "icon": "mdi:account-card-details"
-          },
-          "next": ["d9f8a7b6-5c4d-3e2f-1a0b-9c8d7e6f5a4b"],
-          "createdAt": "2025-06-19T06:00:00Z"
-        },
-        {
-          "id": "d9f8a7b6-5c4d-3e2f-1a0b-9c8d7e6f5a4b",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Scan Hardware Barcode",
-            "icon": "mdi:barcode-scan"
-          },
-          "next": ["a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6"],
-          "createdAt": "2025-06-19T06:01:00Z"
-        },
-        {
-          "id": "a1b2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
-          "type": "NORMAL",
-          "properties": {
-            "label": "Get Status Message",
-            "icon": "mdi:message-text-outline"
-          },
-          "next": null,
-          "createdAt": "2025-06-19T06:02:00Z"
-        }
-      ]
-    },
-    {
       "id": "ba6f7911-e232-469d-9060-2881852f6e59",
       "title": "Product Order",
       "description": "Check product availability, if not exist, create order.",
       "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
       "nodes": [
         {
-          "id": "51dca395-1d90-4a28-9bbc-233de9c1a207",
-          "type": "CONDITION",
+          "id": "76ccda2d-f11f-408c-8087-66c377600d0b",
+          "type": "NORMAL",
           "properties": {
             "label": "Check Product Availability",
             "icon": "mdi:check"
+          },
+          "next": ["51dca395-1d90-4a28-9bbc-233de9c1a207"],
+          "createdAt": "2025-06-19T06:02:00Z"
+        },
+        {
+          "id": "51dca395-1d90-4a28-9bbc-233de9c1a207",
+          "type": "CONDITION",
+          "properties": {
+            "label": "Make Decision",
+            "icon": "mdi:decision"
           },
           "true": ["024cf548-ebfe-4f0f-910f-e1e43a8b8ea2"],
           "false": ["5be22de7-9673-448d-a1b5-dc23a8789b5c"],

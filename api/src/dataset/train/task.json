@@ -140,5 +140,42 @@
         }
       }
     ]
+  },
+  {
+    "id": "0cbfbecd-5e0d-4924-b5fd-6de262285936",
+    "description": "Check product availability, if not exist, create order.",
+    "steps": [
+      {
+        "action": "GREY-MARKET:check_product_count",
+        "parameters": {
+          "productId": "{productId}"
+        }
+      },
+      {
+        "action": "PLATFORM:decision",
+        "parameters": {
+          "condition": "response <= 0",
+          "true": [
+            "GREY-MARKET:create_order"
+          ],
+          "false": [
+            "GREY-MARKET:reduce_product_count"
+          ]
+        }
+      },
+      {
+        "action": "GREY-MARKET:create_order",
+        "parameters": {
+          "productId": "{productId}",
+          "quantity": 10
+        }
+      },
+      {
+        "action": "GREY-MARKET:reduce_product_count",
+        "parameters": {
+          "productId": "{productId}"
+        }
+      }
+    ]
   }
 ]

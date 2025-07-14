@@ -114,5 +114,23 @@ const Integrations = [
       required: ["query"],
     },
   },
+  {
+    id: "31ea5f17-045d-47d0-b9d3-ffc5d8f7b4cb",
+    action: "GREY-MARKET:check_product_count",
+    provider: "GREY-MARKET",
+    description: "Check product count",
+    direction: "OUTGOING",
+    lib: "mcp",
+    inputSchema: {
+      type: "object",
+      properties: {
+        productId: {
+          type: "string",
+          description: "The ID of the product to check the count of.",
+        },
+      },
+      required: ["productId"],
+    },
+  },
 ];
 export default Integrations;
