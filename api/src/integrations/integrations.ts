@@ -132,5 +132,50 @@ const Integrations = [
       required: ["productId"],
     },
   },
+  {
+    id: "90627148-0d9c-405f-90a4-48be9935eb3b",
+    action: "GREY-MARKET:create_order",
+    provider: "GREY-MARKET",
+    description: "Create an order",
+    direction: "OUTGOING",
+    lib: "mcp",
+    inputSchema: {
+      type: "object",
+      properties: {
+        productId: {
+          type: "string",
+          description: "The ID of the product to create an order for.",
+        },
+        quantity: {
+          type: "number",
+          description: "The quantity of the product to create an order for.",
+        },
+      },
+      required: ["productId", "quantity"],
+    },
+  },
+  {
+    id: "90627148-0d9c-405f-90a4-48be9935eb3b",
+    action: "GREY-MARKET:reduce_product_count",
+    provider: "GREY-MARKET",
+    description: "Reduce product count",
+    direction: "OUTGOING",
+    lib: "mcp",
+    inputSchema: {
+      type: "object",
+      properties: {
+        productId: {
+          type: "string",
+          description: "The ID of the product to reduce the count of.",
+        },
+        quantity: {
+          type: "number",
+          description: "The quantity of the product to reduce the count of.",
+        },
+      },
+      required: ["productId", "quantity"],
+    },
+  },
 ];
 export default Integrations;
+
