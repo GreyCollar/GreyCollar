@@ -155,7 +155,7 @@ const Integrations = [
     },
   },
   {
-    id: "90627148-0d9c-405f-90a4-48be9935eb3b",
+    id: "f8c49eb7-a1e3-45a8-a3c7-576b8082b036",
     action: "GREY-MARKET:reduce_product_count",
     provider: "GREY-MARKET",
     description: "Reduce product count",
@@ -178,4 +178,3 @@ const Integrations = [
   },
 ];
 export default Integrations;
-
