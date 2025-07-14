@@ -71,6 +71,8 @@ const StyledHandle = styled(Handle)({
   opacity: 0,
 });
 
+const ANIMATION_DELAY_MS = 200;
+
 const CustomNode = ({ data }) => {
   const [animated, setAnimated] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -78,7 +80,7 @@ const CustomNode = ({ data }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimated(true);
-    }, 200);
+    }, ANIMATION_DELAY_MS);
 
     return () => clearTimeout(timer);
   }, []);
