@@ -18,7 +18,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
-import { Iconify, Scrollbar } from "@nucleoidai/platform/minimal/components";
+import { Iconify, Scrollbar } from "@canmingir/link/minimal/components";
 import { useCallback, useEffect, useState } from "react";
 
 const NAV_COLLAPSE_WIDTH = 96;

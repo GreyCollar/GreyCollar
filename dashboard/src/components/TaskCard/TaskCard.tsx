@@ -1,7 +1,7 @@
 import AccountTreeIcon from "@mui/icons-material/AccountTree";
 import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import FlowDialog from "../FlowDialog/FlowDialog";
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
 import SupervisingTask from "../SupervisingTask/SupervisingTask";
 import TaskIcon from "@mui/icons-material/Task";

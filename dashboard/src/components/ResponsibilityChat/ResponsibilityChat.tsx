@@ -158,7 +158,7 @@ function ResponsibilityChat({
           xl: "100%",
         },
         maxWidth: "100%",
-        background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default}80 100%)`,
+        background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, ${theme.palette.background.default}20 100%)`,
         backdropFilter: "blur(10px)",
         border: `1px solid ${theme.palette.divider}`,
         borderRadius: 2,

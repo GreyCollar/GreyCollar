@@ -10,10 +10,7 @@ import KnowledgeBase from "./src/pages/knowledgeBase";
 import Settings from "./src/pages/settings";
 import Team from "./src/pages/team";
 
-import {
-  DashboardLayout,
-  FullScreenLayout,
-} from "@nucleoidai/platform/layouts";
+import { DashboardLayout, FullScreenLayout } from "@canmingir/link/layouts";
 
 const routes = [
   {

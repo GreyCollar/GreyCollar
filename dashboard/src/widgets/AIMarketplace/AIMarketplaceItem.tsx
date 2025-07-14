@@ -2,7 +2,7 @@ import SourcedAvatar from "../../components/SourcedAvatar/SourcedAvatar";
 import { getBackgroundUrl } from "../../utils/background";
 
 import { Avatar, Box, Card, Stack, Typography } from "@mui/material";
-import { Iconify, Image } from "@nucleoidai/platform/minimal/components";
+import { Iconify, Image } from "@canmingir/link/minimal/components";
 import { alpha, useTheme } from "@mui/material/styles";
 
 function AIMarketplaceItem({ engine, isWizardEngine, handleEngineSelect }) {

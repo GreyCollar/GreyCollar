@@ -1,4 +1,4 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import styles from "../styles";
 
 import { Box, IconButton } from "@mui/material";

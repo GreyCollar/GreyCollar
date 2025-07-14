@@ -7,7 +7,7 @@ import TypeToolbar from "../../components/TypeToolbar/TypeToolbar";
 import useColleague from "../../hooks/useColleagueV2";
 import useKnowledge from "../../hooks/useKnowledge";
 import useOrganizations from "../../hooks/useOrganziationsV2";
-import { useTable } from "@nucleoidai/platform/minimal/components";
+import { useTable } from "@canmingir/link/minimal/components";
 import useTeams from "../../hooks/useTeamsV2";
 
 import { Box, Container, Fab, Stack, useMediaQuery } from "@mui/material";

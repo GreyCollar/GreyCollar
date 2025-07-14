@@ -1,5 +1,5 @@
-import FlowReact from "./ResponsibilityFlow";
 import React from "react";
+import WrappedResponsibilityFlow from "./ResponsibilityFlow";
 
 import {
   Button,
@@ -15,12 +15,27 @@ const ResponsibilityFlowDialog = ({
   selectedItem,
   aiResponse,
 }) => {
+  const DEFAULT_DIALOG_HEIGHT = "600px";
+
   return (
-    <Dialog open={flowDialogOpen} onClose={handleFlowDialogClose}>
+    <Dialog
+      open={flowDialogOpen}
+      onClose={handleFlowDialogClose}
+      maxWidth="md"
+      fullWidth
+    >
       <DialogTitle>Flow Chart</DialogTitle>
-      <DialogContent>
+      <DialogContent
+        sx={{
+          width: "100%",
+          height: DEFAULT_DIALOG_HEIGHT,
+        }}
+      >
         {selectedItem && (
-          <FlowReact responsibility={selectedItem} aiResponse={aiResponse} />
+          <WrappedResponsibilityFlow
+            aiResponse={aiResponse}
+            responsibility={selectedItem}
+          />
         )}
       </DialogContent>
       <DialogActions>

@@ -1,4 +1,4 @@
-import { CustomBreadcrumbs } from "@nucleoidai/platform/minimal/components";
+import { CustomBreadcrumbs } from "@canmingir/link/minimal/components";
 import { Helmet } from "react-helmet-async";
 import config from "../../../config";
 

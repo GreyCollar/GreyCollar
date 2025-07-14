@@ -2,7 +2,7 @@ import "../../styles/chat.css";
 
 import { BaseEditor } from "slate";
 import CommandList from "./CommandList";
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import MentionList from "./MentionList";
 import MentionText from "./MentiontText";
 import { isKeyHotkey } from "is-hotkey";

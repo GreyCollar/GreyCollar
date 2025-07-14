@@ -1,7 +1,7 @@
 import Draggable from "react-draggable";
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import ResponsibilitySelector from "../ResponsibilitySelector";
-import { Scrollbar } from "@nucleoidai/platform/minimal/components";
+import { Scrollbar } from "@canmingir/link/minimal/components";
 import Stack from "@mui/material/Stack";
 import { alpha } from "@mui/material/styles";
 import styles from "./styles";

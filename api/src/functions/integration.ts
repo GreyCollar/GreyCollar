@@ -1,7 +1,7 @@
 import Colleague from "../models/Colleague";
 import Integration from "../models/Integration";
 import Integrations from "../integrations/integrations";
-import { NotFoundError } from "@nucleoidai/platform-express/error";
+import { NotFoundError } from "@canmingir/link-express/error";
 import axios from "axios";
 
 async function read({

@@ -1,4 +1,4 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import InlineChromiumBugfix from "./InlineChromiumBugFix";
 import { ReactEditor } from "slate-react";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";

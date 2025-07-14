@@ -6,7 +6,7 @@ import SystemMessage from "../../SystemMessage/SystemMessage";
 import TeamChatMessageItem from "./TeamChatMessageItem";
 import { Types } from "../../../components/ChatInput/chat.config";
 
-import { Label, Scrollbar } from "@nucleoidai/platform/minimal/components";
+import { Label, Scrollbar } from "@canmingir/link/minimal/components";
 import { memo, useEffect, useRef } from "react";
 
 const TeamChatMessageContent = memo(function ChatMessageList({

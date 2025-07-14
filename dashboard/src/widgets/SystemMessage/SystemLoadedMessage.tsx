@@ -1,4 +1,4 @@
-import { Label } from "@nucleoidai/platform/minimal/components";
+import { Label } from "@canmingir/link/minimal/components";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { fDateTime } from "../../utils/formatTime";
 import { useEffect } from "react";

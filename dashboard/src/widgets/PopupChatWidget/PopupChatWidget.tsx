@@ -1,4 +1,4 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import PopChat from "../../components/PopChat";
 import { useEvent } from "@nucleoidai/react-event";
 import { useParams } from "react-router-dom";

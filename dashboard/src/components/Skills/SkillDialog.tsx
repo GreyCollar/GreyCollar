@@ -3,7 +3,7 @@ import "../../styles/connectButton.css";
 import AuthHandler from "../LoginHandler/AuthHandler";
 import ClosableDialogTitle from "./ClosableDialogTitle";
 import { Icon } from "@iconify/react";
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
 
 import {

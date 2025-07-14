@@ -12,10 +12,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import {
-  FormProvider,
-  RHFTextField,
-} from "@nucleoidai/platform/minimal/components";
+import { FormProvider, RHFTextField } from "@canmingir/link/minimal/components";
 import React, { useEffect, useState } from "react";
 
 function AddTaskDialog({ open, setOpen, createTask, colleagueId }) {

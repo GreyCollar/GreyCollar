@@ -1,4 +1,4 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 
 import { Handle, Position } from "@xyflow/react";
 import React, { useEffect, useState } from "react";
@@ -71,6 +71,8 @@ const StyledHandle = styled(Handle)({
   opacity: 0,
 });
 
+const ANIMATION_DELAY_MS = 200;
+
 const CustomNode = ({ data }) => {
   const [animated, setAnimated] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -78,7 +80,7 @@ const CustomNode = ({ data }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimated(true);
-    }, 1000);
+    }, ANIMATION_DELAY_MS);
 
     return () => clearTimeout(timer);
   }, []);

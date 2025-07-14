@@ -1,6 +1,6 @@
-import * as platform from "@nucleoidai/platform-express";
+import * as platform from "@canmingir/link-express";
 
-import { Permission, Project } from "@nucleoidai/platform-express/models";
+import { Permission, Project } from "@canmingir/link-express/models";
 
 import Joi from "joi";
 import TeamDetails from "../models/TeamDetails";

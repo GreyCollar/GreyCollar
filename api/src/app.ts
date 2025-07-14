@@ -1,6 +1,6 @@
 import "express";
 
-import * as platform from "@nucleoidai/platform-express";
+import * as platform from "@canmingir/link-express";
 
 import agent from "./functions/agent";
 import colleagues from "./routes/colleagues";

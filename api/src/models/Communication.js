@@ -1,4 +1,4 @@
-const platform = require("@nucleoidai/platform-express");
+const platform = require("@canmingir/link-express");
 const {
   Postgres: { sequelize },
 } = platform.module();

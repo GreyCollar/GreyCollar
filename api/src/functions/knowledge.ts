@@ -1,7 +1,7 @@
 import Colleague from "../models/Colleague";
 import ColleagueKnowledge from "../models/ColleagueKnowledge";
 import Knowledge from "../models/Knowledge";
-import { NotFoundError } from "@nucleoidai/platform-express/error";
+import { NotFoundError } from "@canmingir/link-express/error";
 import { Op } from "sequelize";
 import Step from "../models/Step";
 import Task from "../models/Task";

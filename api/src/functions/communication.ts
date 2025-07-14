@@ -1,5 +1,5 @@
 import Communication from "../models/Communication";
-import { NotFoundError } from "@nucleoidai/platform-express/error";
+import { NotFoundError } from "@canmingir/link-express/error";
 
 async function list() {
   const communications = await Communication.findAll();

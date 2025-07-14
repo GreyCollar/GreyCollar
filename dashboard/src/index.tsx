@@ -1,4 +1,4 @@
-import { Platform } from "@nucleoidai/platform";
+import { Platform } from "@canmingir/link";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import routes from "../routes";
