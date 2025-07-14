@@ -78,7 +78,7 @@ const CustomNode = ({ data }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimated(true);
-    }, 1000);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, []);
