@@ -5,6 +5,7 @@ import config from "./config";
 import dotenv from "dotenv";
 import http from "http";
 import models from "./src/models";
+import { nodeEvent } from "nuc-node-event-test/client";
 
 dotenv.config();
 
@@ -23,8 +24,13 @@ platform.init(config).then(() => {
 
   models.init();
 
+  nodeEvent.init({
+    host: "localhost",
+    port: Number(8080),
+    protocol: "http",
+  });
+
   server.listen(process.env.PORT || 4000, () => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
   });
 });
-

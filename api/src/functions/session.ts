@@ -1,5 +1,6 @@
-import Session from "../models/Session";
 import Conversation from "../models/Conversation";
+import Session from "../models/Session";
+import { nodeEvent } from "nuc-node-event-test/client";
 import { publish } from "../lib/Event";
 import { v4 as uuid } from "uuid";
 
@@ -58,7 +59,7 @@ async function addConversation({
       content,
     });
   } else {
-    publish("SESSION", "AI_MESSAGED", {
+    nodeEvent.publish("AI_MESSAGED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,
