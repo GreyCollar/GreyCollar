@@ -16,6 +16,7 @@
     "@nucleoidai/platform-express": "^1.5.48",
     "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
+    "nuc-node-event-test": "^1.0.13",
     "openai": "^4.79.4",
     "puppeteer": "^24.1.0",
     "socket.io": "^4.8.1"
