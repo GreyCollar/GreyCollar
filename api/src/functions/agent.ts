@@ -306,7 +306,7 @@ async function responsibilityToTask({
     dataset: dataset.train.responsibility,
     context,
     content,
-    json_format: "{ task: [<TASK>] ,answer: <ANSWER> }",
+    json_format: "{ task: <TASK> ,steps:[<STEP>] ,answer: <ANSWER> }",
   });
 
   return response;
@@ -371,9 +371,71 @@ async function chat({
       responsibility: responsibilityData,
     });
 
-    return responsibilityToTaskResponse.answer;
+    const createdTask = await taskFn.create({
+      colleagueId,
+      description: responsibilityToTaskResponse.task.description,
+      responsibilityId: responsibilityDecision.responsibilityId,
+    });
+
+    for (const step of responsibilityToTaskResponse.steps) {
+      await taskFn.addStep({
+        taskId: createdTask.id,
+        action: step.action,
+        parameters: step.parameters,
+        comment: "",
+      });
+    }
+
+    await session.addConversation({
+      sessionId,
+      colleagueId,
+      role: "ASSISTANT",
+      content: responsibilityToTaskResponse.answer,
+    });
   } else {
-    return "I'm checking the knowledge base";
+    const infoData = await info({ colleagueId });
+
+    const context = [knowledgeData, conversationsData, infoData];
+
+    const { evaluation } = await generate({
+      dataset: dataset.train.chat,
+      context,
+      content,
+      json_format: "{ evaluation: { is_answer_known: <true|false> } }",
+    });
+
+    if (evaluation.is_answer_known) {
+      const { answer, confidence } = await generate({
+        policy: dataset.policy,
+        dataset: dataset.train.chat,
+        context,
+        content,
+        json_format: "{ answer: <ANSWER_IN_NLP>, confidence: <0-1> }",
+      });
+
+      console.debug(answer, confidence);
+
+      await session.addConversation({
+        sessionId,
+        colleagueId,
+        role: "ASSISTANT",
+        content: answer,
+      });
+    } else {
+      const conversation = await session.addConversation({
+        sessionId,
+        colleagueId,
+        role: "ASSISTANT",
+        content: "Please wait while I am working on your request.",
+      });
+
+      await supervising.create({
+        sessionId,
+        conversationId: conversation.id,
+        question: content,
+        colleagueId,
+      });
+    }
   }
 }
 
