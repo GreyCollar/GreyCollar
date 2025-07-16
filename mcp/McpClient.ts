@@ -39,7 +39,7 @@ class McpClient {
     try {
       const serverPath = `${path.dirname(process.cwd())}\\mcp\\servers\\${
         this.name
-      }\\tools\\${this.name}_${this.tool}.ts`;
+      }`;
 
       console.log(serverPath);
 
