@@ -1,58 +1,64 @@
 [
     {
-        "responsibilities": [
-            {
-                "id": "76ccda2d-f11f-408c-8087-66c377600d0b",
-                "type": "NORMAL",
-                "properties": {
-                    "action": "GREY-MARKET:check_product_count",
-                    "label": "Check Product Availability",
-                    "icon": "mdi:check"
+        "responsibility": {
+            "id": "ba6f7911-e232-469d-9060-2881852f6e59",
+            "title": "Product Order",
+            "description": "Check product availability, if not exist, create order.",
+            "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+            "nodes": [
+                {
+                    "id": "76ccda2d-f11f-408c-8087-66c377600d0b",
+                    "type": "NORMAL",
+                    "properties": {
+                        "action": "GREY-MARKET:check_product_count",
+                        "label": "Check Product Availability",
+                        "icon": "mdi:check"
+                    },
+                    "next": [
+                        "51dca395-1d90-4a28-9bbc-233de9c1a207"
+                    ],
+                    "createdAt": "2025-06-19T06:02:00Z"
                 },
-                "next": [
-                    "51dca395-1d90-4a28-9bbc-233de9c1a207"
-                ],
-                "createdAt": "2025-06-19T06:02:00Z"
-            },
-            {
-                "id": "51dca395-1d90-4a28-9bbc-233de9c1a207",
-                "type": "CONDITION",
-                "properties": {
-                    "action": "PLATFORM:decision",
-                    "label": "Make Decision",
-                    "icon": "mdi:decision"
+                {
+                    "id": "51dca395-1d90-4a28-9bbc-233de9c1a207",
+                    "type": "CONDITION",
+                    "properties": {
+                        "action": "PLATFORM:decision",
+                        "label": "Make Decision",
+                        "icon": "mdi:decision"
+                    },
+                    "true": [
+                        "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2"
+                    ],
+                    "false": [
+                        "5be22de7-9673-448d-a1b5-dc23a8789b5c"
+                    ],
+                    "createdAt": "2025-06-19T06:02:00Z"
                 },
-                "true": [
-                    "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2"
-                ],
-                "false": [
-                    "5be22de7-9673-448d-a1b5-dc23a8789b5c"
-                ],
-                "createdAt": "2025-06-19T06:02:00Z"
-            },
-            {
-                "id": "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2",
-                "type": "NORMAL",
-                "properties": {
-                    "action": "GREY-MARKET:create_order",
-                    "label": "Create Order",
-                    "icon": "mdi:cart-plus"
+                {
+                    "id": "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2",
+                    "type": "NORMAL",
+                    "properties": {
+                        "action": "GREY-MARKET:create_order",
+                        "label": "Create Order",
+                        "icon": "mdi:cart-plus"
+                    },
+                    "next": null,
+                    "createdAt": "2025-06-19T06:02:00Z"
                 },
-                "next": null,
-                "createdAt": "2025-06-19T06:02:00Z"
-            },
-            {
-                "id": "5be22de7-9673-448d-a1b5-dc23a8789b5c",
-                "type": "NORMAL",
-                "properties": {
-                    "action": "GREY-MARKET:reduce_product_count",
-                    "label": "Reduce Product Quantity",
-                    "icon": "mdi:minus"
-                },
-                "next": null,
-                "createdAt": "2025-06-19T06:02:00Z"
-            }
-        ],
+                {
+                    "id": "5be22de7-9673-448d-a1b5-dc23a8789b5c",
+                    "type": "NORMAL",
+                    "properties": {
+                        "action": "GREY-MARKET:reduce_product_count",
+                        "label": "Reduce Product Quantity",
+                        "icon": "mdi:minus"
+                    },
+                    "next": null,
+                    "createdAt": "2025-06-19T06:02:00Z"
+                }
+            ]
+        },
         "content": "Check battery availability, if not exist, create order.",
         "knowledge": [
             {
@@ -106,6 +112,7 @@
                     }
                 }
             ]
-        }
+        },
+        "answer": "Task created successfully"
     }
 ]
