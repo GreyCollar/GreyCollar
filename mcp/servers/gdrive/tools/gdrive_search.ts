@@ -1,5 +1,6 @@
-import { google } from "googleapis";
 import { GDriveSearchInput, InternalToolResponse } from "./types.js";
+
+import { google } from "googleapis";
 
 export const schema = {
   name: "GDRIVE:search",
@@ -41,8 +42,7 @@ export async function search(
     const escapedQuery = userQuery.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
 
     // Build search query with multiple conditions
-    const conditions = [];
-
+    const conditions: string[] = [];
     // Search in title
     conditions.push(`name contains '${escapedQuery}'`);
 

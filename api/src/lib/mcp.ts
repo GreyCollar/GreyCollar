@@ -1,7 +1,11 @@
 import McpClient from "../../../mcp/McpClient";
 
 async function connect() {
-  const mcpClient = new McpClient({ name: "gdrive", version: "1.0.0" });
+  const mcpClient = new McpClient({
+    name: "gdrive",
+    tool: "search",
+    version: "1.0.0",
+  });
   try {
     await mcpClient.connectToServer({
       credentials: {
@@ -18,3 +22,4 @@ async function connect() {
 }
 
 export default { connect };
+
