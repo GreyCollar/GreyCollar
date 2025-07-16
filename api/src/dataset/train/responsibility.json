@@ -76,42 +76,53 @@
                 "createdAt": "1970-01-20T22:08:14.337Z"
             }
         ],
-        "task": {
-            "description": "Check product availability, if not exist, create order.",
-            "steps": [
-                {
-                    "action": "GREY-MARKET:check_product_count",
-                    "parameters": {
-                        "productId": "btr-123"
-                    }
-                },
-                {
-                    "action": "PLATFORM:decision",
-                    "parameters": {
-                        "condition": "product_count <= 0",
-                        "true": [
-                            "GREY-MARKET:create_order"
-                        ],
-                        "false": [
-                            "GREY-MARKET:reduce_product_count"
-                        ]
-                    }
-                },
-                {
-                    "action": "GREY-MARKET:create_order",
-                    "parameters": {
-                        "productId": "btr-123",
-                        "quantity": 10
-                    }
-                },
-                {
-                    "action": "GREY-MARKET:reduce_product_count",
-                    "parameters": {
-                        "productId": "btr-123",
-                        "quantity": 1
-                    }
+        "steps": [
+            {
+                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+                "action": "GREY-MARKET:check_product_count",
+                "status": "COMPLETED",
+                "parameters": {
+                    "productId": "btr-123"
                 }
-            ]
+            },
+            {
+                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+                "action": "PLATFORM:decision",
+                "status": "COMPLETED",
+                "parameters": {
+                    "condition": "product_count <= 0",
+                    "true": [
+                        "GREY-MARKET:create_order"
+                    ],
+                    "false": [
+                        "GREY-MARKET:reduce_product_count"
+                    ]
+                }
+            },
+            {
+                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+                "action": "GREY-MARKET:create_order",
+                "status": "COMPLETED",
+                "parameters": {
+                    "productId": "btr-123",
+                    "quantity": 10
+                }
+            },
+            {
+                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+                "action": "GREY-MARKET:reduce_product_count",
+                "status": "COMPLETED",
+                "parameters": {
+                    "productId": "btr-123",
+                    "quantity": 1
+                }
+            }
+        ],
+        "task": {
+            "id": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+            "status": "COMPLETED",
+            "description": "Check product availability, if not exist, create order.",
+            "responsibilityId": "ba6f7911-e232-469d-9060-2881852f6e59"
         },
         "answer": "Task created successfully"
     }

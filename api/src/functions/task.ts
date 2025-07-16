@@ -1,25 +1,29 @@
-import Task from "../models/Task";
-import Step from "../models/Step";
 import Colleague from "../models/Colleague";
+import Step from "../models/Step";
+import Task from "../models/Task";
 import { publish } from "../lib/Event";
 
 async function create({
   colleagueId,
   description,
+  responsibilityId,
 }: {
   colleagueId: string;
   description: string;
+  responsibilityId?: string;
 }) {
   const task = await Task.create({
     colleagueId,
     description,
     status: "IN_PROGRESS",
+    responsibilityId,
   });
 
   publish("TASK", "CREATED", {
     taskId: task.id,
     colleagueId,
     description,
+    responsibilityId,
   });
 
   return task;
