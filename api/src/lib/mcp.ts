@@ -6,6 +6,7 @@ async function connect() {
     tool: "search",
     version: "1.0.0",
   });
+
   try {
     await mcpClient.connectToServer({
       credentials: {
@@ -15,6 +16,12 @@ async function connect() {
         refreshToken: process.env.GDRIVE_REFRESH_TOKEN as string,
       },
     });
+    const tools = await mcpClient.listTools();
+    console.log(JSON.stringify(tools, null, 2));
+    const res = await mcpClient.callTool("GDRIVE:search", {
+      query: "test",
+    });
+    console.log(res);
     return mcpClient;
   } finally {
     await mcpClient.close();
@@ -22,4 +29,3 @@ async function connect() {
 }
 
 export default { connect };
-
