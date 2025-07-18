@@ -13,7 +13,8 @@ async function connect() {
         clientId: process.env.GDRIVE_CLIENT_ID as string,
         clientSecret: process.env.GDRIVE_CLIENT_SECRET as string,
         redirectUris: [process.env.GDRIVE_REDIRECT_URI as string],
-        refreshToken: process.env.GDRIVE_REFRESH_TOKEN as string,
+        refreshToken:
+          "1//03WcLLAuwVp24CgYIARAAGAMSNwF-L9Ir78hwtFCjLCouuHj-zfQmeULNRuh2NZGG4ZRvqEm8X052lVYiPq6Wd-zdXa2xChEJaHg",
       },
     });
     const tools = await mcpClient.listTools();
@@ -29,3 +30,4 @@ async function connect() {
 }
 
 export default { connect };
+

@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListResourcesRequestSchema,
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+
+import { InternalToolResponse } from "./tools/types.js";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import cli from "../../lib/cli";
 import { google } from "googleapis";
 import { tools } from "./tools";
-import { InternalToolResponse } from "./tools/types.js";
-import cli from "../../lib/cli";
 
 const { credentials } = cli.args();
 
