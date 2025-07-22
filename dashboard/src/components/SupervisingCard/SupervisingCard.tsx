@@ -1,13 +1,11 @@
-import DoneIcon from "@mui/icons-material/Done";
 import { Iconify } from "@nucleoidai/platform/minimal/components";
-import PopupChatWidget from "../../widgets/PopupChatWidget/PopupChatWidget";
+import SupervisingChat from "../SupervisingChat";
 
 import {
   Box,
   Card,
   Divider,
   Fab,
-  InputAdornment,
   Table,
   TableBody,
   TableCell,
@@ -20,18 +18,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-const SupervisingCard = ({ supervise, updateSupervising }) => {
-  const [inputValues, setInputValues] = useState({});
-
-  const handleSubmit = (superviseId) => {
-    if (inputValues[superviseId]) {
-      updateSupervising(superviseId, inputValues[superviseId]);
-      setInputValues({
-        ...inputValues,
-        [superviseId]: "",
-      });
-    }
-  };
+const SupervisingCard = ({ supervise }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -81,82 +68,23 @@ const SupervisingCard = ({ supervise, updateSupervising }) => {
                 </Typography>
               </Box>
 
-              {supervise.answer ? (
-                <TextField
-                  data-cy="answer-supervising"
-                  variant="outlined"
-                  label="Answer"
-                  value={`${supervise.answer}`}
-                  InputProps={{
-                    readOnly: true,
-                    style: { cursor: "text" },
-                  }}
-                  fullWidth
-                  sx={{
-                    "& .MuiOutlinedInput-input": {
-                      cursor: "default",
-                    },
-                    marginTop: 1,
-                  }}
-                />
-              ) : (
-                <TextField
-                  multiline
-                  rows={3}
-                  label="Answer"
-                  variant="outlined"
-                  data-cy="answer-supervise"
-                  value={inputValues[supervise.id] || ""}
-                  onChange={(e) =>
-                    setInputValues({
-                      ...inputValues,
-                      [supervise.id]: e.target.value,
-                    })
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(supervise.id);
-                    }
-                  }}
-                  fullWidth
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "flex-end",
-                            justifyContent: "flex-end",
-                            width: "100%",
-                          }}
-                        >
-                          <Fab
-                            size="small"
-                            disabled={!inputValues[supervise.id]}
-                            sx={{
-                              position: "absolute",
-                              bottom: 5,
-                              right: 5,
-                              backgroundColor: "inherit",
-                              boxShadow: "none",
-                              "&:hover": {
-                                backgroundColor: "common.white",
-                                color: "common.black",
-                              },
-                            }}
-                          >
-                            <DoneIcon
-                              data-cy="send-answer"
-                              onClick={() => handleSubmit(supervise.id)}
-                            />
-                          </Fab>
-                        </Box>
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
+              <TextField
+                data-cy="answer-supervising"
+                variant="outlined"
+                label="Answer"
+                value={supervise.answer ? `${supervise.answer}` : ""}
+                InputProps={{
+                  readOnly: true,
+                  style: { cursor: "text" },
+                }}
+                fullWidth
+                sx={{
+                  "& .MuiOutlinedInput-input": {
+                    cursor: "default",
+                  },
+                  marginTop: 1,
+                }}
+              />
             </Box>
             <Divider orientation="vertical" flexItem />
             <Box
@@ -230,13 +158,10 @@ const SupervisingCard = ({ supervise, updateSupervising }) => {
           </Box>
         </Box>
       </Card>
-      <PopupChatWidget
-        readOnly={true}
-        openPopChat={open}
-        setOpenPopChat={setOpen}
-        conversationId={supervise.conversationId}
-        sessionId={supervise.sessionId}
-        sound={false}
+      <SupervisingChat
+        open={open}
+        handleClose={() => setOpen(false)}
+        supervise={supervise}
       />
     </>
   );
