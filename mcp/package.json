@@ -4,10 +4,12 @@
   "description": "",
   "author": "GreyTeam",
   "scripts": {
+    "debug": "ts-node debugger.ts",
     "prepare": "exit 0",
     "test": "exit 0"
   },
   "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
     "@modelcontextprotocol/sdk": "^1.10.0",
     "googleapis": "^148.0.0"
   },
