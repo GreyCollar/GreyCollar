@@ -441,6 +441,49 @@ async function diamond({
   return response;
 }
 
+async function evaluateSupervisionAnswer({
+  question,
+  answer,
+  colleagueId,
+}: {
+  question: string;
+  answer: string;
+  colleagueId: string;
+}) {
+  const context = [
+    await info({ colleagueId }),
+    await knowledge({ colleagueId }),
+    {
+      role: "system" as const,
+      content: {
+        supervision_context: {
+          original_question: question,
+          proposed_answer: answer,
+        },
+      },
+    },
+  ];
+
+  const evaluation = await generate({
+    dataset: dataset.train.chat,
+    context,
+    content: `Evaluate if this answer is relevant, helpful, and appropriate for the question: "${question}". Answer provided: "${answer}"`,
+    json_format: `{
+      evaluation: {
+        is_relevant: <true|false>,
+        is_helpful: <true|false>,
+        is_complete: <true|false>,
+        confidence_score: <0.0-1.0>,
+        should_auto_send: <true|false>
+      },
+      guidance: <string|null>,
+      improved_answer: <string|null>
+    }`,
+  });
+
+  return evaluation;
+}
+
 export default {
   teamChat,
   chat,
@@ -450,4 +493,5 @@ export default {
   responsibilityName,
   responsibilityToTask,
   diamond,
+  evaluateSupervisionAnswer,
 };
