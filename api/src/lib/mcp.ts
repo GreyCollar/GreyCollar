@@ -14,13 +14,13 @@ async function connect() {
         clientSecret: process.env.GDRIVE_CLIENT_SECRET as string,
         redirectUris: [process.env.GDRIVE_REDIRECT_URI as string],
         refreshToken:
-          "1//03WcLLAuwVp24CgYIARAAGAMSNwF-L9Ir78hwtFCjLCouuHj-zfQmeULNRuh2NZGG4ZRvqEm8X052lVYiPq6Wd-zdXa2xChEJaHg",
+          "1//0313cXAPxW8ozCgYIARAAGAMSNwF-L9IrCeSNrvBKzLjlXXoSFpUQyHFBX3AXBG36j7pSR3uD32BEx3cvWICQV1RJKXj2x2z3q9o",
       },
     });
     const tools = await mcpClient.listTools();
     console.log(JSON.stringify(tools, null, 2));
     const res = await mcpClient.callTool("GDRIVE:search", {
-      query: "test",
+      query: "Call" as string,
     });
     console.log(res);
     return mcpClient;

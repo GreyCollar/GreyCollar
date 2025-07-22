@@ -6,6 +6,7 @@
   "author": "GreyCollar Team",
   "private": "true",
   "scripts": {
+    "debug:mcp": "cd ./mcp && npm run debug",
     "dev:api": "cd ./api && npm run dev",
     "dev:dashboard": "cd ./dashboard && npm run dev",
     "dev:main": "npm start",

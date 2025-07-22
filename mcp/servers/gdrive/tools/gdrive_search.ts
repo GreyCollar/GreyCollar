@@ -1,6 +1,7 @@
 import { GDriveSearchInput, InternalToolResponse } from "./types.js";
 
 import { google } from "googleapis";
+import { getOAuth2Client } from "../index";
 
 export const schema = {
   name: "GDRIVE:search",
@@ -28,10 +29,13 @@ export const schema = {
 } as const;
 
 export async function search(
-  args: GDriveSearchInput,
+  args: GDriveSearchInput
 ): Promise<InternalToolResponse> {
-  const drive = google.drive("v3");
+  const oauth2Client = getOAuth2Client();
+  const drive = google.drive({ version: "v3", auth: oauth2Client });
+
   const userQuery = args.query.trim();
+
   let searchQuery = "";
 
   // If query is empty, list all files
