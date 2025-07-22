@@ -30,7 +30,6 @@ function useSupervisings() {
     return response?.data;
   };
 
-  // Refactored: directly return the update function
   const updateSupervising = async (
     supervisingId: string,
     inputValue: string
@@ -43,6 +42,17 @@ function useSupervisings() {
     if (response?.data) {
       publish("SUPERVISING_ANSWERED", response.data);
     }
+
+    return response?.data;
+  };
+
+  const evaluateSupervising = async (supervisingId: string, answer: string) => {
+    const response = await http.post(
+      `/supervisings/${supervisingId}/evaluate`,
+      {
+        answer,
+      }
+    );
 
     return response?.data;
   };
@@ -91,6 +101,7 @@ function useSupervisings() {
   return {
     createSupervising,
     updateSupervising,
+    evaluateSupervising,
     getColleagueSupervisingByStatus,
     getColleagueSupervising,
   };

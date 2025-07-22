@@ -50,9 +50,9 @@ async function update({
     { status, answer },
     { where: { id: supervisingId } }
   );
-  const { sessionId, conversationId } = await Supervising.findByPk(
-    supervisingId
-  );
+
+  const updatedSupervising = await Supervising.findByPk(supervisingId);
+  const { sessionId, conversationId } = updatedSupervising;
 
   const knowledgeInstance = await Knowledge.create({
     type: "QA",
@@ -76,6 +76,8 @@ async function update({
     answer,
     status,
   });
+
+  return updatedSupervising;
 }
 
 export default { create, update };
