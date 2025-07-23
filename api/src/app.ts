@@ -72,8 +72,8 @@ subscribe("SUPERVISING", "ANSWERED", ({ sessionId, colleagueId, question }) =>
   })
 );
 subscribe("TASK", "CREATED", ({ taskId }) => agent.task({ taskId }));
-subscribe("STEP", "ADDED", ({ stepId, action, parameters }) =>
-  agent.step({ stepId, action, parameters })
+subscribe("STEP", "ADDED", ({ stepId, action, parameters, comment }) =>
+  agent.step({ stepId, action, parameters, comment })
 );
 subscribe("STEP", "COMPLETED", ({ taskId }) => agent.task({ taskId }));
 
