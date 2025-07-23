@@ -116,8 +116,8 @@ const Integrations = [
   },
   {
     id: "31ea5f17-045d-47d0-b9d3-ffc5d8f7b4cb",
-    action: "GREY-MARKET:check_product_count",
-    provider: "GREY-MARKET",
+    action: "GREY:check_product_count",
+    provider: "GREY",
     description: "Check product count",
     direction: "OUTGOING",
     lib: "mcp",
@@ -134,8 +134,8 @@ const Integrations = [
   },
   {
     id: "90627148-0d9c-405f-90a4-48be9935eb3b",
-    action: "GREY-MARKET:create_order",
-    provider: "GREY-MARKET",
+    action: "GREY:create_order",
+    provider: "GREY",
     description: "Create an order",
     direction: "OUTGOING",
     lib: "mcp",
@@ -156,8 +156,8 @@ const Integrations = [
   },
   {
     id: "f8c49eb7-a1e3-45a8-a3c7-576b8082b036",
-    action: "GREY-MARKET:reduce_product_count",
-    provider: "GREY-MARKET",
+    action: "GREY:reduce_product_count",
+    provider: "GREY",
     description: "Reduce product count",
     direction: "OUTGOING",
     lib: "mcp",

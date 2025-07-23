@@ -10,7 +10,7 @@
                     "id": "76ccda2d-f11f-408c-8087-66c377600d0b",
                     "type": "NORMAL",
                     "properties": {
-                        "action": "GREY-MARKET:check_product_count",
+                        "action": "GREY:check_product_count",
                         "label": "Check Product Availability",
                         "icon": "mdi:check"
                     },
@@ -39,7 +39,7 @@
                     "id": "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2",
                     "type": "NORMAL",
                     "properties": {
-                        "action": "GREY-MARKET:create_order",
+                        "action": "GREY:create_order",
                         "label": "Create Order",
                         "icon": "mdi:cart-plus"
                     },
@@ -50,7 +50,7 @@
                     "id": "5be22de7-9673-448d-a1b5-dc23a8789b5c",
                     "type": "NORMAL",
                     "properties": {
-                        "action": "GREY-MARKET:reduce_product_count",
+                        "action": "GREY:reduce_product_count",
                         "label": "Reduce Product Quantity",
                         "icon": "mdi:minus"
                     },
@@ -79,7 +79,7 @@
         "steps": [
             {
                 "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-                "action": "GREY-MARKET:check_product_count",
+                "action": "GREY:check_product_count",
                 "status": "COMPLETED",
                 "parameters": {
                     "productId": "btr-123"
@@ -92,16 +92,16 @@
                 "parameters": {
                     "condition": "product_count <= 0",
                     "true": [
-                        "GREY-MARKET:create_order"
+                        "GREY:create_order"
                     ],
                     "false": [
-                        "GREY-MARKET:reduce_product_count"
+                        "GREY:reduce_product_count"
                     ]
                 }
             },
             {
                 "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-                "action": "GREY-MARKET:create_order",
+                "action": "GREY:create_order",
                 "status": "COMPLETED",
                 "parameters": {
                     "productId": "btr-123",
@@ -110,7 +110,7 @@
             },
             {
                 "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-                "action": "GREY-MARKET:reduce_product_count",
+                "action": "GREY:reduce_product_count",
                 "status": "COMPLETED",
                 "parameters": {
                     "productId": "btr-123",
