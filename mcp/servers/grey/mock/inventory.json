@@ -1,0 +1,12 @@
+[
+    {
+        "id": "btr-123",
+        "name": "Battery",
+        "count": 10
+    },
+    {
+        "id": "scr-123",
+        "name": "Screen",
+        "count": 20
+    }
+]
