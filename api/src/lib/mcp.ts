@@ -1,9 +1,9 @@
 import McpClient from "../../../mcp/McpClient";
 
-async function connect() {
+async function connect({ name, tool }: { name: string; tool: string }) {
   const mcpClient = new McpClient({
-    name: "gdrive",
-    tool: "search",
+    name,
+    tool,
     version: "1.0.0",
   });
 
@@ -19,10 +19,7 @@ async function connect() {
     });
     const tools = await mcpClient.listTools();
     console.log(JSON.stringify(tools, null, 2));
-    const res = await mcpClient.callTool("GDRIVE:search", {
-      query: "Call" as string,
-    });
-    console.log(res);
+
     return mcpClient;
   } finally {
     await mcpClient.close();
