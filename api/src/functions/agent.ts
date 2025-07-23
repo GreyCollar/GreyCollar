@@ -1,3 +1,4 @@
+import Integrations from "../integrations/integrations";
 import actions from "../actions";
 import colleague from "./colleague";
 import dataset from "../dataset";
@@ -191,28 +192,63 @@ async function task({ taskId }: { taskId: string }) {
   });
 }
 
-async function step({ stepId, action, parameters }) {
+async function step({
+  stepId,
+  action,
+  parameters,
+  comment,
+}: {
+  stepId: string;
+  action: string;
+  parameters: object;
+  comment: string;
+}) {
+  let actionType;
+
+  if (Integrations.find((integration) => integration.action === action)) {
+    actionType = "MCP";
+  } else if (action === "SUPERVISED") {
+    actionType = "SUPERVISED";
+  } else {
+    actionType = "ACTION";
+  }
+
   try {
     let actionFn;
+    let result;
+    let mcpClient;
 
     if (action === "SUPERVISED") {
       actionFn = require("../actions/supervised").default;
-    } else {
+    } else if (actionType === "ACTION") {
       // @ts-ignore
       const { lib } = actions.find(action);
       actionFn = require(`../actions/${lib}`).default;
+    } else if (actionType === "MCP") {
+      const mcp = require("../lib/mcp").default;
+
+      const provider = action.split(":")[0].toLowerCase();
+      const tool = action.split(":")[1];
+
+      mcpClient = await mcp.connect({ name: provider, tool });
     }
 
-    const { taskId } = await taskFn.getStep({ stepId });
-    const steps = await taskFn.listSteps({ taskId });
+    if (actionType === "ACTION" || actionType === "SUPERVISED") {
+      const { taskId } = await taskFn.getStep({ stepId });
+      const steps = await taskFn.listSteps({ taskId });
 
-    const result = await actionFn.run({
-      context: steps
-        .filter((step) => step.result)
-        .map(({ comment, result }) => `Comment: ${comment}\nResult: ${result}`)
-        .join("\n"),
-      parameters,
-    });
+      result = await actionFn.run({
+        context: steps
+          .filter((step) => step.result)
+          .map(
+            ({ comment, result }) => `Comment: ${comment}\nResult: ${result}`
+          )
+          .join("\n"),
+        parameters,
+      });
+    } else if (actionType === "MCP") {
+      result = await mcpClient.callTool(action, parameters);
+    }
 
     let resultString;
 
