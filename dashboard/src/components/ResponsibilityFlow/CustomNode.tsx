@@ -4,6 +4,8 @@ import { Handle, Position } from "@xyflow/react";
 import React, { useEffect, useState } from "react";
 import { alpha, styled } from "@mui/material/styles";
 
+const ANIMATION_DELAY_MS = 200;
+
 const MainContainer = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
@@ -70,8 +72,6 @@ const LabelText = styled("div")({
 const StyledHandle = styled(Handle)({
   opacity: 0,
 });
-
-const ANIMATION_DELAY_MS = 200;
 
 const CustomNode = ({ data }) => {
   const [animated, setAnimated] = useState(false);
