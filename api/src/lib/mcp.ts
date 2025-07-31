@@ -21,8 +21,9 @@ async function connect({ name, tool }: { name: string; tool: string }) {
     console.log(JSON.stringify(tools, null, 2));
 
     return mcpClient;
-  } finally {
-    await mcpClient.close();
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
 
