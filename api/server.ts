@@ -25,9 +25,9 @@ platform.init(config).then(() => {
   models.init();
 
   nodeEvent.init({
-    host: "localhost",
-    port: Number(8080),
-    protocol: "http",
+    host: config.nodeEvent.host,
+    port: config.nodeEvent.port,
+    protocol: config.nodeEvent.protocol as "http" | "https",
   });
 
   server.listen(process.env.PORT || 4000, () => {

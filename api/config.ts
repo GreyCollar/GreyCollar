@@ -18,6 +18,11 @@ const config = {
   dynamodb: {
     region: "us-east-1",
   },
+  nodeEvent: {
+    host: "localhost",
+    port: 8080,
+    protocol: "http",
+  },
 };
 
 export default config;
