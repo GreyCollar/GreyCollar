@@ -77,6 +77,20 @@ async function knowledge({
   };
 }
 
+async function responsibilities({ colleagueId }) {
+  const responsibilities = await responsibilityFn.list({ colleagueId });
+
+  return {
+    role: "system",
+    content: {
+      responsibilities,
+    },
+  } as {
+    role: "user" | "system" | "assistant";
+    content: object;
+  };
+}
+
 async function conversations({ sessionId }) {
   const conversations = await session.listConversations({ sessionId });
 
@@ -152,6 +166,7 @@ async function task({ taskId }: { taskId: string }) {
       await Promise.all([
         info({ colleagueId }),
         knowledge({ colleagueId, taskId }),
+        responsibilities({ colleagueId }),
       ])
     ).flat(),
     actions.list(),
@@ -167,7 +182,7 @@ async function task({ taskId }: { taskId: string }) {
       "{ next_step: { action: <ACTION>, parameters: <PARAMETER>, comment: <COMMENT> } }",
   });
 
-  if (action === "COMPLETE") {
+  if (action === "PLATFORM:complete") {
     const steps = await taskFn.listSteps({ taskId });
 
     let result;
@@ -342,7 +357,7 @@ async function responsibilityToTask({
     dataset: dataset.train.responsibility,
     context,
     content,
-    json_format: "{ task: <TASK> ,steps:[<STEP>] ,answer: <ANSWER> }",
+    json_format: "{ task: <TASK> ,answer: <ANSWER> }",
   });
 
   return response;
@@ -407,20 +422,11 @@ async function chat({
       responsibility: responsibilityData,
     });
 
-    const createdTask = await taskFn.create({
+    await taskFn.create({
       colleagueId,
       description: responsibilityToTaskResponse.task.description,
       responsibilityId: responsibilityDecision.responsibilityId,
     });
-
-    for (const step of responsibilityToTaskResponse.steps) {
-      await taskFn.addStep({
-        taskId: createdTask.id,
-        action: step.action,
-        parameters: step.parameters,
-        comment: "",
-      });
-    }
 
     await session.addConversation({
       sessionId,
@@ -485,4 +491,3 @@ export default {
   responsibilityToTask,
   diamond,
 };
-
