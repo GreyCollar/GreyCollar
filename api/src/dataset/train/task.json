@@ -1,179 +1,159 @@
 [
   {
-    "id": "f66cbb2c-d758-4f1f-976c-e7bf5bffb095",
-    "description": "List emails from example.com website",
-    "steps": [
-      {
-        "action": "PLATFORM:scrape_website",
-        "parameters": {
-          "url": "http://www.example.com"
-        },
-        "result": "Example Coffee Shop - We are a coffee shop in the heart of the city. We serve the best coffee in town. Come and visit us today! or contact us at amy@example.com",
-        "comment": "Scrapping example.com website"
-      },
-      {
-        "action": "PLATFORM:llm",
-        "parameters": {
-          "message": "Find all emails in the scraped website"
-        },
-        "comment": "Finding all emails",
-        "result": "amy@example.com"
-      },
-      {
-        "action": "COMPLETE",
-        "comment": "Completing task"
-      }
-    ]
-  },
-  {
-    "id": "76b345d2-9944-4d4d-a586-d206e9cb1d80",
-    "description": "List emails from example.com website",
-    "steps": [
-      {
-        "action": "PLATFORM:scrape_website",
-        "parameters": {
-          "url": "http://www.example.com"
-        },
-        "result": "Example Coffee Shop - We are a coffee shop in the heart of the city. We serve the best coffee in town. Come and visit us today! or contact us at amy@example.com and alex@example.com",
-        "comment": "Scrapping example.com website"
-      },
-      {
-        "action": "PLATFORM:llm",
-        "parameters": {
-          "message": "Find all emails in the scraped website"
-        },
-        "comment": "Finding all emails",
-        "result": "amy@example.com"
-      },
-      {
-        "action": "SUPERVISED",
-        "parameters": {
-          "message": "List emails with numbers"
-        },
-        "comment": "Supervising with listing",
-        "result": "List emails with numbers"
-      },
-      {
-        "action": "PLATFORM:llm",
-        "parameters": {
-          "message": "List emails with numbers"
-        },
-        "comment": "listing emails with numbers",
-        "result": "1.amy@example.com 2.alex@example.com "
-      },
-      {
-        "action": "COMPLETE",
-        "comment": "Completing task"
-      }
-    ]
-  },
-  {
-    "id": "ce09406c-34de-447c-a89f-104a7c4bcd66",
-    "description": "Find phone number and address emails from example.com website",
-    "steps": [
-      {
-        "action": "PLATFORM:scrape_website",
-        "parameters": {
-          "url": "http://www.example2.com"
-        },
-        "result": "Example2 Bakery Shop - We are a bakery shop in the heart of the city. We serve the best bread in town. Come and visit us today! or contact us at (914) 555-1234 and our address is 123 Main St.",
-        "comment": "Scrapping example2.com website"
-      },
-      {
-        "action": "PLATFORM:llm",
-        "parameters": {
-          "message": "Find phone number and address in the scraped website"
-        },
-        "comment": "Finding phone number and address",
-        "result": "(914) 555-1234, 123 Main St."
-      },
-      {
-        "action": "SUPERVISED",
-        "parameters": {
-          "message": "Format contact as name, phone number and address"
-        },
-        "comment": "Supervising with format",
-        "result": "Format contact as name, phone number and address"
-      },
-      {
-        "action": "PLATFORM:llm",
-        "parameters": {
-          "message": "Format (914) 555-1234 and 123 Main St. as name, phone number and address"
-        },
-        "comment": "Formating contact",
-        "result": "Example2 Bakery Shop, (914) 555-1234, 123 Main St."
-      },
-      {
-        "action": "COMPLETE",
-        "comment": "Completing task"
-      }
-    ]
-  },
-  {
-    "id": "61c38f41-4c0b-4506-b4c8-abf9abc04f65",
-    "description": "Get employee ID, scan hardware barcode, retrieve status message.",
-    "steps": [
-      {
-        "action": "POSTGRES:query",
-        "parameters": {
-          "query": "SELECT * FROM employees WHERE id = {employeeId}"
-        }
-      },
-      {
-        "action": "POSTGRES:query",
-        "parameters": {
-          "query": "SELECT * FROM hardware WHERE barcode = {hardwareBarcode}"
-        }
-      },
-      {
-        "action": "POSTGRES:query",
-        "parameters": {
-          "query": "SELECT * FROM hardware_status WHERE hardware_id = {hardwareBarcode}"
-        }
-      },
-      {
-        "action": "JIRA:create",
-        "parameters": {
-          "projectKey": "IT",
-          "summary": "Hardware {hardwareBarcode} status is ORANGE",
-          "description": "Employee ID: {employeeId}, Hardware Barcode: {hardwareBarcode}, Status: ORANGE"
-        }
-      }
-    ]
-  },
-  {
     "id": "0cbfbecd-5e0d-4924-b5fd-6de262285936",
     "description": "Check product availability, if not exist, create order.",
-    "steps": [
-      {
-        "action": "GREY:check_product_count",
-        "parameters": {
-          "productId": "{productId}"
-        }
-      },
-      {
-        "action": "PLATFORM:decision",
-        "parameters": {
-          "condition": "response <= 0",
+    "responsibility": {
+      "id": "ba6f7911-e232-469d-9060-2881852f6e59",
+      "title": "Product Order",
+      "description": "Check product availability, if not exist, create order.",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
+      "nodes": [
+        {
+          "id": "76ccda2d-f11f-408c-8087-66c377600d0b",
+          "type": "NORMAL",
+          "properties": {
+            "action": "GREY:check_product_count",
+            "label": "Check Product Availability",
+            "icon": "mdi:check"
+          },
+          "next": [
+            "51dca395-1d90-4a28-9bbc-233de9c1a207"
+          ],
+          "createdAt": "2025-06-19T06:02:00Z"
+        },
+        {
+          "id": "51dca395-1d90-4a28-9bbc-233de9c1a207",
+          "type": "CONDITION",
+          "properties": {
+            "action": "PLATFORM:decision",
+            "label": "Make Decision",
+            "icon": "mdi:decision"
+          },
           "true": [
-            "GREY:create_order"
+            "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2"
           ],
           "false": [
-            "GREY:reduce_product_count"
+            "5be22de7-9673-448d-a1b5-dc23a8789b5c"
+          ],
+          "createdAt": "2025-06-19T06:02:00Z"
+        },
+        {
+          "id": "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2",
+          "type": "NORMAL",
+          "properties": {
+            "action": "GREY:create_order",
+            "label": "Create Order",
+            "icon": "mdi:cart-plus"
+          },
+          "next": "5be22de7-9673-448d-a1b5-dc23a8789b5c",
+          "createdAt": "2025-06-19T06:02:00Z"
+        },
+        {
+          "id": "5be22de7-9673-448d-a1b5-dc23a8789b5c",
+          "type": "NORMAL",
+          "properties": {
+            "action": "PLATFORM:complete",
+            "label": "Complete Task",
+            "icon": "mdi:check"
+          },
+          "next": null,
+          "createdAt": "2025-06-19T06:02:00Z"
+        },
+        {
+          "id": "5be22de7-9673-448d-a1b5-dc23a8789b5c",
+          "type": "NORMAL",
+          "properties": {
+            "action": "GREY:reduce_product_count",
+            "label": "Reduce Product Quantity",
+            "icon": "mdi:minus"
+          },
+          "next": "f5987e15-d014-4e45-bc3b-7b1f53c4472b",
+          "createdAt": "2025-06-19T06:02:00Z"
+        },
+        {
+          "id": "f5987e15-d014-4e45-bc3b-7b1f53c4472b",
+          "type": "NORMAL",
+          "properties": {
+            "action": "PLATFORM:complete",
+            "label": "Complete Task",
+            "icon": "mdi:check"
+          },
+          "next": null,
+          "createdAt": "2025-06-19T06:02:00Z"
+        }
+      ]
+    },
+    "knowledge": [
+      {
+        "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
+        "type": "TEXT",
+        "text": "Battery product id is btr-123",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      },
+      {
+        "id": "94e582fd-9190-4fb8-936a-327424ac6c77",
+        "type": "TEXT",
+        "text": "If Battery is not available, order 10 Battery",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      }
+    ],
+    "steps": [
+      {
+        "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+        "action": "GREY:check_product_count",
+        "status": "COMPLETED",
+        "parameters": {
+          "productId": "btr-123"
+        },
+        "comment": "Checking product count"
+      },
+      {
+        "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+        "action": "PLATFORM:decision",
+        "status": "COMPLETED",
+        "comment": "Making decision",
+        "parameters": {
+          "condition": "product_count <= 0",
+          "true": [
+            {
+              "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+              "action": "GREY:create_order",
+              "status": "COMPLETED",
+              "parameters": {
+                "productId": "btr-123",
+                "quantity": 10
+              },
+              "comment": "Creating order"
+            },
+            {
+              "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+              "action": "PLATFORM:complete",
+              "status": "COMPLETED",
+              "parameters": {},
+              "comment": "Completing task"
+            }
+          ],
+          "false": [
+            {
+              "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+              "action": "GREY:reduce_product_count",
+              "status": "COMPLETED",
+              "parameters": {
+                "productId": "btr-123",
+                "quantity": 1
+              },
+              "comment": "Reducing product count"
+            },
+            {
+              "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
+              "action": "PLATFORM:complete",
+              "status": "COMPLETED",
+              "parameters": {},
+              "comment": "Completing task"
+            }
           ]
-        }
-      },
-      {
-        "action": "GREY:create_order",
-        "parameters": {
-          "productId": "{productId}",
-          "quantity": 10
-        }
-      },
-      {
-        "action": "GREY:reduce_product_count",
-        "parameters": {
-          "productId": "{productId}"
         }
       }
     ]

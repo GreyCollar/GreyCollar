@@ -76,54 +76,12 @@
                 "createdAt": "1970-01-20T22:08:14.337Z"
             }
         ],
-        "steps": [
-            {
-                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-                "action": "GREY:check_product_count",
-                "status": "COMPLETED",
-                "parameters": {
-                    "productId": "btr-123"
-                }
-            },
-            {
-                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-                "action": "PLATFORM:decision",
-                "status": "COMPLETED",
-                "parameters": {
-                    "condition": "product_count <= 0",
-                    "true": [
-                        "GREY:create_order"
-                    ],
-                    "false": [
-                        "GREY:reduce_product_count"
-                    ]
-                }
-            },
-            {
-                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-                "action": "GREY:create_order",
-                "status": "COMPLETED",
-                "parameters": {
-                    "productId": "btr-123",
-                    "quantity": 10
-                }
-            },
-            {
-                "taskId": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-                "action": "GREY:reduce_product_count",
-                "status": "COMPLETED",
-                "parameters": {
-                    "productId": "btr-123",
-                    "quantity": 1
-                }
-            }
-        ],
         "task": {
             "id": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
             "status": "COMPLETED",
             "description": "Check product availability, if not exist, create order.",
             "responsibilityId": "ba6f7911-e232-469d-9060-2881852f6e59"
         },
-        "answer": "Task created successfully"
+        "answer": "I creating task for checking product availability"
     }
 ]
