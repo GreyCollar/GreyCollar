@@ -488,6 +488,4 @@ export default {
   step,
   responsibility,
   responsibilityName,
-  responsibilityToTask,
-  responsibilityDiamond,
 };
