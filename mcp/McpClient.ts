@@ -36,7 +36,7 @@ class McpClient {
     };
   }) {
     try {
-      const serverPath = `${path.dirname(process.cwd())}\\mcp\\servers\\${this.name}`;
+      const serverPath = path.join(path.dirname(process.cwd()), 'mcp', 'servers', this.name);
       this.transport = new StdioClientTransport({
         command: "ts-node",
         args: [serverPath, `'${JSON.stringify({ credentials })}'`],
