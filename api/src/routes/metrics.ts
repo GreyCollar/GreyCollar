@@ -1,7 +1,7 @@
-import platform from "@nucleoidai/platform-express";
 import express from "express";
-const router = express.Router();
 import os from "os";
+import platform from "@canmingir/link-express";
+const router = express.Router();
 
 router.get("/", (req, res) => {
   res.json({

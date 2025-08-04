@@ -1,7 +1,7 @@
 import PerformanceChart from "../DepartmantCharts/PerformanceChart";
 import React from "react";
 import TotalIncomes from "../DepartmantCharts/TotalIncomes";
-import { TwoSideLayout } from "@nucleoidai/platform/layouts";
+import { TwoSideLayout } from "@canmingir/link/layouts";
 import UsageChart from "../DepartmantCharts/UsageChart";
 
 const StaticsWidget = () => {

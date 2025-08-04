@@ -18,7 +18,7 @@ import {
   CustomPopover,
   Iconify,
   usePopover,
-} from "@nucleoidai/platform/minimal/components";
+} from "@canmingir/link/minimal/components";
 
 const ResponsibilityCard = ({
   item,

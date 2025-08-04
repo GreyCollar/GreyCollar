@@ -1,5 +1,5 @@
 async function init() {
-  const { Project } = require("@nucleoidai/platform-express/models");
+  const { Project } = require("@canmingir/link-express/models");
 
   const Task = require("./Task");
   const Command = require("./Command");

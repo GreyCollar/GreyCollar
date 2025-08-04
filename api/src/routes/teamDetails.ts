@@ -1,7 +1,7 @@
-import platform from "@nucleoidai/platform-express";
-import express from "express";
 import Joi from "joi";
 import TeamDetails from "../models/TeamDetails";
+import express from "express";
+import platform from "@canmingir/link-express";
 import schemas from "../schemas";
 
 const router = express.Router();

@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.15.1",
-    "@nucleoidai/platform": "^1.0.52",
-    "@nucleoidai/platform-express": "^1.5.47",
+    "@canmingir/link": "^1.1.1",
+    "@canmingir/link-express": "^1.6.0",
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",

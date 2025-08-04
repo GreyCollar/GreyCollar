@@ -1,4 +1,4 @@
-import { cypress } from "@nucleoidai/platform/platform/cypress";
+import { cypress } from "@canmingir/link/platform/cypress";
 /* eslint-disable */
 import { defineConfig } from "cypress";
 

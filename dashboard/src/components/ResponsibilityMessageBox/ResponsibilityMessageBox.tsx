@@ -1,4 +1,4 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
 import { findIntegrationById } from "../ChatInput/chat.config";
 import useColleagueV2 from "../../hooks/useColleagueV2";

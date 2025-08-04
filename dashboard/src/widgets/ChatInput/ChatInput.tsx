@@ -2,7 +2,7 @@ import ChatInputCommandEditor from "../../components/ChatInput/ChatInputCommandE
 import { Commands } from "../../components/ChatInput/chat.config.js";
 /* eslint-disable */
 import IconButton from "@mui/material/IconButton";
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import { ResponsibilityCommands } from "../../components/ChatInput/chat.config.js";
 import Stack from "@mui/material/Stack";
 import { Types } from "../../components/ChatInput/chat.config.js";

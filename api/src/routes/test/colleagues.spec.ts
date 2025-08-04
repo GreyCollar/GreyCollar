@@ -1,7 +1,7 @@
-import test from "@nucleoidai/platform-express/test";
-import request from "supertest";
 import app from "../../app";
 import { deepEqual } from "assert";
+import request from "supertest";
+import test from "@canmingir/link-express/test";
 
 describe("Colleague service", () => {
   beforeEach(async () => test.reset());
