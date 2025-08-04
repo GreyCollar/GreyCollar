@@ -9,15 +9,10 @@ async function run({
 }) {
   const { condition, true: trueActions, false: falseActions } = parameters;
 
-  try {
-    const conditionValue = JSON.parse(condition.toLowerCase());
-    if (typeof conditionValue === "boolean" && conditionValue) {
-      return trueActions;
-    } else {
-      return falseActions;
-    }
-  } catch (error) {
-    throw new Error(`Invalid condition: ${condition}`);
+  if (condition && condition.trim() !== "") {
+    return trueActions;
+  } else {
+    return falseActions;
   }
 }
 
