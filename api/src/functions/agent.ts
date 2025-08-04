@@ -175,7 +175,7 @@ async function task({ taskId }: { taskId: string }) {
   const {
     next_step: { action, parameters, comment },
   } = await generate({
-    dataset: dataset.train.task,
+    dataset: dataset.train.taskDiamond,
     context,
     content: currentTask,
     json_format:
