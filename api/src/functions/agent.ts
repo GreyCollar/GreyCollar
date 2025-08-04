@@ -363,7 +363,7 @@ async function responsibilityToTask({
   return response;
 }
 
-async function diamond({
+async function responsibilityDiamond({
   content,
   responsibilities,
 }: {
@@ -380,7 +380,7 @@ async function diamond({
   ];
 
   const response = await generate({
-    dataset: dataset.train.diamond,
+    dataset: dataset.train.responsibilityDiamond,
     context,
     content,
     json_format:
@@ -405,7 +405,7 @@ async function chat({
   const conversationsData = await conversations({ sessionId });
   const responsibilitiesData = await responsibilityFn.list({ colleagueId });
 
-  const responsibilityDecision = await diamond({
+  const responsibilityDecision = await responsibilityDiamond({
     content: content,
     responsibilities: responsibilitiesData,
   });
@@ -489,5 +489,5 @@ export default {
   responsibility,
   responsibilityName,
   responsibilityToTask,
-  diamond,
+  responsibilityDiamond,
 };
