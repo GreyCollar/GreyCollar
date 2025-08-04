@@ -60,6 +60,16 @@
       "id": "efa12ea4-bcf6-40da-99f1-d55c47953858",
       "organizationId": "dfb990bb-81dd-4584-82ce-050eb8f6a12f",
       "knowledgeId": "18a6dc62-9c58-49db-ae61-eef9042102b2"
+    },
+    {
+      "id": "f2f5b5b6-c7ba-46f1-94fc-af99453e1904",
+      "knowledgeId": "7e3d88f6-bc6f-4beb-a793-ef68f219c14a",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
+    },
+    {
+      "id": "a08f93a0-449a-4c91-9bb0-ab190a035c39",
+      "knowledgeId": "18a6dc62-9c58-49db-ae61-eef9042102b2",
+      "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e"
     }
   ]
 }

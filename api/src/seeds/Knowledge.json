@@ -82,20 +82,6 @@
       "createdAt": "2024-08-07T10:00:00Z"
     },
     {
-      "id": "18a6dc62-9c58-49db-ae61-eef9042102b2",
-      "type": "TEXT",
-      "text": "In-progress report on coffee service trends and improvements.",
-      "status": "COMPLETED",
-      "createdAt": "2024-08-07T10:00:00Z"
-    },
-    {
-      "id": "7e3d88f6-bc6f-4beb-a793-ef68f219c14a",
-      "type": "TEXT",
-      "text": "If status message is ORANGE, open a ticket in JIRA",
-      "status": "COMPLETED",
-      "createdAt": "2024-08-07T10:00:00Z"
-    },
-    {
       "id": "240d9a98-f578-4ff9-afbe-2acfae0d77d9",
       "type": "TEXT",
       "text": "Employee IDs are 6 digits",
@@ -106,6 +92,20 @@
       "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
       "type": "TEXT",
       "text": "Hardware barcodes are 13 digits",
+      "status": "COMPLETED",
+      "createdAt": "1970-01-20T22:08:14.337Z"
+    },
+    {
+      "id": "7e3d88f6-bc6f-4beb-a793-ef68f219c14a",
+      "type": "TEXT",
+      "text": "Battery product id is btr-123",
+      "status": "COMPLETED",
+      "createdAt": "1970-01-20T22:08:14.337Z"
+    },
+    {
+      "id": "18a6dc62-9c58-49db-ae61-eef9042102b2",
+      "type": "TEXT",
+      "text": "If Battery is not available, order 10 Battery",
       "status": "COMPLETED",
       "createdAt": "1970-01-20T22:08:14.337Z"
     }

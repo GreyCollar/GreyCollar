@@ -66,6 +66,10 @@ async function create({
     throw new NotFoundError();
   }
 
+  if (!integrationAuth.oauth) {
+    throw new Error("NO_OAUTH_CONFIG");
+  }
+
   const { clientId, clientSecret, redirectUri, tokenUrl } =
     integrationAuth.oauth;
 

@@ -32,7 +32,7 @@ const Task = sequelize.define("Task", {
     type: DataTypes.STRING,
     default: "IN_PROGRESS",
     validate: {
-      isIn: [["IN_PROGRESS", "COMPLETED"]],
+      isIn: [["IN_PROGRESS", "COMPLETED", "FAILED"]],
     },
   },
   colleagueId: {
@@ -42,6 +42,14 @@ const Task = sequelize.define("Task", {
       key: "id",
     },
   },
+  responsibilityId: {
+    type: DataTypes.UUID,
+    references: {
+      model: "Responsibility",
+      key: "id",
+    },
+  },
 });
 
 module.exports = Task;
+

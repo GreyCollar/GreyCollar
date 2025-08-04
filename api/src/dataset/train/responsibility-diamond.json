@@ -1,5 +1,7 @@
 [
     {
+        "content": "I wanna buy battery.",
+        "decision": "RESPONSIBILITY",
         "responsibility": {
             "id": "ba6f7911-e232-469d-9060-2881852f6e59",
             "title": "Product Order",
@@ -59,29 +61,6 @@
                 }
             ]
         },
-        "content": "Check battery availability, if not exist, create order.",
-        "knowledge": [
-            {
-                "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
-                "type": "TEXT",
-                "text": "Battery product id is btr-123",
-                "status": "COMPLETED",
-                "createdAt": "1970-01-20T22:08:14.337Z"
-            },
-            {
-                "id": "94e582fd-9190-4fb8-936a-327424ac6c77",
-                "type": "TEXT",
-                "text": "If Battery is not available, order 10 Battery",
-                "status": "COMPLETED",
-                "createdAt": "1970-01-20T22:08:14.337Z"
-            }
-        ],
-        "task": {
-            "id": "a77ff167-c4f2-44dc-9e8f-e9e645682446",
-            "status": "COMPLETED",
-            "description": "Check product availability, if not exist, create order.",
-            "responsibilityId": "ba6f7911-e232-469d-9060-2881852f6e59"
-        },
-        "answer": "I creating task for checking product availability"
+        "existing": false
     }
 ]

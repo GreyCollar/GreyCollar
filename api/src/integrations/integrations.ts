@@ -114,5 +114,67 @@ const Integrations = [
       required: ["query"],
     },
   },
+  {
+    id: "31ea5f17-045d-47d0-b9d3-ffc5d8f7b4cb",
+    action: "GREY:check_product_count",
+    provider: "GREY",
+    description: "Check product count",
+    direction: "OUTGOING",
+    lib: "mcp",
+    inputSchema: {
+      type: "object",
+      properties: {
+        productId: {
+          type: "string",
+          description: "The ID of the product to check the count of.",
+        },
+      },
+      required: ["productId"],
+    },
+  },
+  {
+    id: "90627148-0d9c-405f-90a4-48be9935eb3b",
+    action: "GREY:create_order",
+    provider: "GREY",
+    description: "Create an order",
+    direction: "OUTGOING",
+    lib: "mcp",
+    inputSchema: {
+      type: "object",
+      properties: {
+        productId: {
+          type: "string",
+          description: "The ID of the product to create an order for.",
+        },
+        quantity: {
+          type: "number",
+          description: "The quantity of the product to create an order for.",
+        },
+      },
+      required: ["productId", "quantity"],
+    },
+  },
+  {
+    id: "f8c49eb7-a1e3-45a8-a3c7-576b8082b036",
+    action: "GREY:reduce_product_count",
+    provider: "GREY",
+    description: "Reduce product count",
+    direction: "OUTGOING",
+    lib: "mcp",
+    inputSchema: {
+      type: "object",
+      properties: {
+        productId: {
+          type: "string",
+          description: "The ID of the product to reduce the count of.",
+        },
+        quantity: {
+          type: "number",
+          description: "The quantity of the product to reduce the count of.",
+        },
+      },
+      required: ["productId", "quantity"],
+    },
+  },
 ];
 export default Integrations;
