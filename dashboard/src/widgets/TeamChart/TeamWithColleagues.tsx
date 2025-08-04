@@ -1,6 +1,6 @@
 import ColleagueNode from "./common/ColleagueNode";
 import EditIcon from "@mui/icons-material/Edit";
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import React from "react";
 import ResponsibilityNode from "./common/ResponsibilityNode";
 import TeamNode from "./common/TeamNode";

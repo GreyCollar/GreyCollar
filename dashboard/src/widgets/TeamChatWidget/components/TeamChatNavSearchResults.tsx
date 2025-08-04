@@ -1,5 +1,5 @@
 import ListItemButton from "@mui/material/ListItemButton";
-import { SearchNotFound } from "@nucleoidai/platform/minimal/components";
+import { SearchNotFound } from "@canmingir/link/minimal/components";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
 import Typography from "@mui/material/Typography";
 

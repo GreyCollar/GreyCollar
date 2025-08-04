@@ -1,4 +1,4 @@
-import { NotFoundError } from "@nucleoidai/platform-express/error";
+import { NotFoundError } from "@canmingir/link-express/error";
 import Responsibility from "../models/Responsibility";
 
 type NodeType = {

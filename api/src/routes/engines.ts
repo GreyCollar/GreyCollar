@@ -1,6 +1,6 @@
-import platform from "@nucleoidai/platform-express";
-import express from "express";
 import AIEngine from "../models/AIEngine";
+import express from "express";
+import platform from "@canmingir/link-express";
 
 const router = express.Router();
 

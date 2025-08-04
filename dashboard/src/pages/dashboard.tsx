@@ -2,7 +2,7 @@ import { Helmet } from "react-helmet-async";
 import PerformanceChart from "../widgets/DepartmantCharts/PerformanceChart";
 import React from "react";
 import TotalIncomes from "../widgets/DepartmantCharts/TotalIncomes";
-import { TwoSideLayout } from "@nucleoidai/platform/layouts";
+import { TwoSideLayout } from "@canmingir/link/layouts";
 import UsageChart from "../widgets/DepartmantCharts/UsageChart";
 import WidgetSummaryWidget from "../widgets/WidgetSummary/WidgetSummary";
 import config from "../../config";

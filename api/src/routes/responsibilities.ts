@@ -1,4 +1,4 @@
-import { AuthenticationError } from "@nucleoidai/platform-express/error";
+import { AuthenticationError } from "@canmingir/link-express/error";
 import Responsibility from "../models/Responsibility";
 import ResponsibilitySchema from "../schemas/Responsibility";
 import agent from "../functions/agent";

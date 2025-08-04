@@ -1,4 +1,4 @@
-import { Label } from "@nucleoidai/platform/minimal/components";
+import { Label } from "@canmingir/link/minimal/components";
 
 import {
   Card,
@@ -15,7 +15,7 @@ import {
   Scrollbar,
   TableHeadCustom,
   TableSelectedAction,
-} from "@nucleoidai/platform/minimal/components";
+} from "@canmingir/link/minimal/components";
 import React, { useState } from "react";
 
 function KnowledgeTable({

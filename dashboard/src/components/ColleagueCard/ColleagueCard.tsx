@@ -11,7 +11,7 @@ import {
   Iconify,
   Image,
   usePopover,
-} from "@nucleoidai/platform/minimal/components";
+} from "@canmingir/link/minimal/components";
 import { Fab, IconButton, MenuItem, Typography } from "@mui/material";
 import { alpha, useTheme } from "@mui/material/styles";
 

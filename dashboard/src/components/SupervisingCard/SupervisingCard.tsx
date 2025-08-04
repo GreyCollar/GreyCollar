@@ -1,5 +1,5 @@
 import DoneIcon from "@mui/icons-material/Done";
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 import PopupChatWidget from "../../widgets/PopupChatWidget/PopupChatWidget";
 
 import {

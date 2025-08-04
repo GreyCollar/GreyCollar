@@ -1,4 +1,4 @@
-import * as platform from "@nucleoidai/platform-express";
+import * as platform from "@canmingir/link-express";
 
 import Colleague from "../models/Colleague";
 import Joi from "joi";
