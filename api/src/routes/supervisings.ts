@@ -129,17 +129,17 @@ router.patch("/:supervisingId", async (req, res) => {
   const supervisingInstance = await Supervising.findByPk(supervisingId);
 
   if (!supervisingInstance) {
-    res.status(404);
+    return res.status(404);
   }
 
   const colleague = await Colleague.findByPk(supervisingInstance.colleagueId);
 
   if (!colleague) {
-    res.status(404);
+    return res.status(404);
   }
 
   if (colleague.teamId !== teamId) {
-    res.status(401);
+    return res.status(401);
   }
 
   const updatedSupervising = await supervising.update({

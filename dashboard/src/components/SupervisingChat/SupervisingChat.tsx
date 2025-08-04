@@ -27,6 +27,9 @@ const SupervisingChat = ({
   loading = false,
   supervise,
 }) => {
+  const SUPERVISING_CHAT_WELCOME_MESSAGE =
+    "Welcome to the Supervising Chat! Here you can discuss and supervise the ongoing tasks. Feel free to ask questions or provide guidance.";
+
   const { evaluateSupervising } = useSupervisings();
 
   const theme = useTheme();
@@ -35,11 +38,20 @@ const SupervisingChat = ({
   const [messages, setMessages] = React.useState([
     {
       role: "ASSISTANT",
-      content:
-        "Welcome to the Supervising Chat! Here you can discuss and supervise the ongoing tasks. Feel free to ask questions or provide guidance.",
+      content: SUPERVISING_CHAT_WELCOME_MESSAGE,
     },
   ]);
-  const [evaluationResult, setEvaluationResult] = React.useState(null);
+  const [evaluationResult, setEvaluationResult] = React.useState<{
+    type: string;
+    message: string;
+    guidance?: string;
+    improved_suggestion?: string;
+  }>({
+    type: "",
+    message: "",
+    guidance: "",
+    improved_suggestion: "",
+  });
   const [isEvaluating, setIsEvaluating] = React.useState(false);
 
   const handleMessageSend = useCallback(
@@ -229,7 +241,9 @@ const SupervisingChat = ({
           {evaluationResult && (
             <Box sx={{ p: 2 }}>
               <Alert
-                severity={evaluationResult.type}
+                severity={
+                  evaluationResult.type as "success" | "warning" | "error"
+                }
                 sx={{ mb: 1 }}
                 variant="filled"
               >
