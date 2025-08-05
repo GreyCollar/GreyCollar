@@ -24,10 +24,12 @@ platform.init(config).then(() => {
 
   models.init();
 
+  const { host, port, protocol } = config.nodeEvent;
+
   nodeEvent.init({
-    host: "localhost",
-    port: Number(8080),
-    protocol: "http",
+    host,
+    port,
+    protocol,
   });
 
   server.listen(process.env.PORT || 4000, () => {
