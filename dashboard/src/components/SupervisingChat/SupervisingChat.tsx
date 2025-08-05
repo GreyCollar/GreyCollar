@@ -51,15 +51,24 @@ const SupervisingChat = ({
         try {
           const result = await evaluateSupervising(supervise.id, message);
 
-          const { evaluation } = result;
+          const { action } = result;
 
-          console.log("Evaluation result:", result);
+          if (action === "needs_improvement") {
+            setMessages((prev) => [
+              ...prev,
+              {
+                role: "ASSISTANT",
+                content: "Your answer needs improvement. Please try again.",
+              },
+            ]);
+            return;
+          }
 
           setMessages((prev) => [
             ...prev,
             {
               role: "ASSISTANT",
-              content: evaluation.description,
+              content: "👍",
             },
           ]);
         } catch (error) {

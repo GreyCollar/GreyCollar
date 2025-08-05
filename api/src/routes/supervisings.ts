@@ -190,8 +190,6 @@ router.post("/:supervisingId/evaluate", async (req, res) => {
       },
     });
 
-    console.log("Evaluation result:", evaluation);
-
     if (evaluation.is_answer_known) {
       const updatedSupervising = await supervising.update({
         teamId,
