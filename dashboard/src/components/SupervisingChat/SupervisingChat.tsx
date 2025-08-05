@@ -5,7 +5,6 @@ import ResponsibilityChatContent from "../ResponsibilityChat/ResponsibilityChatC
 import useSupervisings from "../../hooks/useSupervisingsV2";
 
 import {
-  Alert,
   Backdrop,
   Box,
   Card,
@@ -41,17 +40,6 @@ const SupervisingChat = ({
       content: SUPERVISING_CHAT_WELCOME_MESSAGE,
     },
   ]);
-  const [evaluationResult, setEvaluationResult] = React.useState<{
-    type: string;
-    message: string;
-    guidance?: string;
-    improved_suggestion?: string;
-  }>({
-    type: "",
-    message: "",
-    guidance: "",
-    improved_suggestion: "",
-  });
   const [isEvaluating, setIsEvaluating] = React.useState(false);
 
   const handleMessageSend = useCallback(
@@ -59,51 +47,31 @@ const SupervisingChat = ({
       if (message && supervise.id) {
         setMessages((prev) => [...prev, { role: "USER", content: message }]);
         setIsEvaluating(true);
-        setEvaluationResult(null);
 
-        const result = await evaluateSupervising(supervise.id, message);
+        try {
+          const result = await evaluateSupervising(supervise.id, message);
 
-        const { action, guidance, improved_suggestion } = result;
+          const { evaluation } = result;
 
-        if (action === "auto_sent") {
+          console.log("Evaluation result:", result);
+
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "ASSISTANT",
+              content: evaluation.description,
+            },
+          ]);
+        } catch (error) {
+          console.error("Error evaluating answer:", error);
           setMessages((prev) => [
             ...prev,
             {
               role: "ASSISTANT",
               content:
-                "✅ Great! Your answer was relevant and helpful. I've automatically sent it to PopChat and updated the supervising status.",
+                "Sorry, there was an error evaluating your answer. Please try again.",
             },
           ]);
-          setEvaluationResult({
-            type: "success",
-            message:
-              "Answer automatically sent to PopChat and supervising updated!",
-          });
-        } else if (action === "needs_improvement") {
-          let responseMessage =
-            "I need you to improve your answer to make it more helpful. ";
-
-          if (guidance) {
-            responseMessage += `Here's my guidance: ${guidance}`;
-          }
-
-          if (improved_suggestion) {
-            responseMessage += `\n\nHere's a suggested improvement: "${improved_suggestion}"`;
-          }
-
-          setMessages((prev) => [
-            ...prev,
-            {
-              role: "ASSISTANT",
-              content: responseMessage,
-            },
-          ]);
-          setEvaluationResult({
-            type: "warning",
-            message: "Answer needs improvement before sending to PopChat.",
-            guidance,
-            improved_suggestion,
-          });
         }
 
         setIsEvaluating(false);
@@ -235,30 +203,6 @@ const SupervisingChat = ({
               >
                 {supervise.question}
               </Typography>
-            </Box>
-          )}
-
-          {evaluationResult && (
-            <Box sx={{ p: 2 }}>
-              <Alert
-                severity={
-                  evaluationResult.type as "success" | "warning" | "error"
-                }
-                sx={{ mb: 1 }}
-                variant="filled"
-              >
-                {evaluationResult.message}
-              </Alert>
-              {evaluationResult.improved_suggestion && (
-                <Alert severity="info" sx={{ mt: 1 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-                    Suggested improvement:
-                  </Typography>
-                  <Typography variant="body2">
-                    {evaluationResult.improved_suggestion}
-                  </Typography>
-                </Alert>
-              )}
             </Box>
           )}
 
