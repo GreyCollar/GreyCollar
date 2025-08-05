@@ -442,13 +442,14 @@ async function diamond({
 }
 
 async function evaluateSupervisionAnswer({
-  question,
-  answer,
   colleagueId,
+  content,
 }: {
-  question: string;
-  answer: string;
   colleagueId: string;
+  content: {
+    question: string;
+    answer: string;
+  };
 }) {
   const context = [
     await info({ colleagueId }),
@@ -457,27 +458,20 @@ async function evaluateSupervisionAnswer({
       role: "system" as const,
       content: {
         supervision_context: {
-          original_question: question,
-          proposed_answer: answer,
+          original_question: content.question,
+          proposed_answer: content.answer,
         },
       },
     },
   ];
 
   const evaluation = await generate({
-    dataset: dataset.train.chat,
+    dataset: dataset.train.responsibilityChatEvaluation,
     context,
-    content: `Evaluate if this answer is relevant, helpful, and appropriate for the question: "${question}". Answer provided: "${answer}"`,
+    content: `${content.question}\n\nAnswer: ${content.answer}`,
     json_format: `{
-      evaluation: {
-        is_relevant: <true|false>,
-        is_helpful: <true|false>,
-        is_complete: <true|false>,
-        confidence_score: <0.0-1.0>,
-        should_auto_send: <true|false>
-      },
-      guidance: <string|null>,
-      improved_answer: <string|null>
+      "is_answer_known": <true|false>,
+      "description": "<DESCRIPTION>",
     }`,
   });
 
