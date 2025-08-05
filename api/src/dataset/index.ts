@@ -3,6 +3,7 @@ import diamond from "./train/diamond.json";
 import policy from "./policy.json";
 import responsibility from "./train/responsibility.json";
 import responsibilityChat from "./train/responsibility-chat.json";
+import responsibilityChatEvaluation from "./train/responsibility-chat-evaluation.json";
 import responsibilityName from "./train/responsibility-name.json";
 import task from "./train/task.json";
 import teamChat from "./train/team-chat.json";
@@ -41,6 +42,12 @@ export default {
       role: "system" as const,
       content: JSON.stringify({
         train: responsibilityChat,
+      }),
+    },
+    responsibilityChatEvaluation: {
+      role: "system" as const,
+      content: JSON.stringify({
+        train: responsibilityChatEvaluation,
       }),
     },
     responsibilityName: {
