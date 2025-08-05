@@ -183,40 +183,46 @@ router.post("/:supervisingId/evaluate", async (req, res) => {
 
   try {
     const evaluation = await agent.evaluateSupervisionAnswer({
-      question: supervisingInstance.question,
-      answer,
       colleagueId: colleague.id,
+      content: {
+        question: supervisingInstance.question,
+        answer,
+      },
     });
 
-    if (evaluation.evaluation.should_auto_send) {
+    console.log("Evaluation result:", evaluation);
+
+    if (evaluation.is_answer_known) {
       const updatedSupervising = await supervising.update({
         teamId,
         supervisingId,
         colleagueId: colleague.id,
         question: supervisingInstance.question,
-        answer: evaluation.improved_answer || answer,
+        answer,
         status: "ANSWERED",
       });
 
       return res.status(200).json({
-        action: "auto_sent",
-        message:
-          "Answer was automatically sent to PopChat and supervising updated.",
+        action: "answer_approved",
         supervising: updatedSupervising,
-        evaluation,
+        evaluation: {
+          ...evaluation,
+        },
       });
     } else {
       return res.status(200).json({
         action: "needs_improvement",
-        message: "Answer needs improvement before sending.",
-        guidance: evaluation.guidance,
-        improved_suggestion: evaluation.improved_answer,
-        evaluation,
+        evaluation: {
+          ...evaluation,
+        },
       });
     }
   } catch (error) {
     console.error("Error evaluating supervising answer:", error);
-    return res.status(500).json({ error: "Failed to evaluate answer" });
+    return res.status(500).json({
+      error: "Failed to evaluate answer",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 
