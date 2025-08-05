@@ -1,0 +1,32 @@
+[
+  {
+    "question": "Where is the parking lot?",
+    "answer": "I live in desert",
+    "is_answer_known": false,
+    "description": "This answer is not relevant to the question about parking lot location"
+  },
+  {
+    "question": "Where is the parking lot?",
+    "answer": "Parking lot is located at the corner of 5th and Main",
+    "is_answer_known": true,
+    "description": "👍"
+  },
+  {
+    "question": "Where is the parking lot?",
+    "answer": "Parking lot is at the back of the store",
+    "is_answer_known": true,
+    "description": "👍"
+  },
+  {
+    "question": "Where is the nearest coffee shop?",
+    "answer": "Nearest coffee shop is 5 miles away",
+    "is_answer_known": true,
+    "description": "👍"
+  },
+  {
+    "question": "How do I submit a vacation request?",
+    "answer": "You can submit vacation requests through the HR portal by logging into your employee account and filling out the vacation request form",
+    "is_answer_known": true,
+    "description": "👍"
+  }
+]
