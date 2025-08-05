@@ -471,7 +471,6 @@ async function evaluateSupervisionAnswer({
     content: `${content.question}\n\nAnswer: ${content.answer}`,
     json_format: `{
       "is_answer_known": <true|false>,
-      "description": "<DESCRIPTION>",
     }`,
   });
 
