@@ -3,9 +3,9 @@ import * as platform from "@canmingir/link-express";
 import { Server } from "socket.io";
 import config from "./config";
 import dotenv from "dotenv";
+import { event } from "@nucleoidai/node-event/client";
 import http from "http";
 import models from "./src/models";
-import { nodeEvent } from "nuc-node-event-test/client";
 
 dotenv.config();
 
@@ -24,10 +24,12 @@ platform.init(config).then(() => {
 
   models.init();
 
-  nodeEvent.init({
-    host: "localhost",
-    port: Number(8080),
-    protocol: "http",
+  const { host, port, protocol } = config.event;
+
+  event.init({
+    host,
+    port: Number(port),
+    protocol,
   });
 
   server.listen(process.env.PORT || 4000, () => {
