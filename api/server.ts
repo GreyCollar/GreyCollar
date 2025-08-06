@@ -1,4 +1,4 @@
-import * as platform from "@nucleoidai/platform-express";
+import * as platform from "@canmingir/link-express";
 
 import { Server } from "socket.io";
 import config from "./config";

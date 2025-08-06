@@ -1,6 +1,6 @@
 import "express";
 
-import * as platform from "@nucleoidai/platform-express";
+import * as platform from "@canmingir/link-express";
 
 import agent from "./functions/agent";
 import colleagues from "./routes/colleagues";
@@ -57,31 +57,23 @@ app.use("/communications", communications);
 subscribe("MESSAGE", "USER_MESSAGED", ({ teamId, content }) =>
   agent.teamChat({ teamId, content })
 );
-subscribe(
-  "SESSION",
-  "USER_MESSAGED",
-  ({ colleagueId, sessionId, conversationId, content }) =>
-    agent.chat({
-      colleagueId,
-      sessionId,
-      conversationId,
-      content,
-    })
+subscribe("SESSION", "USER_MESSAGED", ({ colleagueId, sessionId, content }) =>
+  agent.chat({
+    colleagueId,
+    sessionId,
+    content,
+  })
 );
-subscribe(
-  "SUPERVISING",
-  "ANSWERED",
-  ({ sessionId, conversationId, colleagueId, question }) =>
-    agent.chat({
-      colleagueId,
-      sessionId,
-      conversationId,
-      content: question,
-    })
+subscribe("SUPERVISING", "ANSWERED", ({ sessionId, colleagueId, question }) =>
+  agent.chat({
+    colleagueId,
+    sessionId,
+    content: question,
+  })
 );
 subscribe("TASK", "CREATED", ({ taskId }) => agent.task({ taskId }));
-subscribe("STEP", "ADDED", ({ stepId, action, parameters }) =>
-  agent.step({ stepId, action, parameters })
+subscribe("STEP", "ADDED", ({ stepId, action, parameters, comment }) =>
+  agent.step({ stepId, action, parameters, comment })
 );
 subscribe("STEP", "COMPLETED", ({ taskId }) => agent.task({ taskId }));
 

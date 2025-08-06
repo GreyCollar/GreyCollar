@@ -1,20 +1,20 @@
-import { schema as gdriveSearchSchema, search } from "./gdrive_search.js";
+import {
+  GDriveReadFileInput,
+  GDriveSearchInput,
+  GSheetsReadInput,
+  GSheetsUpdateCellInput,
+  Tool,
+} from "./types";
 import {
   schema as gdriveReadFileSchema,
   readFile,
-} from "./gdrive_read_file.js";
+} from "./gdrive_read_file";
+import { schema as gdriveSearchSchema, search } from "./gdrive_search";
+import { schema as gsheetsReadSchema, readSheet } from "./gsheets_read";
 import {
   schema as gsheetsUpdateCellSchema,
   updateCell,
-} from "./gsheets_update_cell.js";
-import { schema as gsheetsReadSchema, readSheet } from "./gsheets_read.js";
-import {
-  Tool,
-  GDriveSearchInput,
-  GDriveReadFileInput,
-  GSheetsUpdateCellInput,
-  GSheetsReadInput,
-} from "./types.js";
+} from "./gsheets_update_cell";
 
 export const tools: [
   Tool<GDriveSearchInput>,

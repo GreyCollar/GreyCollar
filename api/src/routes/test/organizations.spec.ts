@@ -1,4 +1,4 @@
-import * as test from "@nucleoidai/platform-express/test";
+import * as test from "@canmingir/link-express/test";
 
 import app from "../../app";
 import { deepEqual } from "assert";

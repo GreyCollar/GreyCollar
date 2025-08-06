@@ -8,14 +8,16 @@
     "dev": "ts-node server --dev",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "test": "jest --verbose --detectOpenHandles"
+    "test": "ts-node test.ts --dev"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.35.0",
-    "@nucleoidai/platform": "^1.0.44",
-    "@nucleoidai/platform-express": "^1.5.48",
+    "@modelcontextprotocol/sdk": "^1.15.1",
+    "@canmingir/link": "^1.1.1",
+    "@canmingir/link-express": "^1.6.0",
     "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
+    "nuc-node-event-test": "^1.0.13",
     "openai": "^4.79.4",
     "puppeteer": "^24.1.0",
     "socket.io": "^4.8.1",

@@ -1,3 +1,4 @@
+import Integrations from "../integrations/integrations";
 import actions from "../actions";
 import colleague from "./colleague";
 import dataset from "../dataset";
@@ -5,6 +6,7 @@ import { generate } from "../lib/llm";
 import knowledgeFn from "./knowledge";
 import message from "./message";
 import messagesFunc from "./message";
+import responsibilityFn from "../functions/responsibility";
 import session from "./session";
 import supervising from "./supervising";
 import taskFn from "./task";
@@ -75,6 +77,20 @@ async function knowledge({
   };
 }
 
+async function responsibilities({ colleagueId }) {
+  const responsibilities = await responsibilityFn.list({ colleagueId });
+
+  return {
+    role: "system",
+    content: {
+      responsibilities,
+    },
+  } as {
+    role: "user" | "system" | "assistant";
+    content: object;
+  };
+}
+
 async function conversations({ sessionId }) {
   const conversations = await session.listConversations({ sessionId });
 
@@ -130,111 +146,6 @@ async function teamChat({
   });
 }
 
-async function chat({
-  colleagueId,
-  sessionId,
-  conversationId,
-  content,
-}: {
-  colleagueId: string;
-  sessionId: string;
-  conversationId: string;
-  content: string;
-}) {
-  const context = [
-    ...(
-      await Promise.all([
-        info({ colleagueId }),
-        knowledge({ colleagueId }),
-        conversations({ sessionId }),
-      ])
-    ).flat(),
-  ];
-
-  const { evaluation } = await generate({
-    dataset: dataset.train.chat,
-    context,
-    content,
-    json_format: "{ evaluation: { is_answer_known: <true|false> } }",
-    // Experimental Fields
-    // json_format: `
-    //     {
-    //       evaluation: {
-    //         is_answer_known: <true|false>,
-    //         complies_with_policy: <true|false>,
-    //         confidence_score: <0.0-1.0>,
-    //         requires_human_intervention: <true|false>,
-    //         response_type: <factual|opinion|instructional>,
-    //         additional_notes: <string>,
-    //         question_analysis: {
-    //           category: <general_knowledge|HR_policy|technical|other>,
-    //           complexity_level: <low|medium|high>,
-    //           contains_sensitive_information: <true|false>,
-    //           contains_prohibited_content: <true|false>
-    //         },
-    //         security: {
-    //           is_safe_to_answer: <true|false>,
-    //           data_privacy_risk: <low|medium|high>,
-    //           potential_phishing_attempt: <true|false>
-    //         },
-    //         sentiment_analysis: {
-    //           question_sentiment: <positive|neutral|negative>,
-    //           toxicity_level: <none|low|medium|high>,
-    //           user_frustration_detected: <true|false>
-    //         },
-    //         context: {
-    //           previous_questions_context: <true|false>,
-    //           user_role: <employee|manager|customer|other>,
-    //           department: <engineering|HR|sales|other>,
-    //           geolocation_restricted: <true|false>,
-    //           requires_escalation: <true|false>
-    //         },
-    //         response_metadata: {
-    //           source: <internal_knowledge_base|external_API|predefined_response>,
-    //           response_format: <text|JSON|multimedia>,
-    //           alternative_sources_available: <true|false>,
-    //           fallback_strategy: <redirect_to_human|use_predefined_answer|other>
-    //         }
-    //       }
-    //     }`,
-  });
-
-  console.debug(evaluation);
-
-  if (evaluation.is_answer_known) {
-    const { answer, confidence } = await generate({
-      policy: dataset.policy,
-      dataset: dataset.train.chat,
-      context,
-      content,
-      json_format: "{ answer: <ANSWER_IN_NLP>, confidence: <0-1> }",
-    });
-
-    console.debug(answer, confidence);
-
-    await session.addConversation({
-      sessionId,
-      colleagueId,
-      role: "ASSISTANT",
-      content: answer,
-    });
-  } else {
-    const conversation = await session.addConversation({
-      sessionId,
-      colleagueId,
-      role: "ASSISTANT",
-      content: "Please wait while I am working on your request.",
-    });
-
-    await supervising.create({
-      sessionId,
-      conversationId: conversation.id,
-      question: content,
-      colleagueId,
-    });
-  }
-}
-
 async function task({ taskId }: { taskId: string }) {
   const { colleagueId, description } = await taskFn.get({ taskId });
   const currentTask = {
@@ -255,6 +166,7 @@ async function task({ taskId }: { taskId: string }) {
       await Promise.all([
         info({ colleagueId }),
         knowledge({ colleagueId, taskId }),
+        responsibilities({ colleagueId }),
       ])
     ).flat(),
     actions.list(),
@@ -263,14 +175,14 @@ async function task({ taskId }: { taskId: string }) {
   const {
     next_step: { action, parameters, comment },
   } = await generate({
-    dataset: dataset.train.task,
+    dataset: dataset.train.taskDiamond,
     context,
     content: currentTask,
     json_format:
       "{ next_step: { action: <ACTION>, parameters: <PARAMETER>, comment: <COMMENT> } }",
   });
 
-  if (action === "COMPLETE") {
+  if (action === "PLATFORM:complete") {
     const steps = await taskFn.listSteps({ taskId });
 
     let result;
@@ -295,28 +207,63 @@ async function task({ taskId }: { taskId: string }) {
   });
 }
 
-async function step({ stepId, action, parameters }) {
+async function step({
+  stepId,
+  action,
+  parameters,
+  comment,
+}: {
+  stepId: string;
+  action: string;
+  parameters: object;
+  comment: string;
+}) {
+  let actionType;
+
+  if (Integrations.find((integration) => integration.action === action)) {
+    actionType = "MCP";
+  } else if (action === "SUPERVISED") {
+    actionType = "SUPERVISED";
+  } else {
+    actionType = "ACTION";
+  }
+
   try {
     let actionFn;
+    let result;
+    let mcpClient;
 
     if (action === "SUPERVISED") {
       actionFn = require("../actions/supervised").default;
-    } else {
+    } else if (actionType === "ACTION") {
       // @ts-ignore
       const { lib } = actions.find(action);
       actionFn = require(`../actions/${lib}`).default;
+    } else if (actionType === "MCP") {
+      const mcp = require("../lib/mcp").default;
+
+      const provider = action.split(":")[0].toLowerCase();
+      const tool = action.split(":")[1];
+
+      mcpClient = await mcp.connect({ name: provider, tool });
     }
 
-    const { taskId } = await taskFn.getStep({ stepId });
-    const steps = await taskFn.listSteps({ taskId });
+    if (actionType === "ACTION" || actionType === "SUPERVISED") {
+      const { taskId } = await taskFn.getStep({ stepId });
+      const steps = await taskFn.listSteps({ taskId });
 
-    const result = await actionFn.run({
-      context: steps
-        .filter((step) => step.result)
-        .map(({ comment, result }) => `Comment: ${comment}\nResult: ${result}`)
-        .join("\n"),
-      parameters,
-    });
+      result = await actionFn.run({
+        context: steps
+          .filter((step) => step.result)
+          .map(
+            ({ comment, result }) => `Comment: ${comment}\nResult: ${result}`
+          )
+          .join("\n"),
+        parameters,
+      });
+    } else if (actionType === "MCP") {
+      result = await mcpClient.callTool(action, parameters);
+    }
 
     let resultString;
 
@@ -385,7 +332,7 @@ async function responsibilityToTask({
   history,
   content,
   knowledge,
-  responsibilities,
+  responsibility,
 }: {
   history?: {
     role: "system" | "user" | "assistant";
@@ -393,13 +340,13 @@ async function responsibilityToTask({
   }[];
   content: string;
   knowledge: Array<[]>;
-  responsibilities: Array<[]>;
+  responsibility: object;
 }) {
   const context = [
     {
       role: "system" as const,
       content: {
-        responsibilities,
+        responsibility,
         knowledge,
         history,
       },
@@ -410,12 +357,13 @@ async function responsibilityToTask({
     dataset: dataset.train.responsibility,
     context,
     content,
-    json_format: "{ task: [<TASK>] }",
+    json_format: "{ task: <TASK> ,answer: <ANSWER> }",
   });
+
   return response;
 }
 
-async function diamond({
+async function responsibilityDiamond({
   content,
   responsibilities,
 }: {
@@ -432,7 +380,7 @@ async function diamond({
   ];
 
   const response = await generate({
-    dataset: dataset.train.diamond,
+    dataset: dataset.train.responsibilityDiamond,
     context,
     content,
     json_format:
@@ -477,6 +425,98 @@ async function evaluateSupervisionAnswer({
   return evaluation;
 }
 
+async function chat({
+  colleagueId,
+  sessionId,
+  content,
+}: {
+  colleagueId: string;
+  sessionId: string;
+  content: string;
+}) {
+  const knowledgeData = await knowledgeFn.list({
+    colleagueId,
+  });
+
+  const conversationsData = await conversations({ sessionId });
+  const responsibilitiesData = await responsibilityFn.list({ colleagueId });
+
+  const responsibilityDecision = await responsibilityDiamond({
+    content: content,
+    responsibilities: responsibilitiesData,
+  });
+
+  if (responsibilityDecision.decision === "RESPONSIBILITY") {
+    const responsibilityData = await responsibilityFn.get({
+      responsibilityId: responsibilityDecision.responsibilityId,
+    });
+
+    const responsibilityToTaskResponse = await responsibilityToTask({
+      history: conversationsData,
+      knowledge: knowledgeData,
+      content: content,
+      responsibility: responsibilityData,
+    });
+
+    await taskFn.create({
+      colleagueId,
+      description: responsibilityToTaskResponse.task.description,
+      responsibilityId: responsibilityDecision.responsibilityId,
+    });
+
+    await session.addConversation({
+      sessionId,
+      colleagueId,
+      role: "ASSISTANT",
+      content: responsibilityToTaskResponse.answer,
+    });
+  } else {
+    const infoData = await info({ colleagueId });
+
+    const context = [knowledgeData, conversationsData, infoData];
+
+    const { evaluation } = await generate({
+      dataset: dataset.train.chat,
+      context,
+      content,
+      json_format: "{ evaluation: { is_answer_known: <true|false> } }",
+    });
+
+    if (evaluation.is_answer_known) {
+      const { answer, confidence } = await generate({
+        policy: dataset.policy,
+        dataset: dataset.train.chat,
+        context,
+        content,
+        json_format: "{ answer: <ANSWER_IN_NLP>, confidence: <0-1> }",
+      });
+
+      console.debug(answer, confidence);
+
+      await session.addConversation({
+        sessionId,
+        colleagueId,
+        role: "ASSISTANT",
+        content: answer,
+      });
+    } else {
+      const conversation = await session.addConversation({
+        sessionId,
+        colleagueId,
+        role: "ASSISTANT",
+        content: "Please wait while I am working on your request.",
+      });
+
+      await supervising.create({
+        sessionId,
+        conversationId: conversation.id,
+        question: content,
+        colleagueId,
+      });
+    }
+  }
+}
+
 export default {
   teamChat,
   chat,
@@ -484,7 +524,5 @@ export default {
   step,
   responsibility,
   responsibilityName,
-  responsibilityToTask,
-  diamond,
   evaluateSupervisionAnswer,
 };

@@ -1,7 +1,7 @@
 import Colleague from "../models/Colleague";
 import Integration from "../models/Integration";
 import Integrations from "../integrations/integrations";
-import { NotFoundError } from "@nucleoidai/platform-express/error";
+import { NotFoundError } from "@canmingir/link-express/error";
 import axios from "axios";
 
 async function read({
@@ -64,6 +64,10 @@ async function create({
 
   if (!integrationAuth) {
     throw new NotFoundError();
+  }
+
+  if (!integrationAuth.oauth) {
+    throw new Error("NO_OAUTH_CONFIG");
   }
 
   const { clientId, clientSecret, redirectUri, tokenUrl } =

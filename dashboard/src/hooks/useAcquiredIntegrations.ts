@@ -35,6 +35,8 @@ function useIntegrations() {
 
     const response = await http.post(`/integrations`, payload);
 
+    console.log(response);
+
     publish("AUTHORIZED", {});
 
     return response.data;

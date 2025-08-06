@@ -1,5 +1,5 @@
 async function init() {
-  const { Project } = require("@nucleoidai/platform-express/models");
+  const { Project } = require("@canmingir/link-express/models");
 
   const Task = require("./Task");
   const Command = require("./Command");
@@ -101,6 +101,9 @@ async function init() {
 
   Project.hasOne(TeamDetails, { foreignKey: "id" });
   TeamDetails.belongsTo(Project, { foreignKey: "id" });
+
+  Task.hasOne(Responsibility, { foreignKey: "responsibilityId" });
+  Responsibility.belongsTo(Task, { foreignKey: "responsibilityId" });
 
   Project.addHook("beforeDestroy", async (project) => {
     await Colleague.destroy({

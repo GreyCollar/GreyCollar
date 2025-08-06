@@ -1,8 +1,10 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/minimal/components";
 
 import { Handle, Position } from "@xyflow/react";
 import React, { useEffect, useState } from "react";
 import { alpha, styled } from "@mui/material/styles";
+
+const ANIMATION_DELAY_MS = 200;
 
 const MainContainer = styled("div")(({ theme }) => ({
   display: "flex",
@@ -78,7 +80,7 @@ const CustomNode = ({ data }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimated(true);
-    }, 1000);
+    }, ANIMATION_DELAY_MS);
 
     return () => clearTimeout(timer);
   }, []);

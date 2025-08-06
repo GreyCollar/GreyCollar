@@ -1,4 +1,4 @@
-import { NotFoundError } from "@nucleoidai/platform-express/error";
+import { NotFoundError } from "@canmingir/link-express/error";
 import Responsibility from "../models/Responsibility";
 
 type NodeType = {
@@ -71,8 +71,28 @@ async function remove({ responsibilityId }: { responsibilityId: string }) {
   });
 }
 
+async function list({ colleagueId }: { colleagueId: string }) {
+  const responsibilities = await Responsibility.findAll({
+    where: { colleagueId },
+  });
+
+  return responsibilities.map((responsibility) => responsibility.toJSON());
+}
+
+async function get({ responsibilityId }: { responsibilityId: string }) {
+  const responsibility = await Responsibility.findByPk(responsibilityId);
+
+  if (!responsibility) {
+    throw new NotFoundError();
+  }
+
+  return responsibility.toJSON();
+}
+
 export default {
   getWithNodes,
   upsert,
   remove,
+  list,
+  get,
 };

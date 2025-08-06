@@ -1,6 +1,6 @@
-import * as platform from "@nucleoidai/platform-express";
+import * as platform from "@canmingir/link-express";
 
-import { AuthenticationError } from "@nucleoidai/platform-express/error";
+import { AuthenticationError } from "@canmingir/link-express/error";
 import Integration from "../models/Integration";
 import colleague from "../functions/colleague";
 import express from "express";
