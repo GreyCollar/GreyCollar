@@ -5,7 +5,7 @@ import config from "./config";
 import dotenv from "dotenv";
 import http from "http";
 import models from "./src/models";
-import { nodeEvent } from "nuc-node-event-test/client";
+import { nodeEvent } from "@nucleoidai/node-event/client";
 
 dotenv.config();
 

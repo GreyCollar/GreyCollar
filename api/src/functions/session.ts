@@ -1,6 +1,6 @@
 import Conversation from "../models/Conversation";
 import Session from "../models/Session";
-import { nodeEvent } from "nuc-node-event-test/client";
+import { nodeEvent } from "@nucleoidai/node-event/client";
 import { publish } from "../lib/Event";
 import { v4 as uuid } from "uuid";
 
