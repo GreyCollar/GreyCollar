@@ -1,6 +1,6 @@
 import Conversation from "../models/Conversation";
 import Session from "../models/Session";
-import { nodeEvent } from "@nucleoidai/node-event/client";
+import { event } from "@nucleoidai/node-event/client";
 import { publish } from "../lib/Event";
 import { v4 as uuid } from "uuid";
 
@@ -59,7 +59,7 @@ async function addConversation({
       content,
     });
   } else {
-    nodeEvent.publish("AI_MESSAGED", {
+    event.publish("AI_MESSAGED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,
