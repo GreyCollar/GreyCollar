@@ -1,4 +1,4 @@
-name: Land
+name: Communication
 on:
   push:
     branches: [main]
