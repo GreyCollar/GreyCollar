@@ -1,4 +1,4 @@
-name: Land
+name: Event
 on:
   push:
     branches: [main]
@@ -13,10 +13,6 @@ jobs:
       - name: Check Out Repo
         uses: actions/checkout@v2
 
-      - name: Install Dependencies
-        run: |
-          cd communication
-          npm ci
 
       - name: Log in to Docker Hub
         env:
@@ -30,8 +26,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: canmingir/communication:land-${{ github.run_id }}
-          context: ./communication
+          tags: canmingir/event:${{ github.run_id }}
+          context: ./event
 
       - name: Azure Login
         uses: azure/login@v1
@@ -43,7 +39,7 @@ jobs:
           registryUsername: canmingir
           registryUrl: registry.hub.docker.com
           registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: communication-land
+          containerAppName: event
           resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/communication:land-${{ github.run_id }}
+          imageToDeploy: registry.hub.docker.com/canmingir/event:${{ github.run_id }}
 
