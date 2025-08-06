@@ -18,7 +18,7 @@ const config = {
   dynamodb: {
     region: "us-east-1",
   },
-  nodeEvent: {
+  event: {
     host: "greycollar.land",
     port: 8000,
     protocol: "https",

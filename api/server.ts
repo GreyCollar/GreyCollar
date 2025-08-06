@@ -24,7 +24,7 @@ platform.init(config).then(() => {
 
   models.init();
 
-  const { host, port, protocol } = config.nodeEvent;
+  const { host, port, protocol } = config.event;
 
   nodeEvent.init({
     host,
