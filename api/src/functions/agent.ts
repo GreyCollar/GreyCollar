@@ -471,9 +471,15 @@ async function chat({
       content: responsibilityToTaskResponse.answer,
     });
   } else {
-    const infoData = await info({ colleagueId });
-
-    const context = [knowledgeData, conversationsData, infoData];
+    const context = [
+      ...(
+        await Promise.all([
+          info({ colleagueId }),
+          knowledge({ colleagueId }),
+          conversations({ sessionId }),
+        ])
+      ).flat(),
+    ];
 
     const { evaluation } = await generate({
       dataset: dataset.train.chat,
