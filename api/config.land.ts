@@ -19,7 +19,7 @@ const config = {
     region: "us-east-1",
   },
   event: {
-    host: "greycollar.land",
+    host: "https://event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
     port: 8000,
     protocol: "https",
   },
