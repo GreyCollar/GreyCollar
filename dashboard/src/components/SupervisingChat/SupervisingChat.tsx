@@ -61,6 +61,7 @@ const SupervisingChat = ({
                 content: "Your answer needs improvement. Please try again.",
               },
             ]);
+            setIsEvaluating(false);
             return;
           }
 
@@ -81,9 +82,9 @@ const SupervisingChat = ({
                 "Sorry, there was an error evaluating your answer. Please try again.",
             },
           ]);
+        } finally {
+          setIsEvaluating(false);
         }
-
-        setIsEvaluating(false);
       }
     },
     [supervise.id, evaluateSupervising]
