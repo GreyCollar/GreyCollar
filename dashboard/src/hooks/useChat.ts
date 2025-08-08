@@ -1,4 +1,4 @@
-import http from "../http";
+import http from "@canmingir/link/platform/http";
 import useApi from "./useApi";
 import { useLocation } from "react-router-dom";
 import useMessage from "./useMessage";

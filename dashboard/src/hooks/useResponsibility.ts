@@ -1,5 +1,5 @@
 import { convertToNodesAndEdges } from "../components/ResponsibilityFlow/flowAdapter";
-import http from "../http";
+import http from "@canmingir/link/platform/http";
 import { publish } from "@nucleoidai/react-event";
 import useApi from "./useApiV2";
 import { v4 as uuidv4 } from "uuid";
