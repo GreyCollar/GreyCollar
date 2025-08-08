@@ -181,45 +181,37 @@ router.post("/:supervisingId/evaluate", async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  try {
-    const evaluation = await agent.evaluateSupervisionAnswer({
+  const evaluation = await agent.evaluateSupervisionAnswer({
+    colleagueId: colleague.id,
+    content: {
+      question: supervisingInstance.question,
+      answer,
+    },
+  });
+
+  if (evaluation.is_answer_known) {
+    const updatedSupervising = await supervising.update({
+      teamId,
+      supervisingId,
       colleagueId: colleague.id,
-      content: {
-        question: supervisingInstance.question,
-        answer,
-      },
+      question: supervisingInstance.question,
+      answer,
+      status: "ANSWERED",
     });
 
-    if (evaluation.is_answer_known) {
-      const updatedSupervising = await supervising.update({
-        teamId,
-        supervisingId,
-        colleagueId: colleague.id,
-        question: supervisingInstance.question,
-        answer,
-        status: "ANSWERED",
-      });
-
-      return res.status(200).json({
-        action: "answer_approved",
-        supervising: updatedSupervising,
-        evaluation: {
-          ...evaluation,
-        },
-      });
-    } else {
-      return res.status(200).json({
-        action: "needs_improvement",
-        evaluation: {
-          ...evaluation,
-        },
-      });
-    }
-  } catch (error) {
-    console.error("Error evaluating supervising answer:", error);
-    return res.status(500).json({
-      error: "Failed to evaluate answer",
-      details: error instanceof Error ? error.message : "Unknown error",
+    return res.status(200).json({
+      action: "answer_approved",
+      supervising: updatedSupervising,
+      evaluation: {
+        ...evaluation,
+      },
+    });
+  } else {
+    return res.status(200).json({
+      action: "needs_improvement",
+      evaluation: {
+        ...evaluation,
+      },
     });
   }
 });
