@@ -17,6 +17,10 @@ import {
 } from "@mui/material";
 import React, { memo, useCallback } from "react";
 import { alpha, useTheme } from "@mui/material";
+import {
+  getRandomCorrectAnswer,
+  getRandomImprovementAnswer,
+} from "../../utils/answerPool";
 
 const SupervisingChat = ({
   open = false,
@@ -58,7 +62,7 @@ const SupervisingChat = ({
               ...prev,
               {
                 role: "ASSISTANT",
-                content: "Your answer needs improvement. Please try again.",
+                content: getRandomImprovementAnswer(),
               },
             ]);
             setIsEvaluating(false);
@@ -69,7 +73,7 @@ const SupervisingChat = ({
             ...prev,
             {
               role: "ASSISTANT",
-              content: "👍",
+              content: getRandomCorrectAnswer(),
             },
           ]);
         } catch (error) {
@@ -177,7 +181,6 @@ const SupervisingChat = ({
             </Box>
           </Box>
 
-          {/* Question Description Section */}
           {supervise.question && (
             <Box
               sx={{
