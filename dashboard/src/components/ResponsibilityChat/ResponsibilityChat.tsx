@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import InlineChatInput from "../../widgets/ChatInput/InlineChatInput";
 import React from "react";
 import ResponsibilityChatContent from "./ResponsibilityChatContent";
-import http from "../../http";
+import http from "@canmingir/link/platform/http";
 import { publish } from "@nucleoidai/react-event";
 import { useParams } from "react-router-dom";
 import useResponsibility from "../../hooks/useResponsibility";

@@ -1,4 +1,4 @@
-import http from "../http";
+import http from "@canmingir/link/platform/http";
 import { storage } from "@nucleoidjs/webstorage";
 import useApi from "./useApi";
 
