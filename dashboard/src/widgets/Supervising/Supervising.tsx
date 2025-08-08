@@ -9,8 +9,7 @@ import { Container, Skeleton, Stack } from "@mui/material";
 const Supervising = ({ colleagueId }) => {
   const [selectedStatus, setSelectedStatus] = useState("All");
 
-  const { updateSupervising, getColleagueSupervisingByStatus } =
-    useSupervisings();
+  const { getColleagueSupervisingByStatus } = useSupervisings();
 
   const { supervisings, loading } = getColleagueSupervisingByStatus(
     colleagueId,
@@ -53,11 +52,7 @@ const Supervising = ({ colleagueId }) => {
           </Stack>
         ) : supervisings.length > 0 ? (
           supervisings.map((supervise) => (
-            <SupervisingCard
-              key={supervise.id}
-              updateSupervising={updateSupervising}
-              supervise={supervise}
-            />
+            <SupervisingCard key={supervise.id} supervise={supervise} />
           ))
         ) : (
           <Stack sx={{ textAlign: "center", my: 4, color: "text.secondary" }}>

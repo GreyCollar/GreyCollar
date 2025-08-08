@@ -49,10 +49,12 @@ async function generate({
       role: "system",
       content: `json_format: ${json_format}`,
     },
-  ].map(({ role, content }) => ({
-    role,
-    content: JSON.stringify(content),
-  }));
+  ]
+    .map(({ role, content }) => ({
+      role,
+      content: JSON.stringify(content),
+    }))
+    .filter(({ role }) => role !== undefined);
 
   if (dataset) {
     messages.unshift(dataset);
@@ -71,3 +73,4 @@ async function generate({
 }
 
 export { generate };
+
