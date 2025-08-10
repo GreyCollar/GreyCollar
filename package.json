@@ -27,7 +27,7 @@
     "typecheck": "npm run typecheck:dashboard"
   },
   "dependencies": {
-    "@canmingir/link": "^1.1.3",
+    "@canmingir/link": "^1.1.4",
     "@canmingir/link-express": "^1.6.0",
     "@modelcontextprotocol/sdk": "^1.15.1",
     "concurrently": "^9.1.2",
