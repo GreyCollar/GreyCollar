@@ -28,7 +28,6 @@ platform.init(config).then(() => {
 
   event.init({
     host,
-    port: Number(config.event?.port),
     protocol,
   });
 
