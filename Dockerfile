@@ -20,6 +20,7 @@ COPY server.js .
 COPY ./dashboard/dist ./dist
 COPY ./dashboard/config.js ./config.mjs
 COPY ./api ./api
+COPY ./mcp ./mcp
 
 RUN cd api && npm rebuild sqlite3
 RUN npm install -g concurrently
