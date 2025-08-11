@@ -5,8 +5,8 @@ const config = {
   beta: true,
   api: "https://land.greycollar.ai/api",
   socket: {
-    host: "https://land.greycollar.ai",
-    path: "/api/socket.io",
+    host: "https://communication-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
+    path: "/socket.io",
   },
   project: {
     github: {
