@@ -72,6 +72,7 @@ const setup = (io: Server) => {
   });
 
   event.subscribe("AI_MESSAGED", ({ sessionId, content }) => {
+    console.log("subscribed AI_MESSAGED", sessionId, content);
     const socketId = sockets[sessionId];
     if (socketId) {
       io.to(socketId).emit("ai_message", {
