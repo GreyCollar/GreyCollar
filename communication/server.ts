@@ -13,7 +13,7 @@ dotenv.config();
 const startServer = async () => {
   event.init({
     host: process.env.NODE_EVENT_HOST || "localhost",
-    port: parseInt(process.env.NODE_EVENT_PORT || "8080"),
+    port: Number(process.env.NODE_EVENT_PORT),
     protocol: (process.env.NODE_EVENT_PROTOCOL as "http" | "https") || "http",
   });
 
