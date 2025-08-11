@@ -15,7 +15,7 @@
     "@canmingir/link": "^1.1.1",
     "@canmingir/link-express": "^1.6.0",
     "@modelcontextprotocol/sdk": "^1.15.1",
-    "@nucleoidai/node-event": "^1.1.2",
+    "@nucleoidai/node-event": "^1.1.3",
     "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.79.4",

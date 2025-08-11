@@ -20,7 +20,6 @@ const config = {
   },
   event: {
     host: "event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
-    port: 8000,
     protocol: "https",
   },
 };

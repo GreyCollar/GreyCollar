@@ -24,11 +24,11 @@ platform.init(config).then(() => {
 
   models.init();
 
-  const { host, port, protocol } = config.event;
+  const { host, protocol } = config.event;
 
   event.init({
     host,
-    port: Number(port),
+    port: Number(config.event?.port),
     protocol,
   });
 
@@ -36,3 +36,4 @@ platform.init(config).then(() => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
   });
 });
+
