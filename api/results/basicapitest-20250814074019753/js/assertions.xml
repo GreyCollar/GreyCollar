@@ -1,0 +1,8 @@
+<testsuite name="greycollar.api.BasicAPITest" tests="2" errors="0" failures="1" time="0">
+<testcase name="Global: mean of response time is less than 1000.0" status="true" time="0">
+  <system-out>Global: mean of response time is less than 1000.0</system-out>
+</testcase>
+<testcase name="Global: percentage of failed events is less than 10.0" status="false" time="0">
+  <failure type="Global">Actual value: 10.967741935483872</failure>
+</testcase>
+</testsuite>

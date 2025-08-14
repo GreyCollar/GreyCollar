@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  gatling:
+    image: denvazh/gatling:latest
+    container_name: greycollar-gatling
+    volumes:
+      - ./user-files:/opt/gatling/user-files
+      - ./results:/opt/gatling/results
+      - ./gatling.conf:/opt/gatling/conf/gatling.conf
+    environment:
+      - JAVA_OPTS=-Xms512m -Xmx2g
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "
+        echo 'Starting Gatling...' &&
+        /opt/gatling/bin/gatling.sh --simulation-class greycollar.api.BasicAPITest
+      "
+    depends_on:
+      - api
+
+  api:
+    build: .
+    container_name: greycollar-api
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+

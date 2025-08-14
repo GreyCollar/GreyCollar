@@ -1,0 +1,27 @@
+{
+  "simulation": "greycollar.api.BasicAPITest",
+  "simulationId": "basicapitest",
+  "start": 1755157219753,
+  "description": "test-2",
+  "scenarios": ["Simple Load Test", "Health Check"],
+  "assertions": [
+{
+  "path": "Global",
+  "target": "mean of response time",
+  "condition": "is less than",
+  "expectedValues": [1000.0],
+  "result": true,
+  "message": "Global: mean of response time is less than 1000.0",
+  "actualValue": [353.0]
+},
+{
+  "path": "Global",
+  "target": "percentage of failed events",
+  "condition": "is less than",
+  "expectedValues": [10.0],
+  "result": false,
+  "message": "Global: percentage of failed events is less than 10.0",
+  "actualValue": [10.967741935483872]
+}
+  ]
+}
