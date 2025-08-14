@@ -8,7 +8,12 @@
     "dev": "ts-node server --dev",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "test": "ts-node test.ts --dev"
+    "test": "ts-node test.ts --dev",
+    "test:load:smoke": "k6 run load-tests/smoke-test.js",
+    "test:load:load": "k6 run load-tests/load-test.js",
+    "test:load:stress": "k6 run load-tests/stress-test.js",
+    "test:load:spike": "k6 run load-tests/spike-test.js",
+    "test:load:land": "k6 run -e ENVIRONMENT=land load-tests/load-test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.35.0",

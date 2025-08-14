@@ -20,3 +20,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# k6 load testing
+k6-results/
+*.json.gz
+*.html
+*.csv
+*.xml
