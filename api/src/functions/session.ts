@@ -1,7 +1,7 @@
 import Conversation from "../models/Conversation";
 import Session from "../models/Session";
 import { event } from "@nucleoidai/node-event/client";
-import { publish } from "../lib/Event";
+import { publish } from "@nucleoidai/node-event";
 import { v4 as uuid } from "uuid";
 
 async function create({
