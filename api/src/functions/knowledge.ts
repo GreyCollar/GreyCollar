@@ -5,7 +5,7 @@ import { NotFoundError } from "@canmingir/link-express/error";
 import { Op } from "sequelize";
 import Step from "../models/Step";
 import Task from "../models/Task";
-import { publish } from "../lib/Event";
+import { publish } from "@nucleoidai/node-event";
 import scrapper from "../actions/scrapper";
 async function create({
   teamId,

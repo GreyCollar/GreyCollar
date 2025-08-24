@@ -5,7 +5,7 @@ import Message from "../models/Message";
 import { Op } from "sequelize";
 import Supervising from "../models/Supervising";
 import Task from "../models/Task";
-import { publish } from "../lib/Event";
+import { publish } from "@nucleoidai/node-event";
 
 async function create({
   role,
