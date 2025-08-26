@@ -15,7 +15,7 @@ import projects from "./routes/projects";
 import responsibilities from "./routes/responsibilities";
 import sessions from "./routes/sessions";
 import statistics from "./routes/statistics";
-import { subscribe } from "./lib/Event";
+import { subscribe } from "@nucleoidai/node-event";
 import supervisings from "./routes/supervisings";
 import tasks from "./routes/tasks";
 import teamDetails from "./routes/teamDetails";
