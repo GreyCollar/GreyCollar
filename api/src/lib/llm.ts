@@ -53,8 +53,7 @@ async function generate({
     .map(({ role, content }) => ({
       role,
       content: JSON.stringify(content),
-    }))
-    .filter(({ role }) => role !== undefined);
+    }));
 
   if (dataset) {
     messages.unshift(dataset);
