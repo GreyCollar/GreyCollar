@@ -29,6 +29,18 @@ const SupervisingChat = ({
   closeButton = true,
   loading = false,
   supervise,
+}: {
+  open: boolean;
+  handleClose: () => void;
+  readOnly?: boolean;
+  closeButton?: boolean;
+  loading?: boolean;
+  supervise: {
+    id: string;
+    question?: string;
+    conversationId?: string;
+    sessionId?: string;
+  };
 }) => {
   const SUPERVISING_CHAT_WELCOME_MESSAGE =
     "Welcome to the Supervising Chat! Here you can discuss and supervise the ongoing tasks. Feel free to ask questions or provide guidance.";

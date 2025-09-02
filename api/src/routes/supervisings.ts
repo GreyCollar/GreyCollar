@@ -129,17 +129,17 @@ router.patch("/:supervisingId", async (req, res) => {
   const supervisingInstance = await Supervising.findByPk(supervisingId);
 
   if (!supervisingInstance) {
-    return res.status(404);
+    return res.status(404).json({ error: "Supervising not found" });
   }
 
   const colleague = await Colleague.findByPk(supervisingInstance.colleagueId);
 
   if (!colleague) {
-    return res.status(404);
+    return res.status(404).json({ error: "Colleague not found" });
   }
 
   if (colleague.teamId !== teamId) {
-    return res.status(401);
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const updatedSupervising = await supervising.update({

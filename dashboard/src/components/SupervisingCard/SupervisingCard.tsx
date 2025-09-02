@@ -18,7 +18,16 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-const SupervisingCard = ({ supervise }) => {
+const SupervisingCard = ({
+  supervise,
+}: {
+  supervise: {
+    id: string;
+    question?: string;
+    answer?: string;
+    status: string;
+  };
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
