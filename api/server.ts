@@ -1,3 +1,5 @@
+import "./src/instrumentation";
+
 import * as platform from "@canmingir/link-express";
 
 import { Server } from "socket.io";
@@ -35,4 +37,3 @@ platform.init(config).then(() => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
   });
 });
-

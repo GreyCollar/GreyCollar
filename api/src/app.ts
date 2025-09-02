@@ -19,6 +19,7 @@ import { subscribe } from "@nucleoidai/node-event";
 import supervisings from "./routes/supervisings";
 import tasks from "./routes/tasks";
 import teamDetails from "./routes/teamDetails";
+import { telemetryMiddleware } from "./instrumentation";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -34,6 +35,8 @@ declare module "express-serve-static-core" {
 const { authorization } = platform;
 
 const app = platform.express();
+
+app.use(telemetryMiddleware());
 
 app.use("/metrics", metrics);
 
