@@ -18,6 +18,10 @@ const config = {
   dynamodb: {
     region: "us-east-1",
   },
+  event: {
+    host: "event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
+    protocol: "https",
+  },
 };
 
 export default config;

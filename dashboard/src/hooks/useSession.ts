@@ -1,5 +1,5 @@
 import config from "../../config";
-import http from "../http";
+import http from "@canmingir/link/platform/http";
 import { io } from "socket.io-client";
 import { publish } from "@nucleoidai/react-event";
 import { storage } from "@nucleoidjs/webstorage";
