@@ -20,7 +20,7 @@ export const options = {
   },
 };
 
-const BASE_URL = __ENV.BASE_URL || "http://localhost:4000";
+const BASE_URL = __ENV.BASE_URL || "https://land.greycollar.ai/api";
 const errorRate = new Rate("errors");
 
 export default function () {
