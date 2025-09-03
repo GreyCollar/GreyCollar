@@ -1,9 +1,5 @@
 FROM grafana/k6:latest
 
-RUN apk add --no-cache \
-    ca-certificates \
-    curl
-
 COPY scripts /scripts
 
 WORKDIR /scripts
