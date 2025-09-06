@@ -11,4 +11,5 @@ CMD [ "--config.file=/etc/prometheus/prometheus.yml", \
       "--web.console.templates=/etc/prometheus/consoles", \
       "--storage.tsdb.retention.time=200h", \
       "--web.enable-lifecycle", \
+      "--web.enable-remote-write-receiver", \
       "--enable-feature=remote-write-receiver" ] 
