@@ -20,7 +20,7 @@ export type Session = {
   colleagueId: string;
 };
 
-const setup = (io: Server) => {
+const setup = async (io: Server) => {
   io.on("connection", async (socket) => {
     try {
       console.log("New socket connection:", socket.id);
@@ -71,7 +71,7 @@ const setup = (io: Server) => {
     console.error("Socket error:", err);
   });
 
-  event.subscribe("AI_MESSAGED", ({ sessionId, content }) => {
+  await event.subscribe("AI_MESSAGED", ({ sessionId, content }) => {
     console.log("subscribed AI_MESSAGED", sessionId, content);
     const socketId = sockets[sessionId];
     if (socketId) {

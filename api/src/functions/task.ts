@@ -1,7 +1,7 @@
 import Colleague from "../models/Colleague";
 import Step from "../models/Step";
 import Task from "../models/Task";
-import { publish } from "@nucleoidai/node-event";
+import { event } from "@nucleoidai/node-event/client";
 
 async function create({
   colleagueId,
@@ -19,7 +19,7 @@ async function create({
     responsibilityId,
   });
 
-  publish("TASK", "CREATED", {
+  await event.publish("TASK.CREATED", {
     taskId: task.id,
     colleagueId,
     description,
@@ -43,7 +43,7 @@ async function update({
   await Task.update({ result, comment, status }, { where: { id: taskId } });
 
   if (status === "COMPLETED") {
-    publish("TASK", "COMPLETED", { taskId, result, comment });
+    await event.publish("TASK.COMPLETED", { taskId, result, comment });
   }
 }
 
@@ -116,7 +116,7 @@ async function addStep({
     comment,
   });
 
-  publish("STEP", "ADDED", {
+  await event.publish("STEP.ADDED", {
     stepId: step.id,
     taskId,
     action,
@@ -153,7 +153,7 @@ async function updateStep({
   );
 
   if (status === "COMPLETED") {
-    publish("STEP", "COMPLETED", {
+    await event.publish("STEP.COMPLETED", {
       taskId,
       stepId,
       action,
@@ -188,3 +188,4 @@ export default {
   updateStep,
   listSteps,
 };
+

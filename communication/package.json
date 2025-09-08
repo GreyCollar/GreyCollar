@@ -10,7 +10,7 @@
   "keywords": [],
   "author": "NucTeam",
   "dependencies": {
-    "@nucleoidai/node-event": "^1.1.3",
+    "@nucleoidai/node-event": "^1.1.5",
     "@slack/bolt": "^3.22.0",
     "@slack/types": "^2.14.0",
     "axios": "^1.7.7",
