@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import config from "../api/config"
 import { createApp } from "./app";
 import { createChatApp } from "./chatApp";
 import { createProxyMiddleware } from "http-proxy-middleware";
@@ -11,13 +12,13 @@ import session from "./test_chat/session";
 dotenv.config();
 
 const startServer = async () => {
-  console.log("NODE_EVENT_HOST", process.env.NODE_EVENT_HOST);
-  console.log("NODE_EVENT_PROTOCOL", process.env.NODE_EVENT_PROTOCOL);
-  event.init({
-    host:
-      process.env.NODE_EVENT_HOST ||
-      "event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
-    protocol: (process.env.NODE_EVENT_PROTOCOL as "http" | "https") || "https",
+
+  const { type, host, protocol } = config.event;
+  
+  await event.init({
+    type: type as "inMemory",
+    host,
+    protocol,
   });
 
   const mainApp = express();

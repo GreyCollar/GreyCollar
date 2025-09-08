@@ -1,7 +1,7 @@
 import ColleagueKnowledge from "../models/ColleagueKnowledge";
 import Knowledge from "../models/Knowledge";
 import Supervising from "../models/Supervising";
-import { publish } from "@nucleoidai/node-event";
+import { event } from "@nucleoidai/node-event/client";
 
 async function create({
   sessionId,
@@ -21,7 +21,7 @@ async function create({
     colleagueId,
   });
 
-  publish("SUPERVISING", "RAISED", {
+  await event.publish("SUPERVISING.RAISED", {
     sessionId,
     conversationId,
     question,
@@ -66,7 +66,7 @@ async function update({
     teamId,
   });
 
-  publish("SUPERVISING", "ANSWERED", {
+  await event.publish("SUPERVISING.ANSWERED", {
     teamId,
     supervisingId,
     sessionId,
