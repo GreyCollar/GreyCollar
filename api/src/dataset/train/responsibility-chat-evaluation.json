@@ -1,0 +1,458 @@
+[
+  {
+    "question": "Where is the parking lot?",
+    "knowledge": [
+      {
+        "id": "0b6e8e55-3d02-4f59-966f-e6339ba27095",
+        "type": "URL",
+        "url": "https://www.financialmanagementandstrategy.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "8a743824-3a4c-4d96-b235-34a2f0c19dd0",
+        "type": "TEXT",
+        "text": "Latest trends in financial management and strategy.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      },
+      {
+        "id": "17f4a185-c81c-4be5-a6ee-fdd38fdb2b1a",
+        "type": "QA",
+        "question": "What are the key components of an effective financial strategy?",
+        "answer": "The key components of an effective financial strategy include budgeting, forecasting, risk management, investment planning, and performance measurement.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "81a97af4-75ce-473c-9106-2bdfb86abf80",
+        "type": "URL",
+        "url": "https://www.customerservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "eab826a3-2566-4ac9-abaf-c3a31b947059",
+        "type": "TEXT",
+        "text": "In-progress report on customer service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9a1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "QA",
+        "question": "What are the key qualities of an effective customer service representative?",
+        "answer": "Key qualities of an effective customer service representative include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9b1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "TEXT",
+        "text": "Rebel Coffee is located at 225 Wood St, London",
+        "status": "COMPLETED",
+        "createdAt": "2023-08-05T12:00:25"
+      },
+      {
+        "id": "c141c799-4ad9-4fd3-9482-95de77057810",
+        "type": "URL",
+        "url": "https://e17rebelcoffee.com",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "ea02e7db-7ff6-4c88-846f-2de9494d6d8d",
+        "type": "URL",
+        "url": "https://www.coffeeservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "8bc99c86-59f2-48d6-ab3f-4e9129b53814",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "78324f23-6b55-4ef1-871c-34177b312481",
+        "type": "QA",
+        "question": "What are the key qualities of an effective barista?",
+        "answer": "Key qualities of an effective barista include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "18a6dc62-9c58-49db-ae61-eef9042102b2",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "7e3d88f6-bc6f-4beb-a793-ef68f219c14a",
+        "type": "TEXT",
+        "text": "If status message is ORANGE, open a ticket in JIRA",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "240d9a98-f578-4ff9-afbe-2acfae0d77d9",
+        "type": "TEXT",
+        "text": "Employee IDs are 6 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
+        "type": "TEXT",
+        "text": "Hardware barcodes are 13 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      }
+    ],
+    "is_answer_known": false
+  },
+  {
+    "question": "How do I submit a vacation request?",
+    "knowledge": [
+      {
+        "id": "0b6e8e55-3d02-4f59-966f-e6339ba27095",
+        "type": "URL",
+        "url": "https://www.financialmanagementandstrategy.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "8a743824-3a4c-4d96-b235-34a2f0c19dd0",
+        "type": "TEXT",
+        "text": "Latest trends in financial management and strategy.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      },
+      {
+        "id": "17f4a185-c81c-4be5-a6ee-fdd38fdb2b1a",
+        "type": "QA",
+        "question": "What are the key components of an effective financial strategy?",
+        "answer": "The key components of an effective financial strategy include budgeting, forecasting, risk management, investment planning, and performance measurement.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "81a97af4-75ce-473c-9106-2bdfb86abf80",
+        "type": "URL",
+        "url": "https://www.customerservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "eab826a3-2566-4ac9-abaf-c3a31b947059",
+        "type": "TEXT",
+        "text": "In-progress report on customer service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9a1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "QA",
+        "question": "What are the key qualities of an effective customer service representative?",
+        "answer": "Key qualities of an effective customer service representative include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9b1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "TEXT",
+        "text": "Rebel Coffee is located at 225 Wood St, London",
+        "status": "COMPLETED",
+        "createdAt": "2023-08-05T12:00:25"
+      },
+      {
+        "id": "c141c799-4ad9-4fd3-9482-95de77057810",
+        "type": "URL",
+        "url": "https://e17rebelcoffee.com",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "ea02e7db-7ff6-4c88-846f-2de9494d6d8d",
+        "type": "URL",
+        "url": "https://www.coffeeservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "8bc99c86-59f2-48d6-ab3f-4e9129b53814",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "78324f23-6b55-4ef1-871c-34177b312481",
+        "type": "QA",
+        "question": "What are the key qualities of an effective barista?",
+        "answer": "Key qualities of an effective barista include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "18a6dc62-9c58-49db-ae61-eef9042102b2",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "7e3d88f6-bc6f-4beb-a793-ef68f219c14a",
+        "type": "TEXT",
+        "text": "If status message is ORANGE, open a ticket in JIRA",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "240d9a98-f578-4ff9-afbe-2acfae0d77d9",
+        "type": "TEXT",
+        "text": "Employee IDs are 6 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
+        "type": "TEXT",
+        "text": "Hardware barcodes are 13 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      }
+    ],
+    "is_answer_known": false
+  },
+  {
+    "question": "What is the policy for handling customer complaints?",
+    "knowledge": [
+      {
+        "id": "0b6e8e55-3d02-4f59-966f-e6339ba27095",
+        "type": "URL",
+        "url": "https://www.financialmanagementandstrategy.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "8a743824-3a4c-4d96-b235-34a2f0c19dd0",
+        "type": "TEXT",
+        "text": "Latest trends in financial management and strategy.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      },
+      {
+        "id": "17f4a185-c81c-4be5-a6ee-fdd38fdb2b1a",
+        "type": "QA",
+        "question": "What are the key components of an effective financial strategy?",
+        "answer": "The key components of an effective financial strategy include budgeting, forecasting, risk management, investment planning, and performance measurement.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "81a97af4-75ce-473c-9106-2bdfb86abf80",
+        "type": "URL",
+        "url": "https://www.customerservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "eab826a3-2566-4ac9-abaf-c3a31b947059",
+        "type": "TEXT",
+        "text": "In-progress report on customer service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9a1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "QA",
+        "question": "What are the key qualities of an effective customer service representative?",
+        "answer": "Key qualities of an effective customer service representative include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9b1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "TEXT",
+        "text": "Rebel Coffee is located at 225 Wood St, London",
+        "status": "COMPLETED",
+        "createdAt": "2023-08-05T12:00:25"
+      },
+      {
+        "id": "c141c799-4ad9-4fd3-9482-95de77057810",
+        "type": "URL",
+        "url": "https://e17rebelcoffee.com",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "ea02e7db-7ff6-4c88-846f-2de9494d6d8d",
+        "type": "URL",
+        "url": "https://www.coffeeservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "8bc99c86-59f2-48d6-ab3f-4e9129b53814",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "78324f23-6b55-4ef1-871c-34177b312481",
+        "type": "QA",
+        "question": "What are the key qualities of an effective barista?",
+        "answer": "Key qualities of an effective barista include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "18a6dc62-9c58-49db-ae61-eef9042102b2",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "7e3d88f6-bc6f-4beb-a793-ef68f219c14a",
+        "type": "TEXT",
+        "text": "If status message is ORANGE, open a ticket in JIRA",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "240d9a98-f578-4ff9-afbe-2acfae0d77d9",
+        "type": "TEXT",
+        "text": "Employee IDs are 6 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
+        "type": "TEXT",
+        "text": "Hardware barcodes are 13 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      }
+    ],
+    "is_answer_known": false
+  },
+  {
+    "question": "What are the key components of an effective financial strategy?",
+    "knowledge": [
+      {
+        "id": "0b6e8e55-3d02-4f59-966f-e6339ba27095",
+        "type": "URL",
+        "url": "https://www.financialmanagementandstrategy.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "8a743824-3a4c-4d96-b235-34a2f0c19dd0",
+        "type": "TEXT",
+        "text": "Latest trends in financial management and strategy.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      },
+      {
+        "id": "17f4a185-c81c-4be5-a6ee-fdd38fdb2b1a",
+        "type": "QA",
+        "question": "What are the key components of an effective financial strategy?",
+        "answer": "The key components of an effective financial strategy include budgeting, forecasting, risk management, investment planning, and performance measurement.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "81a97af4-75ce-473c-9106-2bdfb86abf80",
+        "type": "URL",
+        "url": "https://www.customerservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "eab826a3-2566-4ac9-abaf-c3a31b947059",
+        "type": "TEXT",
+        "text": "In-progress report on customer service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9a1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "QA",
+        "question": "What are the key qualities of an effective customer service representative?",
+        "answer": "Key qualities of an effective customer service representative include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.324Z"
+      },
+      {
+        "id": "9b1c0eb7-5ada-44e9-bd84-0f55943809b8",
+        "type": "TEXT",
+        "text": "Rebel Coffee is located at 225 Wood St, London",
+        "status": "COMPLETED",
+        "createdAt": "2023-08-05T12:00:25"
+      },
+      {
+        "id": "c141c799-4ad9-4fd3-9482-95de77057810",
+        "type": "URL",
+        "url": "https://e17rebelcoffee.com",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "ea02e7db-7ff6-4c88-846f-2de9494d6d8d",
+        "type": "URL",
+        "url": "https://www.coffeeservicebestpractices.com/resources",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "8bc99c86-59f2-48d6-ab3f-4e9129b53814",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "78324f23-6b55-4ef1-871c-34177b312481",
+        "type": "QA",
+        "question": "What are the key qualities of an effective barista?",
+        "answer": "Key qualities of an effective barista include strong communication skills, empathy, problem-solving abilities, patience, and product knowledge.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "18a6dc62-9c58-49db-ae61-eef9042102b2",
+        "type": "TEXT",
+        "text": "In-progress report on coffee service trends and improvements.",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "7e3d88f6-bc6f-4beb-a793-ef68f219c14a",
+        "type": "TEXT",
+        "text": "If status message is ORANGE, open a ticket in JIRA",
+        "status": "COMPLETED",
+        "createdAt": "2024-08-07T10:00:00Z"
+      },
+      {
+        "id": "240d9a98-f578-4ff9-afbe-2acfae0d77d9",
+        "type": "TEXT",
+        "text": "Employee IDs are 6 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.307Z"
+      },
+      {
+        "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
+        "type": "TEXT",
+        "text": "Hardware barcodes are 13 digits",
+        "status": "COMPLETED",
+        "createdAt": "1970-01-20T22:08:14.337Z"
+      }
+    ],
+    "is_answer_known": true
+  }
+]

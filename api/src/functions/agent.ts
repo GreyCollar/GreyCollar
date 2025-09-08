@@ -389,6 +389,42 @@ async function responsibilityDiamond({
   return response;
 }
 
+async function evaluateSupervisionAnswer({
+  colleagueId,
+  content,
+}: {
+  colleagueId: string;
+  content: {
+    question: string;
+    answer: string;
+  };
+}) {
+  const context = [
+    await info({ colleagueId }),
+    await knowledge({ colleagueId }),
+    {
+      role: "system" as const,
+      content: {
+        supervision_context: {
+          original_question: content.question,
+          proposed_answer: content.answer,
+        },
+      },
+    },
+  ];
+
+  const evaluation = await generate({
+    dataset: dataset.train.responsibilityChatEvaluation,
+    context,
+    content: `${content.question}\n\nAnswer: ${content.answer}`,
+    json_format: `{
+      "is_answer_known": <true|false>,
+    }`,
+  });
+
+  return evaluation;
+}
+
 async function chat({
   colleagueId,
   sessionId,
@@ -435,9 +471,15 @@ async function chat({
       content: responsibilityToTaskResponse.answer,
     });
   } else {
-    const infoData = await info({ colleagueId });
-
-    const context = [knowledgeData, conversationsData, infoData];
+    const context = [
+      ...(
+        await Promise.all([
+          info({ colleagueId }),
+          knowledge({ colleagueId }),
+          conversations({ sessionId }),
+        ])
+      ).flat(),
+    ];
 
     const { evaluation } = await generate({
       dataset: dataset.train.chat,
@@ -488,4 +530,5 @@ export default {
   step,
   responsibility,
   responsibilityName,
+  evaluateSupervisionAnswer,
 };
