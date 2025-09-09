@@ -30,7 +30,7 @@
       },
       "id": 1,
       "panels": [],
-      "title": "Test Overview",
+      "title": "K6 Load Test Overview",
       "type": "row"
     },
     {
@@ -60,7 +60,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 5,
         "x": 0,
         "y": 1
       },
@@ -113,14 +113,14 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "short"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 6,
+        "w": 5,
+        "x": 5,
         "y": 1
       },
       "id": 3,
@@ -140,11 +140,11 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "k6_http_req_duration{quantile=\"0.95\"}",
+          "expr": "k6_http_reqs_total",
           "refId": "A"
         }
       ],
-      "title": "95th Percentile Response Time",
+      "title": "Total HTTP Requests",
       "type": "stat"
     },
     {
@@ -155,8 +155,6 @@
             "mode": "thresholds"
           },
           "mappings": [],
-          "max": 100,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -180,8 +178,8 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 12,
+        "w": 5,
+        "x": 10,
         "y": 1
       },
       "id": 4,
@@ -201,7 +199,7 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "rate(k6_http_req_failed[5m]) * 100",
+          "expr": "k6_http_req_failed_rate * 100",
           "refId": "A"
         }
       ],
@@ -225,22 +223,22 @@
               },
               {
                 "color": "yellow",
-                "value": 50
+                "value": 1000
               },
               {
                 "color": "red",
-                "value": 100
+                "value": 2000
               }
             ]
           },
-          "unit": "reqps"
+          "unit": "ms"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 18,
+        "w": 5,
+        "x": 15,
         "y": 1
       },
       "id": 5,
@@ -260,11 +258,70 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "rate(k6_http_reqs[5m])",
+          "expr": "k6_http_req_duration_seconds{quantile=\"0.95\"} * 1000",
           "refId": "A"
         }
       ],
-      "title": "Request Rate",
+      "title": "95th Percentile Response Time",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 500
+              },
+              {
+                "color": "red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "values": false,
+          "calcs": ["lastNotNull"],
+          "fields": ""
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.0.0",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "k6_http_req_waiting_seconds{quantile=\"0.95\"} * 1000",
+          "refId": "A"
+        }
+      ],
+      "title": "95th Percentile Waiting Time",
       "type": "stat"
     },
     {
@@ -275,10 +332,174 @@
         "x": 0,
         "y": 9
       },
-      "id": 6,
+      "id": 7,
       "panels": [],
-      "title": "Performance Metrics",
+      "title": "Time Series Charts",
       "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "k6_vus",
+          "legendFormat": "Virtual Users",
+          "refId": "A"
+        }
+      ],
+      "title": "Virtual Users Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "vis": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "increase(k6_http_reqs_total[1m])",
+          "legendFormat": "HTTP Requests (per minute)",
+          "refId": "A"
+        }
+      ],
+      "title": "HTTP Requests Over Time",
+      "type": "timeseries"
     },
     {
       "datasource": "Prometheus",
@@ -337,9 +558,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 18
       },
-      "id": 7,
+      "id": 10,
       "options": {
         "legend": {
           "calcs": [],
@@ -354,27 +575,21 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "k6_http_req_duration{quantile=\"0.50\"}",
+          "expr": "k6_http_req_duration_seconds{quantile=\"0.50\"} * 1000",
           "legendFormat": "50th percentile",
           "refId": "A"
         },
         {
           "datasource": "Prometheus",
-          "expr": "k6_http_req_duration{quantile=\"0.90\"}",
-          "legendFormat": "90th percentile",
+          "expr": "k6_http_req_duration_seconds{quantile=\"0.95\"} * 1000",
+          "legendFormat": "95th percentile",
           "refId": "B"
         },
         {
           "datasource": "Prometheus",
-          "expr": "k6_http_req_duration{quantile=\"0.95\"}",
-          "legendFormat": "95th percentile",
-          "refId": "C"
-        },
-        {
-          "datasource": "Prometheus",
-          "expr": "k6_http_req_duration{quantile=\"0.99\"}",
+          "expr": "k6_http_req_duration_seconds{quantile=\"0.99\"} * 1000",
           "legendFormat": "99th percentile",
-          "refId": "D"
+          "refId": "C"
         }
       ],
       "title": "Response Time Percentiles",
@@ -429,7 +644,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -437,97 +652,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 10
-      },
-      "id": 8,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "k6_vus",
-          "legendFormat": "Virtual Users",
-          "refId": "A"
-        },
-        {
-          "datasource": "Prometheus",
-          "expr": "k6_vus_max",
-          "legendFormat": "Max Virtual Users",
-          "refId": "B"
-        }
-      ],
-      "title": "Virtual Users",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
         "y": 18
       },
-      "id": 9,
+      "id": 11,
       "options": {
         "legend": {
           "calcs": [],
@@ -542,12 +669,24 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "rate(k6_http_reqs[5m])",
-          "legendFormat": "Request Rate",
+          "expr": "k6_http_req_waiting_seconds{quantile=\"0.50\"} * 1000",
+          "legendFormat": "50th percentile waiting time",
           "refId": "A"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "k6_http_req_waiting_seconds{quantile=\"0.95\"} * 1000",
+          "legendFormat": "95th percentile waiting time",
+          "refId": "B"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "k6_http_req_waiting_seconds{quantile=\"0.99\"} * 1000",
+          "legendFormat": "99th percentile waiting time",
+          "refId": "C"
         }
       ],
-      "title": "Request Rate",
+      "title": "HTTP Request Waiting Time",
       "type": "timeseries"
     },
     {
@@ -621,160 +760,13 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 18
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "rate(k6_http_req_failed[5m]) * 100",
-          "legendFormat": "Error Rate",
-          "refId": "A"
-        }
-      ],
-      "title": "Error Rate",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
         "w": 24,
         "x": 0,
         "y": 26
       },
-      "id": 11,
-      "panels": [],
-      "title": "HTTP Status Codes & Endpoints",
-      "type": "row"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 27
-      },
       "id": 12,
       "options": {
         "legend": {
-          "displayMode": "list",
-          "placement": "right"
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "values": false,
-          "calcs": ["lastNotNull"],
-          "fields": ""
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "sum by (status) (rate(k6_http_reqs[5m]))",
-          "legendFormat": "{{status}}",
-          "refId": "A"
-        }
-      ],
-      "title": "HTTP Status Codes Distribution",
-      "type": "piechart"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 27
-      },
-      "id": 13,
-      "options": {
-        "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom"
@@ -787,189 +779,12 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "k6_http_req_duration{quantile=\"0.95\"} by (name)",
-          "legendFormat": "{{name}} - 95th percentile",
+          "expr": "k6_http_req_failed_rate * 100",
+          "legendFormat": "Error Rate",
           "refId": "A"
         }
       ],
-      "title": "Response Time by Endpoint (95th percentile)",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 35
-      },
-      "id": 14,
-      "panels": [],
-      "title": "Custom Metrics & Checks",
-      "type": "row"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 36
-      },
-      "id": 15,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "rate(k6_checks{check!=\"\"}[5m]) * 100",
-          "legendFormat": "{{check}}",
-          "refId": "A"
-        }
-      ],
-      "title": "Check Success Rate",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 36
-      },
-      "id": 16,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "rate(k6_errors[5m])",
-          "legendFormat": "Custom Error Rate",
-          "refId": "A"
-        }
-      ],
-      "title": "Custom Error Metrics",
+      "title": "Error Rate Over Time",
       "type": "timeseries"
     }
   ],
