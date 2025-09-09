@@ -26,14 +26,4 @@ jobs:
           containerAppName: event
           resourceGroup: NucGroup
           imageToDeploy: registry.hub.docker.com/apache/kafka:4.1.0
-          environmentVariables: |
-            KAFKA_CFG_NODE_ID=1
-            KAFKA_CFG_PROCESS_ROLES=broker,controller
-            KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT
-            KAFKA_CFG_LISTENERS=INTERNAL://:9092
-            KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://event.internal.gentleflower-99ef02e0.eastus.azurecontainerapps.io:9092
-            KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
-            KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-            KAFKA_CFG_LOG_DIRS=/tmp/kraft-combined-logs
-            KAFKA_HEAP_OPTS=-Xmx1G -Xms1G
 
