@@ -23,15 +23,17 @@ platform.init(config).then(async () => {
 
   models.init();
 
-  const { type, host, protocol } = config.event;
-
   await event.init({
-    type: type as "inMemory",
-    host,
-    protocol,
+    type: "kafka",
+    clientId: "greycollar",
+    brokers: [
+      "event.internal.gentleflower-99ef02e0.eastus.azurecontainerapps.io:9092",
+    ],
+    groupId: "greycollar",
   });
 
   server.listen(process.env.PORT || 4000, () => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
   });
 });
+

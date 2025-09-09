@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import config from "../api/config"
+import config from "../api/config";
 import { createApp } from "./app";
 import { createChatApp } from "./chatApp";
 import { createProxyMiddleware } from "http-proxy-middleware";
@@ -12,13 +12,13 @@ import session from "./test_chat/session";
 dotenv.config();
 
 const startServer = async () => {
-
-  const { type, host, protocol } = config.event;
-  
   await event.init({
-    type: type as "inMemory",
-    host,
-    protocol,
+    type: "kafka",
+    clientId: "greycollar",
+    brokers: [
+      "event.internal.gentleflower-99ef02e0.eastus.azurecontainerapps.io:9092",
+    ],
+    groupId: "greycollar",
   });
 
   const mainApp = express();
