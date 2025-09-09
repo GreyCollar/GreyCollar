@@ -25,7 +25,7 @@ platform.init(config).then(async () => {
 
   await event.init({
     type: "kafka",
-    clientId: "greycollar",
+    clientId: "greycollar-api-consumer",
     brokers: ["event:9092"],
     groupId: "greycollar",
   });

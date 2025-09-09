@@ -13,7 +13,7 @@ const startServer = async () => {
 
   await event.init({
     type: "kafka",
-    clientId: "greycollar-communication",
+    clientId: "greycollar-communication-consumer",
     brokers: ['event:9092'],
     groupId: "greycollar-communication",
   });
