@@ -32,7 +32,7 @@ const setup = async (io: Server) => {
       let colleagueId;
       let decoded;
       
-      if (env !== "TEST") {
+      if (env === "TEST") {
         token = socket.handshake.auth.token;
         colleagueId = socket.handshake.query.colleagueId as string;
 
@@ -49,6 +49,8 @@ const setup = async (io: Server) => {
             "Invalid JWT payload: expected an object, got a string"
           );
         }
+      } else {
+        colleagueId = process.env.COLLEAGUE_ID;
       }
 
       const session: Session = await createSession(token, colleagueId);
