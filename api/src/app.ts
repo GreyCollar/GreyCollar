@@ -16,6 +16,7 @@ import projects from "./routes/projects";
 import responsibilities from "./routes/responsibilities";
 import sessions from "./routes/sessions";
 import statistics from "./routes/statistics";
+import { subscribe } from "@nucleoidai/node-event";
 import supervisings from "./routes/supervisings";
 import tasks from "./routes/tasks";
 import teamDetails from "./routes/teamDetails";
@@ -55,14 +56,12 @@ app.use("/responsibilities", responsibilities);
 app.use("/integrations", integrations);
 app.use("/communications", communications);
 
-const { subscribe } = event;
-
 (async () => {
-  await subscribe("MESSAGE.USER_MESSAGED", ({ teamId, content }) =>
+  await event.subscribe("MESSAGE.USER_MESSAGED", ({ teamId, content }) =>
     agent.teamChat({ teamId, content })
   );
 
-  await subscribe(
+  await event.subscribe(
     "SESSION.USER_MESSAGED",
     ({ colleagueId, sessionId, content }) =>
       agent.chat({
@@ -72,7 +71,7 @@ const { subscribe } = event;
       })
   );
 
-  await subscribe(
+  await event.subscribe(
     "SUPERVISING.ANSWERED",
     ({ sessionId, colleagueId, question }) =>
       agent.chat({
@@ -82,13 +81,18 @@ const { subscribe } = event;
       })
   );
 
-  await subscribe("TASK.CREATED", ({ taskId }) => agent.task({ taskId }));
+  await event.subscribe("TASK.CREATED", ({ taskId }) => agent.task({ taskId }));
 
-  await subscribe("STEP.ADDED", ({ stepId, action, parameters, comment }) =>
-    agent.step({ stepId, action, parameters, comment })
+  await event.subscribe(
+    "STEP.ADDED",
+    ({ stepId, action, parameters, comment }) =>
+      agent.step({ stepId, action, parameters, comment })
   );
 
-  await subscribe("STEP.COMPLETED", ({ taskId }) => agent.task({ taskId }));
+  await event.subscribe("STEP.COMPLETED", ({ taskId }) =>
+    agent.task({ taskId })
+  );
 })();
 
 export default app;
+
