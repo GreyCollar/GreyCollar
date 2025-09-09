@@ -14,21 +14,6 @@ jobs:
         uses: actions/checkout@v2
 
 
-      - name: Log in to Docker Hub
-        env:
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-        uses: docker/login-action@v1
-        with:
-          username: canmingir
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: canmingir/event:${{ github.run_id }}
-          context: ./event
-
       - name: Azure Login
         uses: azure/login@v1
         with:
@@ -36,10 +21,9 @@ jobs:
 
       - uses: azure/container-apps-deploy-action@v2
         with:
-          registryUsername: canmingir
+          registryUsername: apache
           registryUrl: registry.hub.docker.com
-          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
           containerAppName: event
           resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/event:${{ github.run_id }}
+          imageToDeploy: registry.hub.docker.com/apache/kafka:4.1.0
 
