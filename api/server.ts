@@ -26,8 +26,12 @@ platform.init(config).then(async () => {
   await event.init({
     type: "kafka",
     clientId: "greycollar",
-    brokers: ["event:9092"],
+    brokers: ["20.55.19.45:9092"],
     groupId: "greycollar",
+    // type: "inMemory",
+    // host: "localhost",
+    //protocol: "http",
+    //port: 8080,
   });
 
   server.listen(process.env.PORT || 4000, () => {

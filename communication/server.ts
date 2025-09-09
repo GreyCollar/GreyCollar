@@ -10,11 +10,10 @@ import session from "./test_chat/session";
 dotenv.config();
 
 const startServer = async () => {
-
   await event.init({
-    type: "kafka",
+    type: "kafka" ,
     clientId: "greycollar-communication",
-    brokers: ['event:9092'],
+    brokers: ["20.55.19.45:9092"],
     groupId: "greycollar-communication",
   });
 
