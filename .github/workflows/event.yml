@@ -21,9 +21,9 @@ jobs:
 
       - uses: azure/container-apps-deploy-action@v2
         with:
-          registryUsername: apache
+          registryUsername: confluentinc
           registryUrl: registry.hub.docker.com
           containerAppName: event
           resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/apache/kafka:4.1.0
+          imageToDeploy: registry.hub.docker.com/confluentinc/cp-kafka:7.4.0
 
