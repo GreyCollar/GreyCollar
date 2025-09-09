@@ -26,7 +26,7 @@ platform.init(config).then(async () => {
   await event.init({
     type: "kafka",
     clientId: "greycollar",
-    brokers: ["localhost:9092"],
+    brokers: ["event:9092"],
     groupId: "greycollar",
   });
 
