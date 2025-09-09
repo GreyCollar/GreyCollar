@@ -1,6 +1,6 @@
 import http from "../http";
 
-const sendMessageToSession = async (session, accessToken, question) => {
+const sendMessageToSession = async (session, accessToken?: string, question?: string) => {
 
   const message = await http.post(
     `/sessions/${session}`,
