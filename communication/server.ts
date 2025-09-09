@@ -1,7 +1,5 @@
 import { Server } from "socket.io";
-import config from "../api/config";
 import { createApp } from "./app";
-import { createChatApp } from "./chatApp";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import dotenv from "dotenv";
 import { event } from "@nucleoidai/node-event/client";
@@ -12,6 +10,7 @@ import session from "./test_chat/session";
 dotenv.config();
 
 const startServer = async () => {
+
   await event.init({
     type: "kafka",
     clientId: "greycollar",
