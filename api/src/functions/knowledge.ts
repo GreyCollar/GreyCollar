@@ -7,7 +7,6 @@ import Step from "../models/Step";
 import Task from "../models/Task";
 import { event } from "@nucleoidai/node-event/client";
 import scrapper from "../actions/scrapper";
-const { publish } = event;
 
 async function create({
   teamId,
@@ -83,7 +82,7 @@ async function create({
     taskId: knowledgeJson.taskId || null,
   };
 
-  await publish("KNOWLEDGE_CREATED", knowledgeData);
+  await event.publish("KNOWLEDGE_CREATED", knowledgeData);
 
   return knowledgeInstance;
 }
@@ -170,7 +169,7 @@ async function list({
       },
     }));
 
-  await publish("KNOWLEDGES_LOADED", knowledgesInstances);
+  await event.publish("KNOWLEDGES_LOADED", knowledgesInstances);
 
   return knowledgesInstances;
 }
