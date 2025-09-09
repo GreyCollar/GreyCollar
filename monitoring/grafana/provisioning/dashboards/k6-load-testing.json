@@ -140,7 +140,7 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum(k6_http_reqs_total)",
+          "expr": "k6_http_reqs_total",
           "refId": "A"
         }
       ],
@@ -493,12 +493,12 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum(increase(k6_http_reqs_total[1m])) by (name)",
-          "legendFormat": "{{name}}",
+          "expr": "increase(k6_http_reqs_total[1m])",
+          "legendFormat": "HTTP Requests (per minute)",
           "refId": "A"
         }
       ],
-      "title": "HTTP Requests by Endpoint",
+      "title": "HTTP Requests Over Time",
       "type": "timeseries"
     },
     {
@@ -786,111 +786,6 @@
       ],
       "title": "Error Rate Over Time",
       "type": "timeseries"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 34
-      },
-      "id": 13,
-      "panels": [],
-      "title": "Requests by Endpoint",
-      "type": "row"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "displayMode": "auto",
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Endpoint"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 400
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 35
-      },
-      "id": 14,
-      "options": {
-        "showHeader": true
-      },
-      "pluginVersion": "9.0.0",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "sum(k6_http_reqs_total) by (name)",
-          "format": "table",
-          "legendFormat": "{{name}}",
-          "refId": "A"
-        }
-      ],
-      "title": "HTTP Requests by Endpoint",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
-            },
-            "indexByName": {},
-            "renameByName": {
-              "name": "Endpoint",
-              "Value": "Total Requests"
-            }
-          }
-        },
-        {
-          "id": "sortBy",
-          "options": {
-            "fields": {},
-            "sort": [
-              {
-                "field": "Total Requests",
-                "desc": true
-              }
-            ]
-          }
-        }
-      ],
-      "type": "table"
     }
   ],
   "refresh": "5s",
