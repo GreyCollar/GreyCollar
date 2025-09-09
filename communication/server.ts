@@ -14,9 +14,7 @@ const startServer = async () => {
   await event.init({
     type: "kafka",
     clientId: "greycollar",
-    brokers: [
-      "event.internal.gentleflower-99ef02e0.eastus.azurecontainerapps.io:9092",
-    ],
+    brokers: ['event:9092'],
     groupId: "greycollar",
   });
 
