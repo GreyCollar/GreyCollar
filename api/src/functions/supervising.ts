@@ -1,7 +1,7 @@
 import ColleagueKnowledge from "../models/ColleagueKnowledge";
 import Knowledge from "../models/Knowledge";
 import Supervising from "../models/Supervising";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 
 async function create({
   sessionId,

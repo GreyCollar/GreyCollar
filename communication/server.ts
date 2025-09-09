@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import { createApp } from "./app";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import dotenv from "dotenv";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 import express from "express";
 import http from "http";
 import session from "./test_chat/session";
@@ -13,8 +13,8 @@ const startServer = async () => {
 
   await event.init({
     type: "kafka",
-    brokers: ['event:9092'],
     clientId: "greycollar-communication",
+    brokers: ['localhost:9092'],
     groupId: "greycollar-communication",
   });
 

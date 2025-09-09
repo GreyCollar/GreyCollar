@@ -6,7 +6,7 @@ import agent from "./functions/agent";
 import colleagues from "./routes/colleagues";
 import communications from "./routes/communications";
 import engines from "./routes/engines";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 import integrations from "./routes/integrations";
 import knowledge from "./routes/knowledge";
 import messages from "./routes/messages";

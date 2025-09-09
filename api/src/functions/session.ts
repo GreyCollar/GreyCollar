@@ -1,6 +1,6 @@
 import Conversation from "../models/Conversation";
 import Session from "../models/Session";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 import { v4 as uuid } from "uuid";
 
 async function create({

@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import { createSession } from "../api/createSession";
 import dotenv from "dotenv";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 import { getColleague } from "../api/getColleague";
 import jwt from "jsonwebtoken";
 import { sendMessageToSession } from "../api/sendMessageSession";

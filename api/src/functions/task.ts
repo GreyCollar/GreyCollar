@@ -1,7 +1,7 @@
 import Colleague from "../models/Colleague";
 import Step from "../models/Step";
 import Task from "../models/Task";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 
 async function create({
   colleagueId,

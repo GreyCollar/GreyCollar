@@ -2,7 +2,7 @@ import * as platform from "@canmingir/link-express";
 
 import config from "./config";
 import dotenv from "dotenv";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 import http from "http";
 import models from "./src/models";
 
@@ -26,7 +26,7 @@ platform.init(config).then(async () => {
   await event.init({
     type: "kafka",
     clientId: "greycollar",
-    brokers: ["event:9092"],
+    brokers: ["localhost:9092"],
     groupId: "greycollar",
   });
 
@@ -34,4 +34,3 @@ platform.init(config).then(async () => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
   });
 });
-
