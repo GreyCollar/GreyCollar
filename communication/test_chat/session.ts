@@ -23,22 +23,32 @@ export type Session = {
 const setup = async (io: Server) => {
   io.on("connection", async (socket) => {
     try {
+      const env = process.env.PROFILE;
+
+      console.log("Environment:", env);
       console.log("New socket connection:", socket.id);
-      const token = socket.handshake.auth.token;
-      const colleagueId = socket.handshake.query.colleagueId as string;
 
-      const jwtSecret = process.env.JWT_SECRET;
+      let token;
+      let colleagueId;
+      let decoded;
+      
+      if (env === "TEST") {
+        token = socket.handshake.auth.token;
+        colleagueId = socket.handshake.query.colleagueId as string;
 
-      if (!jwtSecret) {
-        throw new Error("JWT_SECRET environment variable is required");
-      }
+        const jwtSecret = process.env.JWT_SECRET;
 
-      const decoded = jwt.verify(token, jwtSecret);
+        if (!jwtSecret) {
+          throw new Error("JWT_SECRET environment variable is required");
+        }
 
-      if (typeof decoded !== "object" || decoded === null) {
-        throw new Error(
-          "Invalid JWT payload: expected an object, got a string"
-        );
+        decoded = jwt.verify(token, jwtSecret);
+
+        if (typeof decoded !== "object" || decoded === null) {
+          throw new Error(
+            "Invalid JWT payload: expected an object, got a string"
+          );
+        }
       }
 
       const session: Session = await createSession(token, colleagueId);
