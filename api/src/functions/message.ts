@@ -38,11 +38,11 @@ async function create({
   });
 
   if (role === "USER") {
-    await event.publish("MESSAGE.USER_MESSAGED", messageInstance.toJSON());
+    await event.publish("MESSAGE_USER_MESSAGED", messageInstance.toJSON());
   }
 
   if (role === "ASSISTANT") {
-    await event.publish("MESSAGE.ASSISTANT_MESSAGED", messageInstance.toJSON());
+    await event.publish("MESSAGE_ASSISTANT_MESSAGED", messageInstance.toJSON());
   }
 
   return messageInstance.toJSON();

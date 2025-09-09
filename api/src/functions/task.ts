@@ -19,7 +19,7 @@ async function create({
     responsibilityId,
   });
 
-  await event.publish("TASK.CREATED", {
+  await event.publish("TASK_CREATED", {
     taskId: task.id,
     colleagueId,
     description,
@@ -43,7 +43,7 @@ async function update({
   await Task.update({ result, comment, status }, { where: { id: taskId } });
 
   if (status === "COMPLETED") {
-    await event.publish("TASK.COMPLETED", { taskId, result, comment });
+    await event.publish("TASK_COMPLETED", { taskId, result, comment });
   }
 }
 
@@ -116,7 +116,7 @@ async function addStep({
     comment,
   });
 
-  await event.publish("STEP.ADDED", {
+  await event.publish("STEP_ADDED", {
     stepId: step.id,
     taskId,
     action,
@@ -153,7 +153,7 @@ async function updateStep({
   );
 
   if (status === "COMPLETED") {
-    await event.publish("STEP.COMPLETED", {
+    await event.publish("STEP_COMPLETED", {
       taskId,
       stepId,
       action,

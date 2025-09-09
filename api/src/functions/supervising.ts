@@ -21,7 +21,7 @@ async function create({
     colleagueId,
   });
 
-  await event.publish("SUPERVISING.RAISED", {
+  await event.publish("SUPERVISING_RAISED", {
     sessionId,
     conversationId,
     question,
@@ -66,7 +66,7 @@ async function update({
     teamId,
   });
 
-  await event.publish("SUPERVISING.ANSWERED", {
+  await event.publish("SUPERVISING_ANSWERED", {
     teamId,
     supervisingId,
     sessionId,

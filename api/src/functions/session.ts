@@ -18,7 +18,7 @@ async function create({
     colleagueId,
   });
 
-  await event.publish("SESSION.INITIATED", {
+  await event.publish("SESSION_INITIATED", {
     id: sessionId,
     type,
     colleagueId,
@@ -51,14 +51,14 @@ async function addConversation({
   });
 
   if (role === "USER") {
-    await event.publish("SESSION.USER_MESSAGED", {
+    await event.publish("SESSION_USER_MESSAGED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,
       content,
     });
   } else {
-    await event.publish("SESSION.AI_MESSAGED", {
+    await event.publish("SESSION_AI_MESSAGED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,

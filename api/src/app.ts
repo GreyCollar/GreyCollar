@@ -56,12 +56,12 @@ app.use("/integrations", integrations);
 app.use("/communications", communications);
 
 (async () => {
-  await event.subscribe("MESSAGE.USER_MESSAGED", ({ teamId, content }) =>
+  await event.subscribe("MESSAGE_USER_MESSAGED", ({ teamId, content }) =>
     agent.teamChat({ teamId, content })
   );
 
   await event.subscribe(
-    "SESSION.USER_MESSAGED",
+    "SESSION_USER_MESSAGED",
     ({ colleagueId, sessionId, content }) =>
       agent.chat({
         colleagueId,
@@ -71,7 +71,7 @@ app.use("/communications", communications);
   );
 
   await event.subscribe(
-    "SUPERVISING.ANSWERED",
+    "SUPERVISING_ANSWERED",
     ({ sessionId, colleagueId, question }) =>
       agent.chat({
         colleagueId,
@@ -80,15 +80,15 @@ app.use("/communications", communications);
       })
   );
 
-  await event.subscribe("TASK.CREATED", ({ taskId }) => agent.task({ taskId }));
+  await event.subscribe("TASK_CREATED", ({ taskId }) => agent.task({ taskId }));
 
   await event.subscribe(
-    "STEP.ADDED",
+    "STEP_ADDED",
     ({ stepId, action, parameters, comment }) =>
       agent.step({ stepId, action, parameters, comment })
   );
 
-  await event.subscribe("STEP.COMPLETED", ({ taskId }) =>
+  await event.subscribe("STEP_COMPLETED", ({ taskId }) =>
     agent.task({ taskId })
   );
 })();
