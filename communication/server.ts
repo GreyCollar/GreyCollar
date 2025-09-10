@@ -11,7 +11,7 @@ dotenv.config();
 
 const startServer = async () => {
   await event.init({
-    type: "kafka" ,
+    type: "kafka",
     clientId: "greycollar-communication",
     brokers: ["20.55.19.45:9092"],
     groupId: "greycollar-communication",

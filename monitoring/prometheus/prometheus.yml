@@ -7,8 +7,7 @@ storage:
     out_of_order_time_window: 10m
 
 scrape_configs:
-  - job_name: 'prometheus'
-    scheme: https
+  - job_name: "prometheus"
     static_configs:
-      - targets: ['prometheus.gentleflower-99ef02e0.eastus.azurecontainerapps.io:443']
-
+      - targets:
+          ["prometheus.gentleflower-99ef02e0.eastus.azurecontainerapps.io:443"]
