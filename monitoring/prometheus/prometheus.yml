@@ -11,3 +11,7 @@ scrape_configs:
     static_configs:
       - targets:
           ["prometheus.gentleflower-99ef02e0.eastus.azurecontainerapps.io:443"]
+
+  - job_name: "greycollar-land"
+    static_configs:
+      - targets: ["https://land.greycollar.ai/api/metrics/prometheus"]
