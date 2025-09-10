@@ -14,9 +14,6 @@ scrape_configs:
 
   - job_name: "api"
     static_configs:
-      - targets:
-          [
-            "https://greycollar-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io/api",
-          ]
+      - targets: ["https://land.greycollar.ai/api"]
     scrape_interval: 5s
     metrics_path: "/metrics/prometheus"
