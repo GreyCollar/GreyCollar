@@ -14,4 +14,6 @@ scrape_configs:
 
   - job_name: "greycollar-land"
     static_configs:
-      - targets: ["https://land.greycollar.ai/api/metrics/prometheus"]
+      - targets: ["land.greycollar.ai:443"]
+    scheme: https
+    metrics_path: /api/metrics/prometheus
