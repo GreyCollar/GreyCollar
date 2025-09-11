@@ -96,7 +96,7 @@ export default function () {
 
       const message = [
         "customer_message",
-        { content: "What is the battery barcode number" },
+        { role: "USER", content: "What is the battery barcode number" },
         callbackId,
       ];
 
@@ -136,4 +136,3 @@ export function loadTest() {
   delete options.vus;
   delete options.duration;
 }
-
