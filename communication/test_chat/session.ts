@@ -56,19 +56,31 @@ const setup = async (io: Server) => {
         };
       }
 
+      console.log("Colleague ID:", colleagueId);
+      console.log("Token:", token);
+      console.log("Decoded:", decoded);
+
       const session: Session = await createSession(token, colleagueId);
       const colleague: Colleague = await getColleague(token, colleagueId);
 
+      console.log("Session:", session);
+      console.log("Colleague:", colleague);
+    
+
       if (!colleague || colleague.teamId !== decoded.aud) {
+        console.log("Colleague not found or team ID does not match");
         socket.disconnect();
         return;
       }
 
       socket.on("disconnect", () => {
+        console.log("Disconnected from socket");
         delete sockets[session.id];
       });
 
       sockets[session.id] = socket.id;
+
+      console.log("Sockets:", sockets);
 
       socket.on("customer_message", async ({ content }, callback) => {
         console.log("Customer message received:", content);
