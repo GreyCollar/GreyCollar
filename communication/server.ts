@@ -20,6 +20,8 @@ const startServer = async () => {
 
   const mainApp = express();
 
+  const testApp = express();
+
   const slackApp = createApp();
 
   const slackPort = process.env.SLACK_PORT || 3002;
@@ -36,9 +38,10 @@ const startServer = async () => {
 
   mainApp.use("/bot", slackProxy);
 
-  mainApp.use("/test-chat", testChat);
+  testApp.use("/test-chat", testChat);
 
   const server = http.createServer(mainApp);
+  const testServer = http.createServer(testApp);
 
   const io = new Server(server, {
     cors: {
@@ -50,15 +53,21 @@ const startServer = async () => {
 
   const mainPort = process.env.MAIN_PORT || 3001;
   const scoketIoPort = process.env.SOCKET_IO_PORT || 3003;
+  const testPort = process.env.TEST_PORT || 3004;
 
   mainApp.listen(mainPort, () => {
     console.log(`⚡️ Main server running on port ${mainPort}`);
     console.log(`⚡️ Bot app accessible at /bot`);
     console.log(`⚡️ Chat app accessible at /chat`);
+    console.log(`⚡️ Test app accessible at /test-chat`);
   });
 
   server.listen(scoketIoPort, () => {
     console.log(`⚡️ Socket.io server running on port ${scoketIoPort}`);
+  });
+
+  testServer.listen(testPort, () => {
+    console.log(`⚡️ Test app running on port ${testPort}`);
   });
 };
 

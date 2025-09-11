@@ -12,7 +12,22 @@ router.use(express.json());
 
 router.post("/", async (req, res) => {
   try {
-    let token;
+    const authorization = req.headers.authorization;
+    
+    let token = authorization?.split(" ")[1];
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ error: "Missing Authorization Bearer token" });
+    }
+
+    if (token !== "dcf0ac50d784ea9837ebf2e1a57d70d9") {
+      return res
+        .status(401)
+        .json({ error: "Invalid Authorization Bearer token" });
+    }
+
     const colleagueId = process.env.COLLEAGUE_ID;
     const decoded = { aud: process.env.PROJECT_ID };
 
@@ -32,7 +47,6 @@ router.post("/", async (req, res) => {
     const content: string =
       (req.body?.content as string) || "Where is the parking lot?";
 
-
     const messageResponse = await sendMessageToSession(
       sessionData.id,
       token,
@@ -45,8 +59,6 @@ router.post("/", async (req, res) => {
       colleague,
       message: messageResponse,
     });
-
-    
   } catch (error: any) {
     return res.status(500).json({ error: error?.message || "Unknown error" });
   }
