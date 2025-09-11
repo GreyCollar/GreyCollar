@@ -6,6 +6,7 @@ import { event } from "node-event-test-package/client";
 import express from "express";
 import http from "http";
 import session from "./test_chat/session";
+import testChat from "./test_chat/testChat";
 
 dotenv.config();
 
@@ -34,6 +35,8 @@ const startServer = async () => {
   });
 
   mainApp.use("/bot", slackProxy);
+
+  mainApp.use("/test-chat", testChat);
 
   const server = http.createServer(mainApp);
 
