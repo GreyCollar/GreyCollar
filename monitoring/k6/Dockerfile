@@ -10,5 +10,5 @@ ENV K6_PROMETHEUS_RW_TREND_AS_NATIVE_HISTOGRAM=true
 
 EXPOSE 6565
 
-ENTRYPOINT ["k6"]
-CMD ["run", "--out", "experimental-prometheus-rw", "load-test-ws.js"]
+#ENTRYPOINT ["k6"]
+#CMD ["run", "--out", "experimental-prometheus-rw", "load-test-ws.js"]
