@@ -11,7 +11,7 @@ const config = {
     },
   },
   postgres: {
-    uri: "postgresql://postgres.nucleoid.com:5432/land",
+    uri: "sqlite::memory:",
     debug: true,
     sync: false,
   },
