@@ -9,8 +9,7 @@ storage:
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
-      - targets:
-          ["prometheus.gentleflower-99ef02e0.eastus.azurecontainerapps.io:443"]
+      - targets: ["http://52.191.251.120:9090"]
 
   - job_name: "greycollar-land"
     static_configs:

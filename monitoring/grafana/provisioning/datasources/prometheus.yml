@@ -4,6 +4,6 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: https://prometheus.gentleflower-99ef02e0.eastus.azurecontainerapps.io:443
+    url: http://52.191.251.120:9090
     isDefault: true
     editable: true
