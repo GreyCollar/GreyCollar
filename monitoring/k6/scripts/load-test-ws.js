@@ -1,8 +1,9 @@
+import { check } from "k6";
 import http from "k6/http";
 
 export const options = {
   vus: Number(__ENV.VUS || 1),
-  iterations: Number(__ENV.ITERATIONS || 100),
+  iterations: Number(__ENV.ITERATIONS || 10),
   thresholds: {
     http_req_duration: ["p(95)<1000"],
     http_req_failed: ["rate<0.05"],
@@ -18,17 +19,24 @@ const BASE_URL =
   "https://communication-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io";
 
 export default function () {
-  const userActions = [
-    () => {
-      const response = http.post(`${BASE_URL}/test-chat`, {
-        colleagueId: "00db1bd4-4829-40f2-8b99-d2e42342157e",
-        content: "i wanna buy battery",
-      });
-      return response;
-    },
-  ];
+  const payload = JSON.stringify({
+    colleagueId: "00db1bd4-4829-40f2-8b99-d2e42342157e",
+    content: "Where is the parking lot?",
+  });
 
-  const randomAction =
-    userActions[Math.floor(Math.random() * userActions.length)];
-  randomAction();
+  const params = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer dcf0ac50d784ea9837ebf2e1a57d70d9",
+    },
+  };
+
+  const res = http.post(`${BASE_URL}/test-chat`, payload, params);
+
+  console.log(`Status: ${res.status}`);
+  console.log(`Response body: ${res.body}`);
+
+  check(res, {
+    "status is 200": (r) => r.status === 200,
+  }) || console.error(`Request failed with status ${res.status}: ${res.body}`);
 }
