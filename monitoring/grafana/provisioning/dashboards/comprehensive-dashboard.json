@@ -219,7 +219,7 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum(events_consumed_total)",
+          "expr": "sum(event_callbacks_processed_total)",
           "interval": "",
           "legendFormat": "Total Consumed",
           "refId": "A"
@@ -280,7 +280,7 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum(rate(events_consumed_total[5m]))",
+          "expr": "sum(rate(event_callbacks_processed_total[5m]))",
           "interval": "",
           "legendFormat": "Consume/sec",
           "refId": "A"
@@ -612,28 +612,28 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.99, sum(rate(event_consume_duration_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.99, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
           "legendFormat": "99th Percentile",
           "refId": "A"
         },
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.95, sum(rate(event_consume_duration_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
           "legendFormat": "95th Percentile",
           "refId": "B"
         },
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.75, sum(rate(event_consume_duration_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.75, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
           "legendFormat": "75th Percentile",
           "refId": "C"
         },
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.50, sum(rate(event_consume_duration_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.50, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
           "legendFormat": "50th Percentile",
           "refId": "D"
