@@ -24,6 +24,7 @@ async function generate({
       ? systemMessages.map((msg) => msg.content).join("\n\n")
       : undefined;
 
+  // TODO: Find a better way to handle json_output enforcement for Claude responses.
   const lastSystemMsg = systemMessages[systemMessages.length - 1];
   if (lastSystemMsg && lastSystemMsg.content.includes("json_format:")) {
     systemPrompt =
