@@ -62,7 +62,15 @@ async function generate({
       .replace(/\s*```$/i, "")
       .trim();
 
-    return JSON.parse(textContent);
+    try {
+      return JSON.parse(textContent);
+    } catch (err) {
+      throw new Error(
+        "Failed to parse Claude response as JSON: " +
+        (err instanceof Error ? err.message : String(err)) +
+        "\nResponse content:\n" + textContent
+      );
+    }
   } else {
     throw new Error("Claude is not responding");
   }
