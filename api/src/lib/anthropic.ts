@@ -1,8 +1,13 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { MessageParam } from "@anthropic-ai/sdk/resources/messages/messages.mjs";
 
+
+const apiKey = process.env.ANTHROPIC_API_KEY;
+if (!apiKey || apiKey.trim() === "") {
+  throw new Error("Missing ANTHROPIC_API_KEY environment variable. Please set it to your Anthropic API key.");
+}
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+  apiKey,
 });
 
 async function generate({
