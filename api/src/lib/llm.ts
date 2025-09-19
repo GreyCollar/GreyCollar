@@ -1,3 +1,4 @@
+import anthropic from "./anthropic";
 import azure from "./azure";
 import openai from "./openai";
 
@@ -9,6 +10,10 @@ if (process.env.PLATFORM_LLM === "OPENAI") {
 
 if (process.env.PLATFORM_LLM === "AZURE") {
   llm = azure;
+}
+
+if (process.env.PLATFORM_LLM === "ANTHROPIC") {
+  llm = anthropic;
 }
 
 async function generate({
@@ -71,3 +76,4 @@ async function generate({
 }
 
 export { generate };
+

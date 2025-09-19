@@ -167,7 +167,7 @@ const PopChat = ({
         >
           <Scrollbar sx={{ height: "100%" }}>
             <MessageList
-              messages={messages}
+              messages={history}
               selectedId={selectedConversationId}
               messagesEndRef={messagesEndRef}
               highlightedMessage={highlightedMessage}

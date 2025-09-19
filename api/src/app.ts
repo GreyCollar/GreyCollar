@@ -6,6 +6,7 @@ import agent from "./functions/agent";
 import colleagues from "./routes/colleagues";
 import communications from "./routes/communications";
 import engines from "./routes/engines";
+import { event } from "node-event-test-package/client";
 import integrations from "./routes/integrations";
 import knowledge from "./routes/knowledge";
 import messages from "./routes/messages";
@@ -15,7 +16,6 @@ import projects from "./routes/projects";
 import responsibilities from "./routes/responsibilities";
 import sessions from "./routes/sessions";
 import statistics from "./routes/statistics";
-import { subscribe } from "@nucleoidai/node-event";
 import supervisings from "./routes/supervisings";
 import tasks from "./routes/tasks";
 import teamDetails from "./routes/teamDetails";
@@ -57,27 +57,44 @@ app.use("/statistics", statistics);
 app.use("/responsibilities", responsibilities);
 app.use("/integrations", integrations);
 app.use("/communications", communications);
-subscribe("MESSAGE", "USER_MESSAGED", ({ teamId, content }) =>
-  agent.teamChat({ teamId, content })
-);
-subscribe("SESSION", "USER_MESSAGED", ({ colleagueId, sessionId, content }) =>
-  agent.chat({
-    colleagueId,
-    sessionId,
-    content,
-  })
-);
-subscribe("SUPERVISING", "ANSWERED", ({ sessionId, colleagueId, question }) =>
-  agent.chat({
-    colleagueId,
-    sessionId,
-    content: question,
-  })
-);
-subscribe("TASK", "CREATED", ({ taskId }) => agent.task({ taskId }));
-subscribe("STEP", "ADDED", ({ stepId, action, parameters, comment }) =>
-  agent.step({ stepId, action, parameters, comment })
-);
-subscribe("STEP", "COMPLETED", ({ taskId }) => agent.task({ taskId }));
+
+(async () => {
+  await event.subscribe("MESSAGE_USER_MESSAGED", ({ teamId, content }) =>
+    agent.teamChat({ teamId, content })
+  );
+
+  await event.subscribe(
+    "SESSION_USER_MESSAGED",
+    ({ colleagueId, sessionId, content }) =>
+      agent.chat({
+        colleagueId,
+        sessionId,
+        content,
+      })
+  );
+
+  await event.subscribe(
+    "SUPERVISING_ANSWERED",
+    ({ sessionId, colleagueId, question }) =>
+      agent.chat({
+        colleagueId,
+        sessionId,
+        content: question,
+      })
+  );
+
+  await event.subscribe("TASK_CREATED", ({ taskId }) => agent.task({ taskId }));
+
+  await event.subscribe(
+    "STEP_ADDED",
+    ({ stepId, action, parameters, comment }) =>
+      agent.step({ stepId, action, parameters, comment })
+  );
+
+  await event.subscribe("STEP_COMPLETED", ({ taskId }) =>
+    agent.task({ taskId })
+  );
+})();
 
 export default app;
+

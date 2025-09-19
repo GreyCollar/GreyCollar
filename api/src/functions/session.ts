@@ -1,7 +1,6 @@
 import Conversation from "../models/Conversation";
 import Session from "../models/Session";
-import { event } from "@nucleoidai/node-event/client";
-import { publish } from "@nucleoidai/node-event";
+import { event } from "node-event-test-package/client";
 import { v4 as uuid } from "uuid";
 
 async function create({
@@ -19,7 +18,7 @@ async function create({
     colleagueId,
   });
 
-  publish("SESSION", "INITIATED", {
+  await event.publish("SESSION_INITIATED", {
     id: sessionId,
     type,
     colleagueId,
@@ -52,14 +51,14 @@ async function addConversation({
   });
 
   if (role === "USER") {
-    publish("SESSION", "USER_MESSAGED", {
+    await event.publish("SESSION_USER_MESSAGED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,
       content,
     });
   } else {
-    event.publish("AI_MESSAGED", {
+    await event.publish("SESSION_AI_MESSAGED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,

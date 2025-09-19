@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import { createSession } from "../api/createSession";
 import dotenv from "dotenv";
-import { event } from "@nucleoidai/node-event/client";
+import { event } from "node-event-test-package/client";
 import { getColleague } from "../api/getColleague";
 import jwt from "jsonwebtoken";
 import { sendMessageToSession } from "../api/sendMessageSession";
@@ -20,40 +20,67 @@ export type Session = {
   colleagueId: string;
 };
 
-const setup = (io: Server) => {
+const setup = async (io: Server) => {
   io.on("connection", async (socket) => {
     try {
+      const env = process.env.PROFILE;
+
+      console.log("Environment:", env);
       console.log("New socket connection:", socket.id);
-      const token = socket.handshake.auth.token;
-      const colleagueId = socket.handshake.query.colleagueId as string;
 
-      const jwtSecret = process.env.JWT_SECRET;
+      let token;
+      let colleagueId;
+      let decoded;
+      
+      if (env !== "TEST") {
+        token = socket.handshake.auth.token;
+        colleagueId = socket.handshake.query.colleagueId as string;
 
-      if (!jwtSecret) {
-        throw new Error("JWT_SECRET environment variable is required");
+        const jwtSecret = process.env.JWT_SECRET;
+
+        if (!jwtSecret) {
+          throw new Error("JWT_SECRET environment variable is required");
+        }
+
+        decoded = jwt.verify(token, jwtSecret);
+
+        if (typeof decoded !== "object" || decoded === null) {
+          throw new Error(
+            "Invalid JWT payload: expected an object, got a string"
+          );
+        }
+      } else {
+        colleagueId = process.env.COLLEAGUE_ID;
+        decoded = {
+          aud: process.env.PROJECT_ID,
+        };
       }
 
-      const decoded = jwt.verify(token, jwtSecret);
-
-      if (typeof decoded !== "object" || decoded === null) {
-        throw new Error(
-          "Invalid JWT payload: expected an object, got a string"
-        );
-      }
+      console.log("Colleague ID:", colleagueId);
+      console.log("Token:", token);
+      console.log("Decoded:", decoded);
 
       const session: Session = await createSession(token, colleagueId);
       const colleague: Colleague = await getColleague(token, colleagueId);
 
+      console.log("Session:", session);
+      console.log("Colleague:", colleague);
+    
+
       if (!colleague || colleague.teamId !== decoded.aud) {
+        console.log("Colleague not found or team ID does not match");
         socket.disconnect();
         return;
       }
 
       socket.on("disconnect", () => {
+        console.log("Disconnected from socket");
         delete sockets[session.id];
       });
 
       sockets[session.id] = socket.id;
+
+      console.log("Sockets:", sockets);
 
       socket.on("customer_message", async ({ content }, callback) => {
         console.log("Customer message received:", content);
@@ -71,7 +98,7 @@ const setup = (io: Server) => {
     console.error("Socket error:", err);
   });
 
-  event.subscribe("AI_MESSAGED", ({ sessionId, content }) => {
+  await event.subscribe("SESSION_AI_MESSAGED", ({ sessionId, content }) => {
     console.log("subscribed AI_MESSAGED", sessionId, content);
     const socketId = sockets[sessionId];
     if (socketId) {

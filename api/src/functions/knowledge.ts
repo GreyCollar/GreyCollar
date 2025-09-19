@@ -5,8 +5,9 @@ import { NotFoundError } from "@canmingir/link-express/error";
 import { Op } from "sequelize";
 import Step from "../models/Step";
 import Task from "../models/Task";
-import { publish } from "@nucleoidai/node-event";
+import { event } from "node-event-test-package/client";
 import scrapper from "../actions/scrapper";
+
 async function create({
   teamId,
   colleagueId,
@@ -81,7 +82,7 @@ async function create({
     taskId: knowledgeJson.taskId || null,
   };
 
-  publish("KNOWLEDGE_CREATED", knowledgeData);
+  await event.publish("KNOWLEDGE_CREATED", knowledgeData);
 
   return knowledgeInstance;
 }
@@ -168,7 +169,7 @@ async function list({
       },
     }));
 
-  publish("KNOWLEDGES_LOADED", knowledgesInstances);
+  await event.publish("KNOWLEDGES_LOADED", knowledgesInstances);
 
   return knowledgesInstances;
 }

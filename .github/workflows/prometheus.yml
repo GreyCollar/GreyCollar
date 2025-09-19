@@ -1,4 +1,4 @@
-name: Event
+name: Prometheus
 on:
   push:
     branches: [main]
@@ -26,8 +26,8 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: canmingir/event:${{ github.run_id }}
-          context: ./event
+          tags: canmingir/prometheus:${{ github.run_id }}
+          context: ./monitoring/prometheus
 
       - name: Azure Login
         uses: azure/login@v1
@@ -39,7 +39,7 @@ jobs:
           registryUsername: canmingir
           registryUrl: registry.hub.docker.com
           registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: event
+          containerAppName: prometheus
           resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/event:${{ github.run_id }}
+          imageToDeploy: registry.hub.docker.com/canmingir/prometheus:${{ github.run_id }}
 

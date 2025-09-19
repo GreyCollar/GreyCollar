@@ -1,7 +1,7 @@
 import ColleagueKnowledge from "../models/ColleagueKnowledge";
 import Knowledge from "../models/Knowledge";
 import Supervising from "../models/Supervising";
-import { publish } from "@nucleoidai/node-event";
+import { event } from "node-event-test-package/client";
 
 async function create({
   sessionId,
@@ -21,7 +21,7 @@ async function create({
     colleagueId,
   });
 
-  publish("SUPERVISING", "RAISED", {
+  await event.publish("SUPERVISING_RAISED", {
     sessionId,
     conversationId,
     question,
@@ -50,9 +50,9 @@ async function update({
     { status, answer },
     { where: { id: supervisingId } }
   );
-  const { sessionId, conversationId } = await Supervising.findByPk(
-    supervisingId
-  );
+
+  const updatedSupervising = await Supervising.findByPk(supervisingId);
+  const { sessionId, conversationId } = updatedSupervising;
 
   const knowledgeInstance = await Knowledge.create({
     type: "QA",
@@ -66,7 +66,7 @@ async function update({
     teamId,
   });
 
-  publish("SUPERVISING", "ANSWERED", {
+  await event.publish("SUPERVISING_ANSWERED", {
     teamId,
     supervisingId,
     sessionId,
@@ -76,6 +76,8 @@ async function update({
     answer,
     status,
   });
+
+  return updatedSupervising;
 }
 
 export default { create, update };

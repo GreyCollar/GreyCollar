@@ -5,7 +5,7 @@ import Message from "../models/Message";
 import { Op } from "sequelize";
 import Supervising from "../models/Supervising";
 import Task from "../models/Task";
-import { publish } from "@nucleoidai/node-event";
+import { event } from "node-event-test-package/client";
 
 async function create({
   role,
@@ -38,11 +38,11 @@ async function create({
   });
 
   if (role === "USER") {
-    publish("MESSAGE", "USER_MESSAGED", messageInstance.toJSON());
+    await event.publish("MESSAGE_USER_MESSAGED", messageInstance.toJSON());
   }
 
   if (role === "ASSISTANT") {
-    publish("MESSAGE", "ASSISTANT_MESSAGED", messageInstance.toJSON());
+    await event.publish("MESSAGE_ASSISTANT_MESSAGED", messageInstance.toJSON());
   }
 
   return messageInstance.toJSON();
@@ -189,7 +189,7 @@ async function list({
     }),
   ];
 
-  publish("MESSAGES_LOADED", result);
+  await event.publish("MESSAGES_LOADED", result);
 
   return result;
 }

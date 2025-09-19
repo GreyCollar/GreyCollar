@@ -1,4 +1,4 @@
-// This will move to @nucleoidai/node-event
+// This will move to node-event-test-package
 import { v4 as uuid } from "uuid";
 
 const subscriptions = {};
