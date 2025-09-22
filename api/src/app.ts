@@ -70,6 +70,15 @@ app.use("/communications", communications);
       })
   );
 
+  await event.subscribe("RESPONSIBILITY_CREATED", ({ responsibility }) => {
+    const pseudo = agent.toPseudo({ content: responsibility.description });
+
+    responsibilities.patch({
+      responsibilityId: responsibility.id,
+      pseudo,
+    });
+  });
+
   await event.subscribe(
     "SUPERVISING_ANSWERED",
     ({ sessionId, colleagueId, question }) =>
