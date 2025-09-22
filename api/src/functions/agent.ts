@@ -523,6 +523,17 @@ async function chat({
   }
 }
 
+async function toPseudo({ content }: { content: string }) {
+  const response = await generate({
+    dataset: dataset.train.pseudo,
+    context: [],
+    content,
+    json_format: "{ pseudo: <PSEUDO> }",
+  });
+
+  return response.pseudo;
+}
+
 export default {
   teamChat,
   chat,
@@ -531,4 +542,5 @@ export default {
   responsibility,
   responsibilityName,
   evaluateSupervisionAnswer,
+  toPseudo,
 };
