@@ -1,5 +1,6 @@
 import chat from "./train/chat.json";
 import policy from "./policy.json";
+import pseudo from "./train/pseudo.json";
 import responsibility from "./train/responsibility.json";
 import responsibilityChat from "./train/responsibility-chat.json";
 import responsibilityChatEvaluation from "./train/responsibility-chat-evaluation.json";
@@ -24,6 +25,12 @@ export default {
       role: "system" as const,
       content: JSON.stringify({
         train: chat,
+      }),
+    },
+    pseudo: {
+      role: "system" as const,
+      content: JSON.stringify({
+        train: pseudo,
       }),
     },
     taskDiamond: {
@@ -64,3 +71,4 @@ export default {
     },
   },
 };
+
