@@ -14,6 +14,7 @@ import metrics from "./routes/metrics";
 import organizations from "./routes/organizations";
 import projects from "./routes/projects";
 import responsibilities from "./routes/responsibilities";
+import responsibilityFn from "./functions/responsibility";
 import sessions from "./routes/sessions";
 import statistics from "./routes/statistics";
 import supervisings from "./routes/supervisings";
@@ -70,14 +71,19 @@ app.use("/communications", communications);
       })
   );
 
-  await event.subscribe("RESPONSIBILITY_CREATED", ({ responsibility }) => {
-    const pseudo = agent.toPseudo({ content: responsibility.description });
+  await event.subscribe(
+    "RESPONSIBILITY_CREATED",
+    async ({ responsibility }) => {
+      const pseudo = await agent.toPseudo({
+        content: responsibility.description,
+      });
 
-    responsibilities.patch({
-      responsibilityId: responsibility.id,
-      pseudo,
-    });
-  });
+      responsibilityFn.patch({
+        responsibilityId: responsibility.id,
+        pseudo: pseudo,
+      });
+    }
+  );
 
   await event.subscribe(
     "SUPERVISING_ANSWERED",

@@ -9,6 +9,8 @@ type NodeType = {
   };
   type: string;
   next?: string[] | null;
+  true?: string[] | null;
+  false?: string[] | null;
 };
 
 async function getWithNodes(id: string) {
