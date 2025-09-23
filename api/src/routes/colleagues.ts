@@ -183,12 +183,7 @@ router.post("/responsibility-name", async (req, res) => {
 
   const response = await agent.responsibilityName({ history, content });
 
-  await event.publish("RESPONSIBILITY_CREATED", {
-    responsibility: response,
-  });
-
   res.json(response);
 });
 
 export default router;
-
