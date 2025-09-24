@@ -72,20 +72,6 @@ app.use("/communications", communications);
   );
 
   await event.subscribe(
-    "RESPONSIBILITY_CREATED",
-    async ({ responsibility }) => {
-      const pseudo = await agent.toPseudo({
-        content: responsibility.description,
-      });
-
-      responsibilityFn.patch({
-        responsibilityId: responsibility.id,
-        pseudo: pseudo,
-      });
-    }
-  );
-
-  await event.subscribe(
     "SUPERVISING_ANSWERED",
     ({ sessionId, colleagueId, question }) =>
       agent.chat({

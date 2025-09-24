@@ -58,7 +58,18 @@ router.put("/:responsibilityId", async (req, res) => {
     nodes
   );
 
-  await event.publish("RESPONSIBILITY_CREATED", { responsibility: result });
+  const pseudo = await agent.toPseudo({
+    content: result.description,
+  });
+
+  await responsibility.patch({
+    responsibilityId,
+    pseudo,
+  });
+
+  await event.publish("RESPONSIBILITY_CREATED", {
+    responsibility: { ...result, pseudo },
+  });
 
   res.status(200).json(result);
 });
