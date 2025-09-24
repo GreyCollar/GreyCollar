@@ -2,10 +2,12 @@
   {
     "id": "0cbfbecd-5e0d-4924-b5fd-6de262285936",
     "description": "Check product availability, if not exist, create order.",
+    "pseudo": "BEGIN_CONTEXT\nIF Product.Available == FALSE THEN\n    Order.Create()\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE",
     "responsibility": {
       "id": "ba6f7911-e232-469d-9060-2881852f6e59",
       "title": "Product Order",
       "description": "Check product availability, if not exist, create order.",
+      "pseudo": "BEGIN_CONTEXT\nIF Product.Available == FALSE THEN\n    Order.Create()\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE",
       "colleagueId": "00db1bd4-4829-40f2-8b99-d2e42342157e",
       "nodes": [
         {

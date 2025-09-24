@@ -60,6 +60,7 @@
             ]
         },
         "content": "Check battery availability, if not exist, create order.",
+        "pseudo": "BEGIN_CONTEXT\nIF Product.Available == FALSE THEN\n    Order.Create()\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE",
         "knowledge": [
             {
                 "id": "66f2e2e0-dd81-4a1c-9474-089558b43084",
