@@ -30,9 +30,25 @@ platform.init(config).then(async () => {
     groupId: "greycollar",
     // type: "inMemory",
     // host: "localhost",
-    //protocol: "http",
-    //port: 8080,
+    // protocol: "http",
+    // port: 8080,
   });
+
+  const pushgatewayConfig = {
+    url: process.env.PUSHGATEWAY_URL || "http://localhost:9091",
+    jobName: process.env.PUSHGATEWAY_JOB || "greycollar-api",
+    instance: process.env.PUSHGATEWAY_INSTANCE || `node-events`,
+    interval: parseInt(process.env.PUSHGATEWAY_INTERVAL || "15000"),
+  };
+
+  try {
+    event.startPushgateway(pushgatewayConfig);
+    console.log(
+      `Started automatic metrics pushing to pushgateway: ${pushgatewayConfig.url}`
+    );
+  } catch (error) {
+    console.error("Failed to start pushgateway:", error);
+  }
 
   server.listen(process.env.PORT || 4000, () => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
