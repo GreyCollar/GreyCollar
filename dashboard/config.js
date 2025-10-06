@@ -12,7 +12,7 @@ const config = {
     github: {
       authUrl: "https://github.com/login/oauth/authorize",
       clientId: "Ov23lihgDzlqJ1gnZxX3",
-      redirectUri: "http://localhost:3000/dashboard/callback",
+      redirectUri: "http://localhost:3000/dashboard/callback/github",
       userUrl: "https://api.github.com/user",
       scope: "user",
       response_type: "code",
