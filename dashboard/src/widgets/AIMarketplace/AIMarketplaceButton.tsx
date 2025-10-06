@@ -1,6 +1,6 @@
 import EnginesChart from "./AIMarketplaceCard";
 import { IconButton } from "@mui/material";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import { useState } from "react";
 
 function AIMarketplaceButton() {

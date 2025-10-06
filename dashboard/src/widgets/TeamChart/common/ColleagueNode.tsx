@@ -1,6 +1,6 @@
 import Card from "@mui/material/Card";
-import { Iconify } from "@canmingir/link/minimal/components";
-import { Image } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
+import { Image } from "@canmingir/link/platform/components";
 import React from "react";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";
 import { getBackgroundUrl } from "../../../utils/background";

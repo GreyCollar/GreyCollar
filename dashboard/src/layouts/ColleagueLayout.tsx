@@ -1,6 +1,6 @@
 import ColleagueIntegration from "../widgets/ColleagueIntegration/ColleagueIntegration";
 import Communication from "../widgets/Communication/Communication";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import Knowledge from "../widgets/Knowledge/Knowledge";
 import PopupChatWidget from "../widgets/PopupChatWidget";
 import Profile from "../widgets/Profile/Profile";

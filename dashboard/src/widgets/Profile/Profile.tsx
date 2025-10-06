@@ -4,7 +4,7 @@ import Card from "@mui/material/Card";
 import CheckIcon from "@mui/icons-material/Check";
 import EditIcon from "@mui/icons-material/Edit";
 import { Grid } from "@mui/material";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import Stack from "@mui/material/Stack";
 import useColleague from "../../hooks/useColleagueV2";
 

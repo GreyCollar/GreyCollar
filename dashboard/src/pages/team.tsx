@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { IconButton } from "@mui/material";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import OrganizationChart from "../widgets/OrganizationChart/OrganizationChart";
 import TeamChart from "../widgets/TeamChart/TeamChart";
 

@@ -1,7 +1,7 @@
 import AddIcon from "@mui/icons-material/Add";
 import AddTaskDialog from "../AddTaskDialog/AddTaskDialog";
 import CloseIcon from "@mui/icons-material/Close";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import React from "react";
 
 import {
