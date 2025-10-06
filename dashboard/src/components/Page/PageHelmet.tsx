@@ -1,4 +1,4 @@
-import { CustomBreadcrumbs } from "@canmingir/link/minimal/components";
+import { CustomBreadcrumbs } from "@canmingir/link/platform/components";
 import { Helmet } from "react-helmet-async";
 import config from "../../../config";
 

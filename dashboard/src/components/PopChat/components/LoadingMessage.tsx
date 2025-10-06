@@ -1,4 +1,4 @@
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import { Stack } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import { memo } from "react";

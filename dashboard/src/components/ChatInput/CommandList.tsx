@@ -1,4 +1,4 @@
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";

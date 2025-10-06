@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 

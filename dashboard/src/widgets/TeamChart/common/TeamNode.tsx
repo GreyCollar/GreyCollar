@@ -1,5 +1,5 @@
 import Card from "@mui/material/Card";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import React from "react";
 import Typography from "@mui/material/Typography";
 

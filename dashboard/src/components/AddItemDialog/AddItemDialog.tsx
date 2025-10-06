@@ -1,4 +1,4 @@
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import LoadingButton from "@mui/lab/LoadingButton";
 import type { Resolver } from "react-hook-form";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";
@@ -15,7 +15,10 @@ import {
   Select,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { FormProvider, RHFTextField } from "@canmingir/link/minimal/components";
+import {
+  FormProvider,
+  RHFTextField,
+} from "@canmingir/link/platform/components";
 import React, { useEffect, useState } from "react";
 
 import * as Yup from "yup";

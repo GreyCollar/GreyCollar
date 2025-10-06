@@ -1,7 +1,7 @@
 import Chart from "react-apexcharts";
 import React from "react";
 import TotalIncomes from "../../components/TotalIncomes/TotalIncomes";
-import { useChart } from "@canmingir/link/minimal/components";
+import { useChart } from "@canmingir/link/platform/components";
 import { useTheme } from "@mui/material/styles";
 export default function TotalIncome({ size }: { size?: string }) {
   const theme = useTheme();

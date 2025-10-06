@@ -5,7 +5,7 @@ import {
   CustomPopover,
   Iconify,
   usePopover,
-} from "@canmingir/link/minimal/components";
+} from "@canmingir/link/platform/components";
 
 function MoreVertButton({ handleEdit, handleDelete, isEditable }) {
   const popover = usePopover();
