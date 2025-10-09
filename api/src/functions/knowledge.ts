@@ -82,7 +82,7 @@ async function create({
     taskId: knowledgeJson.taskId || null,
   };
 
-  await event.publish("KNOWLEDGE_CREATED", knowledgeData);
+  await event.publish("KNOWLEDGE","CREATED", knowledgeData);
 
   return knowledgeInstance;
 }

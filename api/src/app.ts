@@ -59,39 +59,49 @@ app.use("/integrations", integrations);
 app.use("/communications", communications);
 
 (async () => {
-  await event.subscribe("MESSAGE_USER_MESSAGED", ({ teamId, content }) =>
-    agent.teamChat({ teamId, content })
+  await event.subscribe<{ teamId: string; content: string }>(
+    "MESSAGE_USER_MESSAGED",
+    ({ teamId, content }) => agent.teamChat({ teamId, content })
   );
 
-  await event.subscribe(
-    "SESSION_USER_MESSAGED",
-    ({ colleagueId, sessionId, content }) =>
-      agent.chat({
-        colleagueId,
-        sessionId,
-        content,
-      })
+  await event.subscribe<{
+    colleagueId: string;
+    sessionId: string;
+    content: string;
+  }>("SESSION_USER_MESSAGED", ({ colleagueId, sessionId, content }) =>
+    agent.chat({
+      colleagueId,
+      sessionId,
+      content,
+    })
   );
 
-  await event.subscribe(
-    "SUPERVISING_ANSWERED",
-    ({ sessionId, colleagueId, question }) =>
-      agent.chat({
-        colleagueId,
-        sessionId,
-        content: question,
-      })
+  await event.subscribe<{
+    sessionId: string;
+    colleagueId: string;
+    question: string;
+  }>("SUPERVISING_ANSWERED", ({ sessionId, colleagueId, question }) =>
+    agent.chat({
+      colleagueId,
+      sessionId,
+      content: question,
+    })
   );
 
-  await event.subscribe("TASK_CREATED", ({ taskId }) => agent.task({ taskId }));
-
-  await event.subscribe(
-    "STEP_ADDED",
-    ({ stepId, action, parameters, comment }) =>
-      agent.step({ stepId, action, parameters, comment })
+  await event.subscribe<{ taskId: string }>("TASK_CREATED", ({ taskId }) =>
+    agent.task({ taskId })
   );
 
-  await event.subscribe("STEP_COMPLETED", ({ taskId }) =>
+  await event.subscribe<{
+    stepId: string;
+    action: string;
+    parameters: object;
+    comment: string;
+  }>("STEP_ADDED", ({ stepId, action, parameters, comment }) =>
+    agent.step({ stepId, action, parameters, comment })
+  );
+
+  await event.subscribe<{ taskId: string }>("STEP_COMPLETED", ({ taskId }) =>
     agent.task({ taskId })
   );
 })();
