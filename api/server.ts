@@ -4,7 +4,9 @@ import config from "./config";
 import dotenv from "dotenv";
 import { event } from "node-event-test-package/client";
 import http from "http";
+//import kafkaConfig from "./config.kafka";
 import models from "./src/models";
+import txqConfig from "./config.txq";
 
 dotenv.config();
 
@@ -23,16 +25,7 @@ platform.init(config).then(async () => {
 
   models.init();
 
-  await event.init({
-    type: "kafka",
-    clientId: "greycollar",
-    brokers: ["20.55.19.45:9092"],
-    groupId: "greycollar",
-    // type: "inMemory",
-    // host: "localhost",
-    // protocol: "http",
-    // port: 8080,
-  });
+  await event.init(txqConfig);
 
   const pushgatewayConfig = {
     url: process.env.PUSHGATEWAY_URL || "http://localhost:9091",
@@ -54,3 +47,4 @@ platform.init(config).then(async () => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
   });
 });
+
