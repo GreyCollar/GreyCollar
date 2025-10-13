@@ -35,8 +35,6 @@ class PushgatewayExporter {
       await axios.post(this.url, metricsText, {
         headers: { "Content-Type": "text/plain" },
       });
-      const metricsCount = metricsText.split('\n').filter(line => line.trim() && !line.startsWith('#')).length;
-      console.log(`[Pushgateway] ✅ Metrics pushed successfully (${metricsCount} metrics)`); 
       resultCallback({ code: 0 });
     } catch (err) {
       console.error("[Pushgateway] ❌ Push failed:", (err as Error).message);
