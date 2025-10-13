@@ -107,4 +107,3 @@ app.use("/communications", communications);
 })();
 
 export default app;
-
