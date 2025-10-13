@@ -1,6 +1,5 @@
 import { client } from "node-event-test-package/client";
 import express from "express";
-import { getMetricsData } from "../instrumentation";
 import os from "os";
 import platform from "@canmingir/link-express";
 
