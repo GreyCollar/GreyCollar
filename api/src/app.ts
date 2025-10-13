@@ -10,7 +10,6 @@ import { event } from "node-event-test-package/client";
 import integrations from "./routes/integrations";
 import knowledge from "./routes/knowledge";
 import messages from "./routes/messages";
-import metrics from "./routes/metrics";
 import organizations from "./routes/organizations";
 import projects from "./routes/projects";
 import responsibilities from "./routes/responsibilities";
@@ -37,8 +36,6 @@ const { authorization } = platform;
 const app = platform.express();
 
 app.use(telemetryMiddleware());
-
-app.use("/metrics", metrics);
 
 app.use(authorization.verify);
 app.use(authorization.authorize("ADMIN"));
