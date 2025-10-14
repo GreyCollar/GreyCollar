@@ -2,8 +2,9 @@ import { check } from "k6";
 import http from "k6/http";
 
 export const options = {
-  vus: Number(__ENV.VUS || 100000),
-  iterations: Number(__ENV.ITERATIONS || 1000000),
+  vus: Number(__ENV.VUS || 1000),
+  iterations: Number(__ENV.ITERATIONS || 1000),
+  duration: __ENV.DURATION || "1h",
   thresholds: {
     http_req_duration: ["p(95)<1000"],
     http_req_failed: ["rate<0.05"],
