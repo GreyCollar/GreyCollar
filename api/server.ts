@@ -35,7 +35,7 @@ platform.init(config).then(async () => {
   };
 
   try {
-    //event.startPushgateway(pushgatewayConfig);
+    event.startPushgateway(pushgatewayConfig);
     console.log(
       `Started automatic metrics pushing to pushgateway: ${pushgatewayConfig.url}`
     );

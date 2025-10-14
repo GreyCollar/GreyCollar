@@ -23,6 +23,13 @@ const config = {
     host: "event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
     protocol: "https",
   },
+  pushGateway: {
+    url: "http://localhost:9091",
+    jobName: "greycollar-database",
+    instance: "default",
+    interval: 15000,
+  },
 };
 
 export default config;
+
