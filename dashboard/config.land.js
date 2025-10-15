@@ -10,7 +10,7 @@ const config = {
   },
   project: {
     github: {
-      redirectUri: "https://land.greycollar.ai/dashboard/callback",
+      redirectUri: "https://land.greycollar.ai/dashboard/callback/github",
       authUrl: "https://github.com/login/oauth/authorize",
       userUrl: "https://api.github.com/user",
       clientId: "Ov23liDUwCkj5NPpApo7",

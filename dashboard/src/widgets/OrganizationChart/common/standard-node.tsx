@@ -1,5 +1,5 @@
 import Card from "@mui/material/Card";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import { Link } from "react-router-dom";
 import React from "react";
 import SourcedAvatar from "../../../components/SourcedAvatar/SourcedAvatar";

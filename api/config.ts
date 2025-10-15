@@ -5,9 +5,20 @@ const config = {
       jwt: {
         identifier: "id",
       },
-      tokenUrl: "https://github.com/login/oauth/access_token",
-      userUrl: "https://api.github.com/user",
-      clientId: "Ov23lihgDzlqJ1gnZxX3",
+      providers: {
+        github: {
+          tokenUrl: "https://github.com/login/oauth/access_token",
+          userUrl: "https://api.github.com/user",
+          clientId: "Ov23lihgDzlqJ1gnZxX3",
+          userIdentifier: "id",
+          userFields: {
+            name: "login",
+            displayName: "name",
+            avatarUrl: "avatar_url",
+            email: "email",
+          },
+        },
+      },
     },
   },
   postgres: {

@@ -1,4 +1,4 @@
-import { Label } from "@canmingir/link/minimal/components";
+import { Label } from "@canmingir/link/platform/components";
 import React from "react";
 
 import { Avatar, Box } from "@mui/material";

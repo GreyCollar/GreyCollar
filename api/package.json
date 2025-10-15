@@ -12,13 +12,13 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.35.0",
-    "@canmingir/link": "^1.1.1",
-    "@canmingir/link-express": "^1.6.4",
+    "@canmingir/link": "^1.2.2",
+    "@canmingir/link-express": "^1.6.3",
     "@modelcontextprotocol/sdk": "^1.15.1",
     "@nucleoidai/node-event": "^1.1.5",
     "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
-    "node-event-test-package": "^1.1.42",
+    "node-event-test-package": "^1.1.15",
     "openai": "^4.79.4",
     "puppeteer": "^24.1.0",
     "socket.io": "^4.8.1"

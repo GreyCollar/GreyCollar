@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import Typography from "@mui/material/Typography";
 
 function TeamChatHeaderDetail({ title, mdDown }) {

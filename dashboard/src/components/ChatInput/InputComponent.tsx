@@ -1,4 +1,4 @@
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import InlineChromiumBugfix from "./InlineChromiumBugFix";
 import { ReactEditor } from "slate-react";
 import SourcedAvatar from "../SourcedAvatar/SourcedAvatar";

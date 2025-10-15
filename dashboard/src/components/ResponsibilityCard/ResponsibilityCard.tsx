@@ -18,7 +18,7 @@ import {
   CustomPopover,
   Iconify,
   usePopover,
-} from "@canmingir/link/minimal/components";
+} from "@canmingir/link/platform/components";
 
 const ResponsibilityCard = ({
   item,

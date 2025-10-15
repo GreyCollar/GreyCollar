@@ -1,4 +1,4 @@
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import styles from "../styles";
 
 import { Box, IconButton } from "@mui/material";
