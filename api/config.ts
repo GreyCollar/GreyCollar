@@ -35,7 +35,7 @@ const config = {
     protocol: "https",
   },
   pushGateway: {
-    url: "http://52.191.251.120:9091",
+    url: "http://localhost:9091",
     jobName: "greycollar-database",
     instance: "default",
     interval: 15000,

@@ -4,7 +4,7 @@ COPY scripts /scripts
 
 WORKDIR /scripts
 
-ENV BASE_URL=http://172.27.112.1:3001
+ENV BASE_URL=https://communication-land.gentleflower-99ef02e0.eastus.azurecontainerapps.io
 
 EXPOSE 6565
 
