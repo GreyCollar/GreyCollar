@@ -15,9 +15,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": null,
+  "id": 2,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
@@ -45,7 +44,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "yellow",
@@ -63,7 +62,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
+        "w": 8,
         "x": 0,
         "y": 1
       },
@@ -73,14 +72,17 @@
         "graphMode": "area",
         "justifyMode": "center",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
-        "textMode": "auto"
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": "Prometheus",
@@ -106,76 +108,19 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "yellow",
-                "value": 10
-              },
-              {
-                "color": "red",
                 "value": 100
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 6,
-        "y": 1
-      },
-      "id": 2,
-      "options": {
-        "colorMode": "background_solid",
-        "graphMode": "area",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "sum(rate(events_published_total[5m]))",
-          "interval": "",
-          "legendFormat": "Events/sec",
-          "refId": "A"
-        }
-      ],
-      "title": "⚡ Publishing Rate (Real-time)",
-      "type": "stat"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
               },
               {
-                "color": "yellow",
-                "value": 50
+                "color": "orange",
+                "value": 500
               },
               {
                 "color": "red",
-                "value": 200
+                "value": 1000
               }
             ]
           },
@@ -185,355 +130,38 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 6,
-        "x": 12,
-        "y": 1
-      },
-      "id": 3,
-      "options": {
-        "colorMode": "background_solid",
-        "graphMode": "area",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "sum(active_event_subscriptions)",
-          "interval": "",
-          "legendFormat": "Active Subscriptions",
-          "refId": "A"
-        }
-      ],
-      "title": "👥 Active Subscriptions",
-      "type": "stat"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.1
-              },
-              {
-                "color": "red",
-                "value": 0.5
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 1
-      },
-      "id": 4,
-      "options": {
-        "colorMode": "background_solid",
-        "graphMode": "area",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.95, sum(rate(event_publish_duration_seconds_bucket[5m])) by (le))",
-          "interval": "",
-          "legendFormat": "95th Percentile",
-          "refId": "A"
-        }
-      ],
-      "title": "⏱️ Publishing Latency (95th %ile)",
-      "type": "stat"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 9
-      },
-      "id": 101,
-      "panels": [],
-      "title": "📊 Event Publishing Trends & Performance",
-      "type": "row"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisGridShow": true,
-            "axisLabel": "Events per Second",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 25,
-            "gradientMode": "hue",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            },
-            "lineInterpolation": "smooth",
-            "lineStyle": {
-              "fill": "solid"
-            },
-            "lineWidth": 3,
-            "pointSize": 6,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 16,
-        "x": 0,
-        "y": 10
-      },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": ["lastNotNull", "max", "mean", "sum"],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "rate(events_published_total[5m])",
-          "interval": "",
-          "legendFormat": "{{event_type}}",
-          "refId": "A"
-        }
-      ],
-      "title": "🚀 Event Publishing Rate by Type (Real-time)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
         "w": 8,
-        "x": 16,
-        "y": 10
+        "x": 8,
+        "y": 1
       },
-      "id": 6,
+      "id": 21,
       "options": {
-        "calculateHeatmapFromData": true,
-        "calculation": {
-          "xBuckets": {
-            "mode": "count",
-            "value": "20"
-          },
-          "yBuckets": {
-            "mode": "count",
-            "value": "20"
-          }
-        },
-        "cellGap": 2,
-        "cellValues": {
-          "unit": "short"
-        },
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Spectral",
-          "steps": 64
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
-        "legend": {
-          "show": true
-        },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "tooltip": {
-          "show": true,
-          "yHistogram": false
-        },
-        "yAxis": {
-          "axisPlacement": "left",
-          "reverse": false,
-          "unit": "s"
-        }
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "increase(event_publish_duration_seconds_bucket[2m])",
-          "format": "heatmap",
-          "interval": "",
-          "legendFormat": "{{le}}",
-          "refId": "A"
-        }
-      ],
-      "title": "🔥 Publishing Duration Heatmap",
-      "type": "heatmap"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 20
-      },
-      "id": 102,
-      "panels": [],
-      "title": "🎯 Event Type Distribution & Analysis",
-      "type": "row"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "vis": false
-            }
-          },
-          "mappings": [],
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 8,
-        "x": 0,
-        "y": 21
-      },
-      "id": 7,
-      "options": {
-        "displayLabels": ["name", "percent"],
-        "legend": {
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "values": ["value", "percent"]
-        },
-        "pieType": "donut",
+        "colorMode": "background_solid",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum by (event_type) (events_published_total)",
+          "expr": "sum(kafka_backlog_events_total)",
           "interval": "",
-          "legendFormat": "{{event_type}}",
+          "legendFormat": "Backlog Size",
           "refId": "A"
         }
       ],
-      "title": "🥧 Event Distribution by Type",
-      "type": "piechart"
+      "title": "🔴 Kafka Backlog Size",
+      "type": "stat"
     },
     {
       "datasource": "Prometheus",
@@ -543,18 +171,22 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisGridShow": true,
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 80,
-            "gradientMode": "opacity",
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
-              "vis": false
+              "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -577,249 +209,54 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 10
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 100
               }
             ]
           },
-          "unit": "short"
+          "unit": "reqps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 10,
+        "h": 8,
         "w": 8,
-        "x": 8,
-        "y": 21
+        "x": 16,
+        "y": 1
       },
-      "id": 8,
+      "id": 2,
       "options": {
         "legend": {
-          "calcs": ["lastNotNull", "max"],
-          "displayMode": "table",
+          "calcs": [],
+          "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "active_event_subscriptions",
+          "expr": "sum(rate(events_published_total[5m]))",
           "interval": "",
-          "legendFormat": "{{event_type}}",
+          "legendFormat": "Events/sec",
           "refId": "A"
         }
       ],
-      "title": "📊 Active Subscriptions by Event Type",
+      "title": "⚡ Publishing Rate (Real-time)",
       "type": "timeseries"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Total Events"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "short"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "gradient",
-                  "type": "gauge"
-                }
-              },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-GrYlRd"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Rate (events/sec)"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "reqps"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "basic",
-                  "type": "color-background"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Active Subscriptions"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "short"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "basic",
-                  "type": "color-background"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Avg Duration (ms)"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "ms"
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "basic",
-                  "type": "color-background"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 10,
-        "w": 8,
-        "x": 16,
-        "y": 21
-      },
-      "id": 9,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": ["sum"],
-          "show": false
-        },
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Total Events"
-          }
-        ]
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "sum by (event_type) (events_published_total)",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        },
-        {
-          "datasource": "Prometheus",
-          "expr": "sum by (event_type) (rate(events_published_total[5m]))",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "B"
-        },
-        {
-          "datasource": "Prometheus",
-          "expr": "sum by (event_type) (active_event_subscriptions)",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "C"
-        },
-        {
-          "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.50, sum by (event_type, le) (rate(event_publish_duration_seconds_bucket[5m]))) * 1000",
-          "format": "table",
-          "instant": true,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "D"
-        }
-      ],
-      "title": "📋 Event Types Performance Summary",
-      "transformations": [
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
-            },
-            "indexByName": {},
-            "renameByName": {
-              "Value #A": "Total Events",
-              "Value #B": "Rate (events/sec)",
-              "Value #C": "Active Subscriptions",
-              "Value #D": "Avg Duration (ms)",
-              "event_type": "Event Type"
-            }
-          }
-        }
-      ],
-      "type": "table"
     },
     {
       "collapsed": false,
@@ -827,11 +264,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 9
       },
-      "id": 103,
+      "id": 106,
       "panels": [],
-      "title": "⚡ Performance Deep Dive",
+      "title": "📊 Kafka Backlog Monitoring",
       "type": "row"
     },
     {
@@ -842,18 +279,407 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Events",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line+area"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "transparent",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1000
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull", "max"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "kafka_backlog_events_total",
+          "interval": "",
+          "legendFormat": "Backlog Events",
+          "refId": "A"
+        }
+      ],
+      "title": "⏱️ Kafka Backlog Over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Events/sec",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Backlog Growth Rate"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 23,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull", "max"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "increase(kafka_backlog_events_total[5m]) / 300",
+          "interval": "",
+          "legendFormat": "Backlog Growth Rate",
+          "refId": "A"
+        }
+      ],
+      "title": "📈 Backlog Change Rate",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 104,
+      "panels": [],
+      "title": "📥 Event Consumption Analytics",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 1000
+              },
+              {
+                "color": "red",
+                "value": 10000
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(event_callbacks_processed_total)",
+          "interval": "",
+          "legendFormat": "Total Consumed",
+          "refId": "A"
+        }
+      ],
+      "title": "📊 Total Consumed",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(rate(event_callbacks_processed_total[5m]))",
+          "interval": "",
+          "legendFormat": "Consume/sec",
+          "refId": "A"
+        }
+      ],
+      "title": "⚡ Consume Rate (second)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 105,
+      "panels": [],
+      "title": "⏱️ Duration Percentiles Analysis",
+      "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisGridShow": true,
             "axisLabel": "Duration (seconds)",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 30,
             "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
-              "vis": false
+              "vis": false,
+              "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
@@ -879,7 +705,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -890,6 +716,21 @@
           "unit": "s"
         },
         "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*99th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
           {
             "matcher": {
               "id": "byRegexp",
@@ -938,12 +779,12 @@
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 28
       },
-      "id": 10,
+      "id": 17,
       "options": {
         "legend": {
           "calcs": ["lastNotNull", "max", "mean"],
@@ -952,34 +793,43 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.95, sum by (event_type, le) (rate(event_publish_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum(rate(event_publish_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "95th %ile - {{event_type}}",
+          "legendFormat": "99th Percentile",
           "refId": "A"
         },
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.75, sum by (event_type, le) (rate(event_publish_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum(rate(event_publish_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "75th %ile - {{event_type}}",
+          "legendFormat": "95th Percentile",
           "refId": "B"
         },
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.50, sum by (event_type, le) (rate(event_publish_duration_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.75, sum(rate(event_publish_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "50th %ile - {{event_type}}",
+          "legendFormat": "75th Percentile",
           "refId": "C"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.50, sum(rate(event_publish_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "50th Percentile",
+          "refId": "D"
         }
       ],
-      "title": "⏱️ Publishing Duration Percentiles by Event Type",
+      "title": "📤 Publish Duration Percentiles",
       "type": "timeseries"
     },
     {
@@ -990,18 +840,24 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
             "axisGridShow": true,
-            "axisLabel": "Size (bytes)",
+            "axisLabel": "Duration (seconds)",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 30,
             "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
-              "vis": false
+              "vis": false,
+              "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
@@ -1027,7 +883,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1035,17 +891,78 @@
               }
             ]
           },
-          "unit": "bytes"
+          "unit": "s"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*99th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*95th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*75th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*50th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 12,
         "x": 12,
-        "y": 32
+        "y": 28
       },
-      "id": 11,
+      "id": 18,
       "options": {
         "legend": {
           "calcs": ["lastNotNull", "max", "mean"],
@@ -1054,27 +971,43 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.95, sum by (event_type, le) (rate(event_payload_size_bytes_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "95th %ile - {{event_type}}",
+          "legendFormat": "99th Percentile",
           "refId": "A"
         },
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.50, sum by (event_type, le) (rate(event_payload_size_bytes_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "50th %ile - {{event_type}}",
+          "legendFormat": "95th Percentile",
           "refId": "B"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.75, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "75th Percentile",
+          "refId": "C"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.50, sum(rate(event_callback_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "50th Percentile",
+          "refId": "D"
         }
       ],
-      "title": "📦 Event Payload Size Percentiles by Type",
+      "title": "📥 Consume Duration Percentiles (Callback)",
       "type": "timeseries"
     },
     {
@@ -1083,12 +1016,140 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 41
+        "y": 38
       },
-      "id": 104,
+      "id": 107,
       "panels": [],
-      "title": "🚨 Error Monitoring & Health",
+      "title": "💾 Database Metrics",
       "type": "row"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 10000
+              },
+              {
+                "color": "red",
+                "value": 100000
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 39
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(db_read_operations_total)",
+          "interval": "",
+          "legendFormat": "Total Read Ops",
+          "refId": "A"
+        }
+      ],
+      "title": "📖 Total DB Read Operations",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "yellow",
+                "value": 5000
+              },
+              {
+                "color": "red",
+                "value": 50000
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 39
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "background_solid",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(db_write_operations_total)",
+          "interval": "",
+          "legendFormat": "Total Write Ops",
+          "refId": "A"
+        }
+      ],
+      "title": "✍️ Total DB Write Operations",
+      "type": "stat"
     },
     {
       "datasource": "Prometheus",
@@ -1098,18 +1159,205 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisGridShow": true,
-            "axisLabel": "Errors per second",
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 39
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(rate(db_read_operations_total[5m]))",
+          "interval": "",
+          "legendFormat": "Read Ops/sec",
+          "refId": "A"
+        }
+      ],
+      "title": "📖 DB Read Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 39
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "calcs": ["lastNotNull"],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "12.1.1",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "sum(rate(db_write_operations_total[5m]))",
+          "interval": "",
+          "legendFormat": "Write Ops/sec",
+          "refId": "A"
+        }
+      ],
+      "title": "✍️ DB Write Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "Duration (seconds)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 30,
             "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
-              "vis": false
+              "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineStyle": {
               "fill": "solid"
@@ -1123,7 +1371,7 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "normal"
+              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1135,7 +1383,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1143,39 +1391,123 @@
               }
             ]
           },
-          "unit": "eps"
+          "unit": "s"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*99th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*95th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*75th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*50th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 0,
-        "y": 42
+        "y": 47
       },
-      "id": 12,
+      "id": 28,
       "options": {
         "legend": {
-          "calcs": ["lastNotNull", "max"],
+          "calcs": ["lastNotNull", "max", "mean"],
           "displayMode": "table",
           "placement": "bottom",
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "rate(event_publish_errors_total[5m])",
+          "expr": "histogram_quantile(0.99, sum(rate(db_read_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "{{event_type}} - {{error_type}}",
+          "legendFormat": "99th Percentile",
           "refId": "A"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.95, sum(rate(db_read_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "95th Percentile",
+          "refId": "B"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.75, sum(rate(db_read_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "75th Percentile",
+          "refId": "C"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.50, sum(rate(db_read_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "50th Percentile",
+          "refId": "D"
         }
       ],
-      "title": "🚨 Event Publishing Errors by Type",
+      "title": "📖 DB Read Latency Percentiles",
       "type": "timeseries"
     },
     {
@@ -1183,139 +1515,190 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": true,
+            "axisLabel": "Duration (seconds)",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 30,
+            "gradientMode": "opacity",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
-          "max": 1,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.01
+                "value": 0
               },
               {
                 "color": "red",
-                "value": 0.05
+                "value": 80
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "s"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*99th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*95th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*75th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*50th.*"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "super-light-blue",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 8,
-        "w": 6,
+        "h": 10,
+        "w": 12,
         "x": 12,
-        "y": 42
+        "y": 47
       },
-      "id": 13,
+      "id": 29,
       "options": {
-        "colorMode": "background_solid",
-        "graphMode": "area",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": ["lastNotNull", "max", "mean"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
         },
-        "textMode": "auto"
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "desc"
+        }
       },
-      "pluginVersion": "10.0.0",
+      "pluginVersion": "12.1.1",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum(rate(event_publish_errors_total[5m])) / sum(rate(events_published_total[5m]))",
+          "expr": "histogram_quantile(0.99, sum(rate(db_write_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "Error Rate",
+          "legendFormat": "99th Percentile",
           "refId": "A"
-        }
-      ],
-      "title": "🚨 Overall Error Rate",
-      "type": "stat"
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.95
-              },
-              {
-                "color": "green",
-                "value": 0.99
-              }
-            ]
-          },
-          "unit": "percentunit"
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 6,
-        "x": 18,
-        "y": 42
-      },
-      "id": 14,
-      "options": {
-        "colorMode": "background_solid",
-        "graphMode": "area",
-        "justifyMode": "center",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": ["lastNotNull"],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.0.0",
-      "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "1 - (sum(rate(event_publish_errors_total[5m])) / sum(rate(events_published_total[5m])))",
+          "expr": "histogram_quantile(0.95, sum(rate(db_write_duration_seconds_bucket[5m])) by (le))",
           "interval": "",
-          "legendFormat": "Success Rate",
-          "refId": "A"
+          "legendFormat": "95th Percentile",
+          "refId": "B"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.75, sum(rate(db_write_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "75th Percentile",
+          "refId": "C"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.50, sum(rate(db_write_duration_seconds_bucket[5m])) by (le))",
+          "interval": "",
+          "legendFormat": "50th Percentile",
+          "refId": "D"
         }
       ],
-      "title": "✅ Success Rate",
-      "type": "stat"
+      "title": "✍️ DB Write Latency Percentiles",
+      "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "5s",
-  "schemaVersion": 38,
-  "style": "dark",
-  "tags": ["events", "publishing", "analytics", "detailed"],
+  "schemaVersion": 41,
+  "tags": ["events", "publishing", "analytics", "detailed", "kafka", "backlog"],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": false,
           "text": "All",
           "value": "$__all"
         },
-        "hide": 0,
         "includeAll": true,
         "label": "Event Type",
         "multi": true,
@@ -1324,7 +1707,6 @@
         "query": "label_values(events_published_total, event_type)",
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "sort": 1,
         "type": "query"
       }
@@ -1336,9 +1718,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "🚀 Event Publishing Analytics - Detailed Dashboard",
-  "uid": "event-publishing-detailed",
-  "version": 1,
-  "weekStart": ""
+  "title": "Event Publishing Analytics",
+  "uid": "comprehensive-dashboard",
+  "version": 1
 }
-
