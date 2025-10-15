@@ -27,7 +27,7 @@
     "typecheck": "npm run typecheck:dashboard"
   },
   "dependencies": {
-    "@canmingir/link": "^1.2.3",
+    "@canmingir/link": "^1.2.4",
     "@canmingir/link-express": "^1.6.4",
     "@modelcontextprotocol/sdk": "^1.15.1",
     "@nucleoidai/node-event": "^1.1.5",

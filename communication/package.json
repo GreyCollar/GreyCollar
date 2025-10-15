@@ -17,7 +17,7 @@
     "dotenv": "^16.4.5",
     "http-proxy-middleware": "^3.0.3",
     "jsonwebtoken": "^9.0.2",
-    "node-event-test-package": "^1.1.43",
+    "node-event-test-package": "^1.1.44",
     "react-event-test": "^1.7.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
