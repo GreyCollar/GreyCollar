@@ -28,7 +28,7 @@ platform.init(config).then(async () => {
   await event.init(txqConfig);
 
   const pushgatewayConfig = {
-    url: process.env.PUSHGATEWAY_URL || "http://localhost:9091",
+    url: process.env.PUSHGATEWAY_URL || "http://52.191.251.120:9091",
     jobName: process.env.PUSHGATEWAY_JOB || "greycollar-api",
     instance: process.env.PUSHGATEWAY_INSTANCE || `node-events`,
     interval: parseInt(process.env.PUSHGATEWAY_INTERVAL || "15000"),
