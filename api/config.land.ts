@@ -13,7 +13,7 @@ const config = {
   postgres: {
     uri: "sqlite::memory:",
     debug: true,
-    sync: true,
+    sync: false,
   },
   dynamodb: {
     region: "us-east-1",
