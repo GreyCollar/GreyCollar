@@ -1,3 +1,5 @@
+import "./src/instrumentation";
+
 import * as platform from "@canmingir/link-express";
 
 import config from "./config";
@@ -43,8 +45,16 @@ platform.init(config).then(async () => {
     console.error("Failed to start pushgateway:", error);
   }
 
+  try {
+    event.startPushgateway(pushgatewayConfig);
+    console.log(
+      `Started automatic metrics pushing to pushgateway: ${pushgatewayConfig.url}`
+    );
+  } catch (error) {
+    console.error("Failed to start pushgateway:", error);
+  }
+
   server.listen(process.env.PORT || 4000, () => {
     console.log(`Server is running on port ${process.env.PORT || 4000}`);
   });
 });
-

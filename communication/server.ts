@@ -58,7 +58,6 @@ const startServer = async () => {
   server.listen(scoketIoPort, () => {
     console.log(`⚡️ Socket.io server running on port ${scoketIoPort}`);
   });
-
 };
 
 startServer().catch(console.error);

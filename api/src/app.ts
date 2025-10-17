@@ -10,7 +10,6 @@ import { event } from "node-event-test-package/client";
 import integrations from "./routes/integrations";
 import knowledge from "./routes/knowledge";
 import messages from "./routes/messages";
-import metrics from "./routes/metrics";
 import organizations from "./routes/organizations";
 import projects from "./routes/projects";
 import responsibilities from "./routes/responsibilities";
@@ -19,6 +18,7 @@ import statistics from "./routes/statistics";
 import supervisings from "./routes/supervisings";
 import tasks from "./routes/tasks";
 import teamDetails from "./routes/teamDetails";
+import { telemetryMiddleware } from "./instrumentation";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -35,7 +35,7 @@ const { authorization } = platform;
 
 const app = platform.express();
 
-app.use("/metrics", metrics);
+app.use(telemetryMiddleware());
 
 app.use(authorization.verify);
 app.use(authorization.authorize("ADMIN"));
@@ -104,4 +104,3 @@ app.use("/communications", communications);
 })();
 
 export default app;
-
