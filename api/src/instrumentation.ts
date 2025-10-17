@@ -11,12 +11,12 @@ import {
 import { HostMetrics } from "@opentelemetry/host-metrics";
 import { RuntimeNodeInstrumentation } from "@opentelemetry/instrumentation-runtime-node";
 import axios from "axios";
-import config from "../config.land";
+import config from "../config";
 import { metrics } from "@opentelemetry/api";
 
 class PushgatewayExporter {
   private serializer = new PrometheusSerializer();
-  private url = `${config.pushGateway.url}/metrics/job/${config.pushGateway.jobName}/instance/${config.pushGateway.instance}`;
+  private url = `${config.pushGateWayOpenTelemetry.url}/metrics/job/${config.pushGateWayOpenTelemetry.jobName}/instance/${config.pushGateWayOpenTelemetry.instance}`;
 
   async export(metrics: any, resultCallback: (result: any) => void) {
     try {
@@ -42,7 +42,7 @@ const meterProvider = new MeterProvider({
     new PrometheusExporter(),
     new PeriodicExportingMetricReader({
       exporter: new PushgatewayExporter() as any,
-      exportIntervalMillis: config.pushGateway.interval,
+      exportIntervalMillis: config.pushGateWayOpenTelemetry.interval,
     }),
   ],
 });

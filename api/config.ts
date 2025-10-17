@@ -40,6 +40,18 @@ const config = {
     instance: "default",
     interval: 15000,
   },
+  pushGateWayOpenTelemetry: {
+    url: "http://localhost:9091",
+    jobName: "greycollar-opentelemetry",
+    instance: "default",
+    interval: 15000,
+  },
+  pushGatewayNodeEvents: {
+    url: "http://localhost:9091",
+    jobName: "greycollar-api",
+    instance: "node-events",
+    interval: 15000,
+  },
 };
 
 export default config;
