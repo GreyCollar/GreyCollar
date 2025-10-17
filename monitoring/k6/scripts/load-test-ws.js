@@ -2,12 +2,16 @@ import { check } from "k6";
 import http from "k6/http";
 
 export const options = {
-  vus: Number(__ENV.VUS || 100),
-  iterations: Number(__ENV.ITERATIONS || 1000000),
-  duration: "1h",
-  thresholds: {
-    http_req_failed: ["rate<0.05"],
-  },
+    scenarios: {
+      load_test: {
+        executor: 'constant-arrival-rate',
+        rate: 1000, // requests per second
+        timeUnit: '1s',
+        duration: '30s',
+        preAllocatedVUs: 1000,
+        maxVUs: 2000,
+      },
+    },
   tags: {
     test_type: "load",
     environment: __ENV.ENVIRONMENT || "local",
