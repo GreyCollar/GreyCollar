@@ -11,18 +11,12 @@ import {
 import { HostMetrics } from "@opentelemetry/host-metrics";
 import { RuntimeNodeInstrumentation } from "@opentelemetry/instrumentation-runtime-node";
 import axios from "axios";
+import config from "../config.land";
 import { metrics } from "@opentelemetry/api";
-
-const config = {
-  pushgatewayUrl: process.env.PUSHGATEWAY_URL || "http://localhost:9091",
-  jobName: process.env.PUSHGATEWAY_JOB || "greycollar-api",
-  instance: process.env.PUSHGATEWAY_INSTANCE || "opentelemetry",
-  interval: parseInt(process.env.PUSHGATEWAY_INTERVAL || "15000"),
-};
 
 class PushgatewayExporter {
   private serializer = new PrometheusSerializer();
-  private url = `${config.pushgatewayUrl}/metrics/job/${config.jobName}/instance/${config.instance}`;
+  private url = `${config.pushGateway.url}/metrics/job/${config.pushGateway.jobName}/instance/${config.pushGateway.instance}`;
 
   async export(metrics: any, resultCallback: (result: any) => void) {
     try {
@@ -48,7 +42,7 @@ const meterProvider = new MeterProvider({
     new PrometheusExporter(),
     new PeriodicExportingMetricReader({
       exporter: new PushgatewayExporter() as any,
-      exportIntervalMillis: config.interval,
+      exportIntervalMillis: config.pushGateway.interval,
     }),
   ],
 });
