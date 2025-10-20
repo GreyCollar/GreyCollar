@@ -6,10 +6,9 @@ import config from "./config";
 import dotenv from "dotenv";
 import { event } from "node-event-test-package/client";
 import http from "http";
-import kafkaConfig from "./config.kafka";
+// import kafkaConfig from "./config.kafka";
 import models from "./src/models";
-
-//import txqConfig from "./config.txq";
+import txqConfig from "./config.txq";
 
 dotenv.config();
 
@@ -28,7 +27,7 @@ platform.init(config).then(async () => {
 
   models.init();
 
-  await event.init(kafkaConfig);
+  await event.init(txqConfig);
 
   const pushgatewayConfig = {
     url: config.pushGatewayNodeEvents.url,

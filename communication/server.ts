@@ -5,16 +5,15 @@ import dotenv from "dotenv";
 import { event } from "node-event-test-package/client";
 import express from "express";
 import http from "http";
-import kafkaConfig from "./config.kafka";
+// import kafkaConfig from "./config.kafka";
 import session from "./test_chat/session";
 import testChat from "./test_chat/testChat";
-
-//import txqConfig from "./config.txq";
+import txqConfig from "./config.txq";
 
 dotenv.config();
 
 const startServer = async () => {
-  await event.init(kafkaConfig);
+  await event.init(txqConfig);
 
   const mainApp = express();
 
