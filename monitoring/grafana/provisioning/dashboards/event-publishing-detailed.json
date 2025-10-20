@@ -154,13 +154,13 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum(kafka_backlog_events_total)",
+          "expr": "sum(backlog_events_total)",
           "interval": "",
           "legendFormat": "Backlog Size",
           "refId": "A"
         }
       ],
-      "title": "🔴 Kafka Backlog Size",
+      "title": "🔴 Backlog Size",
       "type": "stat"
     },
     {
@@ -268,7 +268,7 @@
       },
       "id": 106,
       "panels": [],
-      "title": "📊 Kafka Backlog Monitoring",
+      "title": "📊 Backlog Monitoring",
       "type": "row"
     },
     {
@@ -353,13 +353,13 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "kafka_backlog_events_total",
+          "expr": "backlog_events_total",
           "interval": "",
           "legendFormat": "Backlog Events",
           "refId": "A"
         }
       ],
-      "title": "⏱️ Kafka Backlog Over Time",
+      "title": "⏱️ Backlog Over Time",
       "type": "timeseries"
     },
     {
@@ -460,7 +460,7 @@
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "increase(kafka_backlog_events_total[5m]) / 300",
+          "expr": "increase(backlog_events_total[5m]) / 300",
           "interval": "",
           "legendFormat": "Backlog Growth Rate",
           "refId": "A"
