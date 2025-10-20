@@ -27,7 +27,7 @@
     "@opentelemetry/semantic-conventions": "^1.36.0",
     "googleapis": "^148.0.0",
     "jsonwebtoken": "^9.0.2",
-    "node-event-test-package": "^1.1.49",
+    "node-event-test-package": "^1.1.56",
     "openai": "^4.79.4",
     "puppeteer": "^24.1.0",
     "socket.io": "^4.8.1"
