@@ -58,7 +58,7 @@ async function addConversation({
       content,
     });
   } else {
-    await event.publish("AI_MESSAGED", {
+    await event.publish("AI_RESPONDED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,
