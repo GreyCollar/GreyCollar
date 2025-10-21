@@ -98,7 +98,7 @@ const setup = async (io: Server) => {
     console.error("Socket error:", err);
   });
 
-  await event.subscribe<{ sessionId: string; content: string }>("AI_RESPONDED", ({ sessionId, content }) => {
+  await event.subscribe<{ sessionId: string; content: string }>("AI_ASSISTANT_MESSAGED", ({ sessionId, content }) => {
     console.log("subscribed AI_MESSAGED", sessionId, content);
     const socketId = sockets[sessionId];
     if (socketId) {
