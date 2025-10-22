@@ -10,7 +10,7 @@ export const options = {
     scenarios: {
       executor: 'constant-vus',
       vus: 250,
-      duration: "1h",
+      duration: "15m",
     },
   },
 };
