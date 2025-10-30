@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: canmingir/greycollar:latest
+          tags: |
+            canmingir/greycollar:land-${{ github.run_id }}
+            canmingir/greycollar:latest
           context: .
-
-
