@@ -24,19 +24,19 @@ const config = {
     protocol: "https",
   },
   pushGateway: {
-    url: "http://52.191.251.120:9091",
+    url: "http://98.88.24.46:9091",
     jobName: "greycollar-database",
     instance: "default",
     interval: 15000,
   },
   pushGateWayOpenTelemetry: {
-    url: "http://52.191.251.120:9091",
+    url: "http://98.88.24.46:9091",
     jobName: "greycollar-opentelemetry",
     instance: "default",
     interval: 15000,
   },
   pushGatewayNodeEvents: {
-    url: "http://52.191.251.120:9091",
+    url: "http://98.88.24.46:9091",
     jobName: "greycollar-api",
     instance: "node-events",
     interval: 15000,
