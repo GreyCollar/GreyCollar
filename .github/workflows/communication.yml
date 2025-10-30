@@ -30,20 +30,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: canmingir/communication:land-${{ github.run_id }}
+          tags: |
+            canmingir/communication:land-${{ github.run_id }}
+            canmingir/communication:latest
           context: ./communication
 
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - uses: azure/container-apps-deploy-action@v2
-        with:
-          registryUsername: canmingir
-          registryUrl: registry.hub.docker.com
-          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: communication-land
-          resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/communication:land-${{ github.run_id }}
 

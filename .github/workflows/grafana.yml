@@ -26,20 +26,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: canmingir/grafana:${{ github.run_id }}
+          tags: |
+            canmingir/grafana:${{ github.run_id }}
+            canmingir/grafana:latest
           context: ./monitoring/grafana
 
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - uses: azure/container-apps-deploy-action@v2
-        with:
-          registryUsername: canmingir
-          registryUrl: registry.hub.docker.com
-          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: grafana
-          resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/grafana:${{ github.run_id }}
 
