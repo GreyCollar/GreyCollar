@@ -16,9 +16,7 @@
             "label": "Check Product Availability",
             "icon": "mdi:check"
           },
-          "next": [
-            "51dca395-1d90-4a28-9bbc-233de9c1a207"
-          ],
+          "next": ["51dca395-1d90-4a28-9bbc-233de9c1a207"],
           "createdAt": "2025-06-19T06:02:00Z"
         },
         {
@@ -29,12 +27,8 @@
             "label": "Make Decision",
             "icon": "mdi:decision"
           },
-          "true": [
-            "024cf548-ebfe-4f0f-910f-e1e43a8b8ea2"
-          ],
-          "false": [
-            "5be22de7-9673-448d-a1b5-dc23a8789b5c"
-          ],
+          "true": ["024cf548-ebfe-4f0f-910f-e1e43a8b8ea2"],
+          "false": ["5be22de7-9673-448d-a1b5-dc23a8789b5c"],
           "createdAt": "2025-06-19T06:02:00Z"
         },
         {
@@ -155,6 +149,42 @@
             }
           ]
         }
+      }
+    ]
+  },
+  {
+    "id": "d9cb119c-c764-4e33-ac09-ded7a491b946",
+    "description": "List emails from https://nucleoid.com/domain-ownership.html website",
+    "steps": [
+      {
+        "id": "e511963e-5d58-407d-b1d1-63322dd64df7",
+        "taskId": "c63393d9-f83e-4d33-8ec2-90de17357b4a",
+        "action": "PLATFORM:scrape_website",
+        "status": "COMPLETED",
+        "parameters": {
+          "url": "https://nucleoid.com/domain-ownership.html"
+        },
+        "comment": "Scrape the website to extract the list of emails",
+        "result": "\n        URL: https://nucleoid.com/domain-ownership.html\n        Title: \n        Content: This domain \"nucleoid.com\" is owned by Can Mingir for Nucleoid Ltd. Co. Contact: canmingir@nucleoid.com Phone: (914) 525-5929 Address: 2972 Webb Bridge Rd, Alpharetta, GA 30009, United States\n      "
+      },
+      {
+        "id": "e31e2f87-1fb5-4ed3-9fb3-0111706fb100",
+        "taskId": "c63393d9-f83e-4d33-8ec2-90de17357b4a",
+        "action": "PLATFORM:llm",
+        "status": "COMPLETED",
+        "parameters": {
+          "message": "Extract the email addresses from the scraped website content:\n\nThis domain \"nucleoid.com\" is owned by Can Mingir for Nucleoid Ltd. Co. Contact: canmingir@nucleoid.com Phone: (914) 525-5929 Address: 2972 Webb Bridge Rd, Alpharetta, GA 30009, United States"
+        },
+        "comment": "Extract the email addresses from the scraped website content",
+        "result": "[\"canmingir@nucleoid.com\"]"
+      },
+      {
+        "id": "3ea13ed0-9afd-4e54-bdea-f979b9d72828",
+        "taskId": "c63393d9-f83e-4d33-8ec2-90de17357b4a",
+        "action": "PLATFORM:complete",
+        "status": "COMPLETED",
+        "parameters": {},
+        "comment": "Complete the task"
       }
     ]
   }
