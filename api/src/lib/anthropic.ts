@@ -1,17 +1,18 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { MessageParam } from "@anthropic-ai/sdk/resources/messages/messages.mjs";
 
-
 const apiKey = process.env.ANTHROPIC_API_KEY;
 if (!apiKey || apiKey.trim() === "") {
-  throw new Error("Missing ANTHROPIC_API_KEY environment variable. Please set it to your Anthropic API key.");
+  throw new Error(
+    "Missing ANTHROPIC_API_KEY environment variable. Please set it to your Anthropic API key."
+  );
 }
 const anthropic = new Anthropic({
   apiKey,
 });
 
 async function generate({
-  model = "claude-3-5-sonnet-20241022",
+  model = "claude-3-5-haiku-20241022",
   messages = [],
   temperature = 0,
   max_tokens = 2048,
@@ -55,7 +56,7 @@ async function generate({
   if (content) {
     const textContent = content
       .filter((block) => block.type === "text")
-      .map((block) => block.text)
+      .map((block) => (block.type === "text" ? block.text : ""))
       .join("")
       .replace(/^```json\s*/i, "")
       .replace(/^```\s*/i, "")
@@ -67,8 +68,9 @@ async function generate({
     } catch (err) {
       throw new Error(
         "Failed to parse Claude response as JSON: " +
-        (err instanceof Error ? err.message : String(err)) +
-        "\nResponse content:\n" + textContent
+          (err instanceof Error ? err.message : String(err)) +
+          "\nResponse content:\n" +
+          textContent
       );
     }
   } else {
