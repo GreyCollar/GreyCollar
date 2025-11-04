@@ -28,7 +28,12 @@ platform.init(config).then(async () => {
 
   models.init();
 
-  await event.init(kafkaConfig);
+  await event.init({
+    type: "inMemory",
+    host: "localhost",
+    protocol: "http",
+    port: 8080,
+  });
 
   const pushgatewayConfig = {
     url: config.pushGatewayNodeEvents.url,
