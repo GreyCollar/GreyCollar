@@ -185,6 +185,19 @@ async function task({ taskId }: { taskId: string }) {
   if (action === "PLATFORM:complete") {
     const steps = await taskFn.listSteps({ taskId });
 
+    const hasCompleteStep = steps.some(
+      (step) => step.action === "PLATFORM:complete"
+    );
+
+    if (!hasCompleteStep) {
+      await taskFn.addStep({
+        taskId,
+        action,
+        parameters,
+        comment,
+      });
+    }
+
     let result;
 
     if (steps.length) {

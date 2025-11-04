@@ -141,16 +141,19 @@ async function updateStep({
   result: string;
   status: "IN_PROGRESS" | "SUPERVISED_NEEDED" | "COMPLETED" | "FAILED";
 }) {
-  const { taskId, action, parameters } = await Step.findOne({
+  const stepInstance = await Step.findOne({
     where: { id: stepId },
   });
-  const step = await Step.update(
-    {
-      result,
-      status,
-    },
-    { where: { id: stepId } }
-  );
+
+  if (!stepInstance) {
+    throw new Error(`Step not found: ${stepId}`);
+  }
+
+  const { taskId, action, parameters } = stepInstance.toJSON();
+
+  stepInstance.result = result;
+  stepInstance.status = status;
+  await stepInstance.save();
 
   if (status === "COMPLETED") {
     await event.publish("STEP_COMPLETED", {
@@ -162,7 +165,7 @@ async function updateStep({
     });
   }
 
-  return step;
+  return stepInstance.toJSON();
 }
 
 async function listSteps({ taskId }: { taskId: string }) {
@@ -188,4 +191,3 @@ export default {
   updateStep,
   listSteps,
 };
-
