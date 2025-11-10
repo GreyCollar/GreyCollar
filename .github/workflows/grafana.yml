@@ -18,7 +18,7 @@ on:
 
 jobs:
   build-and-push:
-    uses: ./.github/workflows/reusable-docker-build.yml
+    uses: ./.github/workflows/deploy.yml
     with:
       service_name: grafana
       environment: ${{ github.event.inputs.environment }}
