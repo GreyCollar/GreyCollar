@@ -21,7 +21,7 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     with:
       service_name: greycollar
-      environment: ${{ github.event.inputs.environment }}
+      environment: ${{ startsWith(github.ref, 'refs/tags/') && 'live' || github.event.inputs.environment || 'land' }}
       context_path: .
       install_dependencies: true
       dependency_path: .
