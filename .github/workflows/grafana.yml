@@ -5,6 +5,8 @@ on:
     paths:
       - 'monitoring/grafana/**'
       - '.github/workflows/grafana.yml'
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       environment:

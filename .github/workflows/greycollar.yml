@@ -6,6 +6,8 @@ on:
       - 'dashboard/**'
       - 'api/**'
       - '.github/workflows/greycollar.yml'
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       environment:

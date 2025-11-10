@@ -5,6 +5,8 @@ on:
     paths:
       - 'communication/**'
       - '.github/workflows/communication.yml'
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       environment:
