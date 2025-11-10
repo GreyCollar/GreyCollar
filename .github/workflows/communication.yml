@@ -2,48 +2,28 @@ name: Communication
 on:
   push:
     branches: [main]
+    paths:
+      - 'communication/**'
+      - '.github/workflows/communication.yml'
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        type: choice
+        options:
+          - land
+          - live
+        default: 'land'
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
-
-      - name: Install Dependencies
-        run: |
-          cd communication
-          npm ci
-
-      - name: Log in to Docker Hub
-        env:
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-        uses: docker/login-action@v1
-        with:
-          username: canmingir
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: canmingir/communication:land-${{ github.run_id }}
-          context: ./communication
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - uses: azure/container-apps-deploy-action@v2
-        with:
-          registryUsername: canmingir
-          registryUrl: registry.hub.docker.com
-          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: communication-land
-          resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/communication:land-${{ github.run_id }}
-
+    uses: ./.github/workflows/reusable-docker-build.yml
+    with:
+      service_name: communication
+      environment: ${{ github.event.inputs.environment }}
+      context_path: ./communication
+      install_dependencies: true
+      dependency_path: communication
+    secrets:
+      DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      DOCKER_USERNAME: canmingir
