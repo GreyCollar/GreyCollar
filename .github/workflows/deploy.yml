@@ -48,7 +48,7 @@ on:
         default: canmingir
     secrets:
       DOCKER_ACCESS_TOKEN:
-        required: true
+        required: false
       DOCKER_USERNAME:
         required: false
 
