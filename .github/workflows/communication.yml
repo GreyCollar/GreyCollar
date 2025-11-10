@@ -6,25 +6,21 @@ on:
       - 'communication/**'
       - '.github/workflows/communication.yml'
   workflow_dispatch:
-
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        type: choice
+        options:
+          - land
+          - live
+        default: 'land'
 jobs:
-  build-and-push-land:
+  build-and-push:
     uses: ./.github/workflows/reusable-docker-build.yml
     with:
       service_name: communication
-      environment: land
-      context_path: ./communication
-      install_dependencies: true
-      dependency_path: communication
-    secrets:
-      DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-      DOCKER_USERNAME: canmingir
-
-  build-and-push-live:
-    uses: ./.github/workflows/reusable-docker-build.yml
-    with:
-      service_name: communication
-      environment: live
+      environment: ${{ github.event.inputs.environment }}
       context_path: ./communication
       install_dependencies: true
       dependency_path: communication
