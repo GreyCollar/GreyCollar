@@ -17,7 +17,7 @@ on:
         default: 'land'
 
 jobs:
-  build-and-push:
+  grafana:
     uses: ./.github/workflows/deploy.yml
     with:
       service_name: grafana

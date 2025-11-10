@@ -16,7 +16,7 @@ on:
           - live
         default: 'land'
 jobs:
-  build-and-push:
+  communication:
     uses: ./.github/workflows/deploy.yml
     with:
       service_name: communication

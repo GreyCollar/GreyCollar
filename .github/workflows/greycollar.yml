@@ -17,7 +17,7 @@ on:
           - live
         default: 'land'
 jobs:
-  build-and-push:
+  greycollar:
     uses: ./.github/workflows/deploy.yml
     with:
       service_name: greycollar

@@ -19,7 +19,7 @@ on:
         default: 'land'
 
 jobs:
-  build-and-push:
+  prometheus:
     uses: ./.github/workflows/deploy.yml
     with:
       service_name: prometheus
