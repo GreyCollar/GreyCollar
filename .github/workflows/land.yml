@@ -3,60 +3,25 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
-
-      - name: Set config file
-        run: |
-          cp ./dashboard/config.land.js ./dashboard/config.js && cp ./api/config.land.ts ./api/config.ts
-
-      - name: Update version.json
-        run: |
-          echo "{ \"version\": \"$BRANCH\" }" > ./dashboard/src/version.json
-
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Check lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-
-      - name: Log in to Docker Hub
-        env:
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-        uses: docker/login-action@v1
-        with:
-          username: canmingir
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: canmingir/greycollar:land-${{ github.run_id }}
-          context: .
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - uses: azure/container-apps-deploy-action@v2
-        with:
-          registryUsername: canmingir
-          registryUrl: registry.hub.docker.com
-          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: greycollar-land
-          resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/greycollar:land-${{ github.run_id }}
-          targetPort: 3000
-          ingress: "external"
+    uses: ./.github/workflows/reusable-docker-build.yml
+    with:
+      image_name: greycollar
+      context_path: .
+      tag_prefix: land-
+      install_dependencies: true
+      dependency_path: .
+      run_lint: true
+      run_build: true
+      setup_config: true
+      config_source: ./dashboard/config.land.js
+      config_dest: ./dashboard/config.js
+      api_config_source: ./api/config.land.ts
+      api_config_dest: ./api/config.ts
+      update_version: true
+      version_file_path: ./dashboard/src/version.json
+    secrets:
+      DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      DOCKER_USERNAME: canmingir

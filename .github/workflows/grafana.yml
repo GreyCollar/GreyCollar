@@ -2,44 +2,28 @@ name: Grafana
 on:
   push:
     branches: [main]
+    paths:
+      - 'monitoring/grafana/**'
+      - '.github/workflows/grafana.yml'
   workflow_dispatch:
+
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
+  build-and-push-land:
+    uses: ./.github/workflows/reusable-docker-build.yml
+    with:
+      service_name: grafana
+      environment: land
+      context_path: ./monitoring/grafana
+    secrets:
+      DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      DOCKER_USERNAME: canmingir
 
-
-      - name: Log in to Docker Hub
-        env:
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-        uses: docker/login-action@v1
-        with:
-          username: canmingir
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: canmingir/grafana:${{ github.run_id }}
-          context: ./monitoring/grafana
-
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - uses: azure/container-apps-deploy-action@v2
-        with:
-          registryUsername: canmingir
-          registryUrl: registry.hub.docker.com
-          registryPassword: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-          containerAppName: grafana
-          resourceGroup: NucGroup
-          imageToDeploy: registry.hub.docker.com/canmingir/grafana:${{ github.run_id }}
-
+  build-and-push-live:
+    uses: ./.github/workflows/reusable-docker-build.yml
+    with:
+      service_name: grafana
+      environment: live
+      context_path: ./monitoring/grafana
+    secrets:
+      DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+      DOCKER_USERNAME: canmingir

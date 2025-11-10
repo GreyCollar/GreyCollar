@@ -1,21 +1,25 @@
-name: Communication
+name: GreyCollar
 on:
   push:
     branches: [main]
     paths:
-      - 'communication/**'
-      - '.github/workflows/communication.yml'
+      - 'dashboard/**'
+      - 'api/**'
+      - '.github/workflows/greycollar.yml'
   workflow_dispatch:
 
 jobs:
   build-and-push-land:
     uses: ./.github/workflows/reusable-docker-build.yml
     with:
-      service_name: communication
+      service_name: greycollar
       environment: land
-      context_path: ./communication
+      context_path: .
       install_dependencies: true
-      dependency_path: communication
+      dependency_path: .
+      run_lint: true
+      run_build: true
+      setup_config: true
     secrets:
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       DOCKER_USERNAME: canmingir
@@ -23,11 +27,14 @@ jobs:
   build-and-push-live:
     uses: ./.github/workflows/reusable-docker-build.yml
     with:
-      service_name: communication
+      service_name: greycollar
       environment: live
-      context_path: ./communication
+      context_path: .
       install_dependencies: true
-      dependency_path: communication
+      dependency_path: .
+      run_lint: true
+      run_build: true
+      setup_config: true
     secrets:
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       DOCKER_USERNAME: canmingir
