@@ -24,6 +24,7 @@ jobs:
       context_path: ./communication
       install_dependencies: true
       dependency_path: communication
+      setup_config: true
     secrets:
       DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
       DOCKER_USERNAME: canmingir
