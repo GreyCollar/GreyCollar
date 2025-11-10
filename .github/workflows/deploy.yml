@@ -43,9 +43,9 @@ on:
         description: 'Whether to setup config files for the environment'
     secrets:
       DOCKER_ACCESS_TOKEN:
-        required: true
+        required: false
       DOCKER_USERNAME:
-        required: true
+        required: false
 
 jobs:
   build-and-push:
