@@ -6,6 +6,7 @@ import Responsibility from "../schemas/Responsibility";
 import Session from "../models/Session";
 import Supervising from "../models/Supervising";
 import agent from "../functions/agent";
+import { event } from "node-event-test-package/client";
 import express from "express";
 import schemas from "../schemas";
 

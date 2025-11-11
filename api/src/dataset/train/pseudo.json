@@ -1,0 +1,23 @@
+[
+  {
+    "content": "Check product availability, if not exist, create order.",
+    "pseudo": "BEGIN_CONTEXT\nIF Product.Available == FALSE THEN\n    Order.Create()\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE"
+  },
+  {
+    "content": "Check the parking lot; if there are no spaces available, put the person in line.",
+    "pseudo": "BEGIN_CONTEXT\nIF ParkingLot.Spaces == 0 THEN\n    Queue.Add(Person)\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE"
+  },
+  {
+    "content": "Human beings are mortal.",
+    "pseudo": "BEGIN_CONTEXT\nIF Entity.Type == Human THEN\n    Entity.IsMortal = TRUE\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE"
+  },
+  {
+    "content": "If it rains, the ground becomes wet.",
+    "pseudo": "BEGIN_CONTEXT\nIF Weather == Rain THEN\n    Ground.State = Wet\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE"
+  },
+  {
+    "content": "If an employee works more than 40 hours in a week, they receive overtime pay.",
+    "pseudo": "BEGIN_CONTEXT\nIF Employee.WeeklyHours > 40 THEN\n    Employee.Pay += CalculateOvertime(Employee)\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE"
+  }
+]
+

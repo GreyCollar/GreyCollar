@@ -3,6 +3,7 @@
     "title": "Product Stock Management",
     "description": "If product is not available, create order. if available reduce product count.",
     "content": "If product is not available, create order. if available reduce product count.",
+    "pseudo": "BEGIN_CONTEXT\nIF Product.Available == FALSE THEN\n    Order.Create()\nEND_IF\nEND_CONTEXT\n\nEND_MESSAGE",
     "history": [
       {
         "content": "If product is not available, create order. if available reduce product count.",

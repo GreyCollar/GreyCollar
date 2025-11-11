@@ -20,6 +20,10 @@ const Responsibility = sequelize.define("Responsibility", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  pseudo: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   colleagueId: {
     type: DataTypes.UUID,
     allowNull: false,

@@ -9,6 +9,8 @@ type NodeType = {
   };
   type: string;
   next?: string[] | null;
+  true?: string[] | null;
+  false?: string[] | null;
 };
 
 async function getWithNodes(id: string) {
@@ -89,10 +91,37 @@ async function get({ responsibilityId }: { responsibilityId: string }) {
   return responsibility.toJSON();
 }
 
+async function patch({
+  responsibilityId,
+  pseudo,
+  title,
+  description,
+}: {
+  responsibilityId: string;
+  pseudo?: string;
+  title?: string;
+  description?: string;
+}) {
+  const responsibility = await Responsibility.findByPk(responsibilityId);
+
+  if (!responsibility) {
+    throw new NotFoundError();
+  }
+
+  await responsibility.update({
+    ...(pseudo && { pseudo }),
+    ...(title && { title }),
+    ...(description && { description }),
+  });
+
+  return responsibility.toJSON();
+}
+
 export default {
   getWithNodes,
   upsert,
   remove,
   list,
   get,
+  patch,
 };

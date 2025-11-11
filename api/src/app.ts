@@ -13,6 +13,7 @@ import messages from "./routes/messages";
 import organizations from "./routes/organizations";
 import projects from "./routes/projects";
 import responsibilities from "./routes/responsibilities";
+import responsibilityFn from "./functions/responsibility";
 import sessions from "./routes/sessions";
 import statistics from "./routes/statistics";
 import supervisings from "./routes/supervisings";

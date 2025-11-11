@@ -8,7 +8,7 @@ const Responsibility = {
     nodes: z
       .array(
         z.object({
-          id: z.string().uuid(),
+          id: z.string(),
           properties: z
             .object({
               label: z.string(),
@@ -16,8 +16,9 @@ const Responsibility = {
             })
             .optional(),
           type: z.string(),
-          responsibilityId: z.string().uuid().optional(),
-          dependencyId: z.string().uuid().nullish(),
+          next: z.array(z.string()).nullish(),
+          true: z.array(z.string()).nullish(),
+          false: z.array(z.string()).nullish(),
         })
       )
       .optional(),
@@ -48,4 +49,3 @@ const Responsibility = {
 };
 
 export default Responsibility;
-
