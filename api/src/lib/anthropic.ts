@@ -1,7 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk";
 import { MessageParam } from "@anthropic-ai/sdk/resources/messages/messages.mjs";
 
-
 const apiKey = process.env.ANTHROPIC_API_KEY;
 if (!apiKey || apiKey.trim() === "") {
   throw new Error("Missing ANTHROPIC_API_KEY environment variable. Please set it to your Anthropic API key.");
@@ -11,7 +10,7 @@ const anthropic = new Anthropic({
 });
 
 async function generate({
-  model = "claude-3-5-sonnet-20241022",
+  model = "claude-sonnet-4-20250514",
   messages = [],
   temperature = 0,
   max_tokens = 2048,
