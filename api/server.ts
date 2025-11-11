@@ -6,7 +6,7 @@ import config from "./config";
 import dotenv from "dotenv";
 import { event } from "node-event-test-package/client";
 import http from "http";
-import kafkaConfig from "./config.kafka";
+//import kafkaConfig from "./config.kafka";
 import models from "./src/models";
 
 //import txqConfig from "./config.txq";
@@ -28,7 +28,12 @@ platform.init(config).then(async () => {
 
   models.init();
 
-  await event.init(kafkaConfig);
+  await event.init({
+    type: "inMemory",
+    host: "localhost",
+    protocol: "http",
+    port: 8080,
+  });
 
   const pushgatewayConfig = {
     url: config.pushGatewayNodeEvents.url,
@@ -38,7 +43,7 @@ platform.init(config).then(async () => {
   };
 
   try {
-    event.startPushgateway(pushgatewayConfig);
+    // event.startPushgateway(pushgatewayConfig);
     console.log(
       `Started automatic metrics pushing to pushgateway: ${pushgatewayConfig.url}`
     );

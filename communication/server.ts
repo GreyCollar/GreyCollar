@@ -5,17 +5,24 @@ import dotenv from "dotenv";
 import { event } from "node-event-test-package/client";
 import express from "express";
 import http from "http";
-import kafkaConfig from "./config.kafka";
 import session from "./test_chat/session";
 import testChat from "./test_chat/testChat";
+
+//import kafkaConfig from "./config.kafka";
+
+
 
 //import txqConfig from "./config.txq";
 
 dotenv.config();
 
 const startServer = async () => {
-  await event.init(kafkaConfig);
-
+  await event.init({
+    type: "inMemory",
+    host: "localhost",
+    protocol: "http",
+    port: 8080,
+  });
   const mainApp = express();
 
   const testApp = express();
