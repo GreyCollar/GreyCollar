@@ -10,7 +10,7 @@
     "dev:api": "cd ./api && npm run dev",
     "dev:dashboard": "cd ./dashboard && npm run dev",
     "dev:main": "npm start",
-    "dev": "concurrently -n \"main,api,dashboard\" \"npm start\" \"npm run dev:api\" \"npm run dev:dashboard\" \"npm run dev:communication\"",
+    "dev": "concurrently -n \"main,api,dashboard,event_listener\" \"npm start\" \"npm run dev:api\" \"npm run dev:dashboard\" \"npm run dev:communication\" \"npx node-event-test-package\"",
     "install:api": "cd ./api && npm install",
     "install:dashboard": "cd ./dashboard && npm install",
     "install:communication": "cd ./communication && npm install",
@@ -34,7 +34,6 @@
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "http-proxy-middleware": "^3.0.1",
-    "node-event-test-package": "^1.1.56"
+    "http-proxy-middleware": "^3.0.1"
   }
 }
