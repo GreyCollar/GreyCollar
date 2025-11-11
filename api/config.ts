@@ -30,27 +30,27 @@ const config = {
     region: "us-east-1",
   },
   event: {
-    type: "inMemory",
-    host: "event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
-    protocol: "https",
+    type: "inMemory" as const,
+    host: "localhost",
+    protocol: "http" as const,
+    port: 8080,
   },
-  pushGateway: {
-    url: "http://localhost:9091",
-    jobName: "greycollar-database",
-    instance: "default",
+  metrics: {
+    enabled: false,
     interval: 15000,
-  },
-  pushGateWayOpenTelemetry: {
     url: "http://localhost:9091",
-    jobName: "greycollar-opentelemetry",
-    instance: "default",
-    interval: 15000,
-  },
-  pushGatewayNodeEvents: {
-    url: "http://localhost:9091",
-    jobName: "greycollar-api",
-    instance: "node-events",
-    interval: 15000,
+    pushGateway: {
+      jobName: "greycollar-database",
+      instance: "default",
+    },
+    pushGateWayOpenTelemetry: {
+      jobName: "greycollar-opentelemetry",
+      instance: "default",
+    },
+    pushGatewayNodeEvents: {
+      jobName: "greycollar-api",
+      instance: "node-events",
+    },
   },
 };
 

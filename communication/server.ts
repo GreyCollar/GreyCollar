@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import config from "./config";
 import { createApp } from "./app";
 import { createProxyMiddleware } from "http-proxy-middleware";
 import dotenv from "dotenv";
@@ -9,20 +10,12 @@ import session from "./test_chat/session";
 import testChat from "./test_chat/testChat";
 
 //import kafkaConfig from "./config.kafka";
-
-
-
 //import txqConfig from "./config.txq";
 
 dotenv.config();
 
 const startServer = async () => {
-  await event.init({
-    type: "inMemory",
-    host: "localhost",
-    protocol: "http",
-    port: 8080,
-  });
+  await event.init(config.event);
   const mainApp = express();
 
   const testApp = express();

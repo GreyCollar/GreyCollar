@@ -5,6 +5,7 @@ import * as platform from "@canmingir/link-express";
 import agent from "./functions/agent";
 import colleagues from "./routes/colleagues";
 import communications from "./routes/communications";
+import config from "../config";
 import engines from "./routes/engines";
 import { event } from "node-event-test-package/client";
 import integrations from "./routes/integrations";
@@ -35,7 +36,9 @@ const { authorization } = platform;
 
 const app = platform.express();
 
-app.use(telemetryMiddleware());
+if (config.metrics.enabled) {
+  app.use(telemetryMiddleware());
+}
 
 app.use(authorization.verify);
 app.use(authorization.authorize("ADMIN"));

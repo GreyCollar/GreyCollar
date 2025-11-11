@@ -16,7 +16,7 @@ import { metrics } from "@opentelemetry/api";
 
 class PushgatewayExporter {
   private serializer = new PrometheusSerializer();
-  private url = `${config.pushGateWayOpenTelemetry.url}/metrics/job/${config.pushGateWayOpenTelemetry.jobName}/instance/${config.pushGateWayOpenTelemetry.instance}`;
+  private url = `${config.metrics.url}/metrics/job/${config.metrics.pushGateWayOpenTelemetry.jobName}/instance/${config.metrics.pushGateWayOpenTelemetry.instance}`;
 
   async export(metrics: any, resultCallback: (result: any) => void) {
     try {
@@ -42,7 +42,7 @@ const meterProvider = new MeterProvider({
     new PrometheusExporter(),
     new PeriodicExportingMetricReader({
       exporter: new PushgatewayExporter() as any,
-      exportIntervalMillis: config.pushGateWayOpenTelemetry.interval,
+      exportIntervalMillis: config.metrics.interval,
     }),
   ],
 });

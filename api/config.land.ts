@@ -23,23 +23,22 @@ const config = {
     host: "event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
     protocol: "https",
   },
-  pushGateway: {
-    url: "http://98.88.24.46:9091",
-    jobName: "greycollar-database",
-    instance: "default",
+  metrics: {
+    enabled: true,
     interval: 15000,
-  },
-  pushGateWayOpenTelemetry: {
     url: "http://98.88.24.46:9091",
-    jobName: "greycollar-opentelemetry",
-    instance: "default",
-    interval: 15000,
-  },
-  pushGatewayNodeEvents: {
-    url: "http://98.88.24.46:9091",
-    jobName: "greycollar-api",
-    instance: "node-events",
-    interval: 15000,
+    pushGateway: {
+      jobName: "greycollar-database",
+      instance: "default",
+    },
+    pushGateWayOpenTelemetry: {
+      jobName: "greycollar-opentelemetry",
+      instance: "default",
+    },
+    pushGatewayNodeEvents: {
+      jobName: "greycollar-api",
+      instance: "node-events",
+    },
   },
 };
 
