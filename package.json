@@ -10,7 +10,7 @@
     "dev:api": "cd ./api && npm run dev",
     "dev:dashboard": "cd ./dashboard && npm run dev",
     "dev:main": "npm start",
-    "dev": "concurrently -n \"main,api,dashboard,event_listener\" \"npm start\" \"npm run dev:api\" \"npm run dev:dashboard\" \"npm run dev:communication\" \"npx node-event-test-package\"",
+    "dev": "concurrently -n \"main,api,dashboard\" \"npm start\" \"npm run dev:api\" \"npm run dev:dashboard\" \"npm run dev:communication\"",
     "install:api": "cd ./api && npm install",
     "install:dashboard": "cd ./dashboard && npm install",
     "install:communication": "cd ./communication && npm install",
