@@ -1,0 +1,98 @@
+name: Reusable Docker Build and Push
+
+on:
+  workflow_call:
+    inputs:
+      service_name:
+        required: true
+        type: string
+        description: 'Service name (e.g., greycollar, communication, prometheus, grafana)'
+      environment:
+        required: true
+        type: string
+        description: 'Environment: live or land'
+      context_path:
+        required: false
+        type: string
+        default: '.'
+        description: 'Docker build context path'
+      install_dependencies:
+        required: false
+        type: boolean
+        default: false
+        description: 'Whether to run npm ci'
+      dependency_path:
+        required: false
+        type: string
+        default: '.'
+        description: 'Path where to run npm ci'
+      run_lint:
+        required: false
+        type: boolean
+        default: false
+        description: 'Whether to run linting'
+      run_build:
+        required: false
+        type: boolean
+        default: false
+        description: 'Whether to run npm build'
+      setup_config:
+        required: false
+        type: boolean
+        default: false
+        description: 'Whether to setup config files for the environment'
+      docker_username:
+        required: false
+        type: string
+        description: 'Docker username'
+        default: canmingir
+    secrets:
+      DOCKER_ACCESS_TOKEN:
+        required: false
+      DOCKER_USERNAME:
+        required: false
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v4
+
+      - name: Set config files
+        if: ${{ inputs.setup_config }}
+        run: |
+          cp ./dashboard/config.${{ inputs.environment }}.js ./dashboard/config.js
+          cp ./api/config.${{ inputs.environment }}.ts ./api/config.ts
+
+      - name: Update version.json
+        if: ${{ inputs.setup_config }}
+        run: |
+          echo "{ \"version\": \"${{ github.ref_name }}\" }" > ./dashboard/src/version.json
+
+      - name: Install Dependencies
+        if: ${{ inputs.install_dependencies }}
+        run: |
+          cd ${{ inputs.dependency_path }}
+          npm ci
+
+      - name: Check lint
+        if: ${{ inputs.run_lint }}
+        run: npm run lint
+
+      - name: Build
+        if: ${{ inputs.run_build }}
+        run: npm run build
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ inputs.docker_username || secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ inputs.docker_username || secrets.DOCKER_USERNAME }}/${{ inputs.service_name }}-${{ inputs.environment }}:latest
+          context: ${{ inputs.context_path }}
