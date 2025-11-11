@@ -31,7 +31,7 @@ class PushgatewayExporter {
       });
       resultCallback({ code: 0 });
     } catch (err) {
-      console.error("[Pushgateway] ❌ Push failed:", (err as Error).message);
+      // console.error("[Pushgateway] ❌ Push failed:", (err as Error).message);
       resultCallback({ code: 1, error: err as Error });
     }
   }
