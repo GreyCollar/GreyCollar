@@ -36,9 +36,7 @@ const { authorization } = platform;
 
 const app = platform.express();
 
-if (config.metrics.enabled) {
-  app.use(telemetryMiddleware());
-}
+app.use(telemetryMiddleware());
 
 app.use(authorization.verify);
 app.use(authorization.authorize("ADMIN"));
