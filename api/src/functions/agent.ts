@@ -460,7 +460,7 @@ async function chat({
 
     await taskFn.create({
       colleagueId,
-      description: responsibilityToTaskResponse.task.description,
+      description: responsibilityToTaskResponse.task,
       responsibilityId: responsibilityDecision.responsibilityId,
     });
 

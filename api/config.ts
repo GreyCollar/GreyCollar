@@ -5,9 +5,20 @@ const config = {
       jwt: {
         identifier: "id",
       },
-      tokenUrl: "https://github.com/login/oauth/access_token",
-      userUrl: "https://api.github.com/user",
-      clientId: "Ov23lihgDzlqJ1gnZxX3",
+      providers: {
+        github: {
+          tokenUrl: "https://github.com/login/oauth/access_token",
+          userUrl: "https://api.github.com/user",
+          clientId: "Ov23lihgDzlqJ1gnZxX3",
+          userIdentifier: "id",
+          userFields: {
+            name: "login",
+            displayName: "name",
+            avatarUrl: "avatar_url",
+            email: "email",
+          },
+        },
+      },
     },
   },
   postgres: {
@@ -19,9 +30,27 @@ const config = {
     region: "us-east-1",
   },
   event: {
-    type: "inMemory",
-    host: "event.gentleflower-99ef02e0.eastus.azurecontainerapps.io",
-    protocol: "https",
+    type: "inMemory" as const,
+    host: "localhost",
+    protocol: "http" as const,
+    port: 8080,
+  },
+  metrics: {
+    enabled: false,
+    interval: 15000,
+    url: "http://localhost:9091",
+    pushGateway: {
+      jobName: "greycollar-database",
+      instance: "default",
+    },
+    pushGateWayOpenTelemetry: {
+      jobName: "greycollar-opentelemetry",
+      instance: "default",
+    },
+    pushGatewayNodeEvents: {
+      jobName: "greycollar-api",
+      instance: "node-events",
+    },
   },
 };
 

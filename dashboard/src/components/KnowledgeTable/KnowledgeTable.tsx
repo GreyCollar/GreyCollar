@@ -1,4 +1,4 @@
-import { Label } from "@canmingir/link/minimal/components";
+import { Label } from "@canmingir/link/platform/components";
 
 import {
   Card,
@@ -15,7 +15,7 @@ import {
   Scrollbar,
   TableHeadCustom,
   TableSelectedAction,
-} from "@canmingir/link/minimal/components";
+} from "@canmingir/link/platform/components";
 import React, { useState } from "react";
 
 function KnowledgeTable({

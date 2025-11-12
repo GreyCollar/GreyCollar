@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import Chart from "react-apexcharts";
 import React from "react";
-import { useChart } from "@canmingir/link/minimal/components";
+import { useChart } from "@canmingir/link/platform/components";
 import { useMediaQuery } from "@mui/material";
 
 function UsageChart() {

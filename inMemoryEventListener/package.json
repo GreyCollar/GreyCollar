@@ -1,0 +1,9 @@
+{
+    "name": "in_memory_event.greycollar.ai",
+    "version": "1.0.0",
+    "description": "",
+    "author": "GreyCollar Team",
+    "scripts": {
+        "dev": "npx node-event-test-package"
+    }
+}

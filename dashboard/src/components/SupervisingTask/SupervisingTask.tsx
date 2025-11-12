@@ -12,7 +12,10 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { FormProvider, RHFTextField } from "@canmingir/link/minimal/components";
+import {
+  FormProvider,
+  RHFTextField,
+} from "@canmingir/link/platform/components";
 import React, { useState } from "react";
 
 const SupervisingTask = ({ open, setOpen, taskId, colleagueId }) => {

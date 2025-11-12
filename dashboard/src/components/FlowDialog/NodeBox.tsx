@@ -1,5 +1,5 @@
 import AnimatedNode from "./AnimatedNode";
-import { Iconify } from "@canmingir/link/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import LoadingNode from "./LoadingNode";
 import React from "react";
 

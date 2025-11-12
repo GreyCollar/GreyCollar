@@ -17,7 +17,7 @@
     "dotenv": "^16.4.5",
     "http-proxy-middleware": "^3.0.3",
     "jsonwebtoken": "^9.0.2",
-    "node-event-test-package": "^1.1.30",
+    "node-event-test-package": "^1.1.66",
     "react-event-test": "^1.7.0",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1",
@@ -26,7 +26,6 @@
   "devDependencies": {
     "@types/http-proxy-middleware": "^1.0.0",
     "@types/node": "^22.12.0",
-    "ngrok": "^5.0.0-beta.2",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"

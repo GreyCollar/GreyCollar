@@ -8,6 +8,9 @@ import { event } from "node-event-test-package/client";
 import http from "http";
 import models from "./src/models";
 
+//import kafkaConfig from "./config.kafka";
+//import txqConfig from "./config.txq";
+
 dotenv.config();
 
 process.on("uncaughtException", (err) => {
@@ -25,31 +28,15 @@ platform.init(config).then(async () => {
 
   models.init();
 
-  await event.init({
-    type: "kafka",
-    clientId: "greycollar",
-    brokers: ["20.55.19.45:9092"],
-    groupId: "greycollar",
-    // type: "inMemory",
-    // host: "localhost",
-    // protocol: "http",
-    // port: 8080,
-  });
+  await event.init(config.event);
 
-  const pushgatewayConfig = {
-    url: process.env.PUSHGATEWAY_URL || "http://localhost:9091",
-    jobName: process.env.PUSHGATEWAY_JOB || "greycollar-api",
-    instance: process.env.PUSHGATEWAY_INSTANCE || `node-events`,
-    interval: parseInt(process.env.PUSHGATEWAY_INTERVAL || "15000"),
-  };
-
-  try {
-    event.startPushgateway(pushgatewayConfig);
-    console.log(
-      `Started automatic metrics pushing to pushgateway: ${pushgatewayConfig.url}`
-    );
-  } catch (error) {
-    console.error("Failed to start pushgateway:", error);
+  if (config.metrics.enabled) {
+    event.startPushgateway({
+      url: config.metrics.url,
+      jobName: config.metrics.pushGatewayNodeEvents.jobName,
+      instance: config.metrics.pushGatewayNodeEvents.instance,
+      interval: config.metrics.interval,
+    });
   }
 
   server.listen(process.env.PORT || 4000, () => {

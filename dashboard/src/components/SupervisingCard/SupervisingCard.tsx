@@ -1,4 +1,4 @@
-import { Iconify } from "@nucleoidai/platform/minimal/components";
+import { Iconify } from "@canmingir/link/platform/components";
 import SupervisingChat from "../SupervisingChat";
 
 import {

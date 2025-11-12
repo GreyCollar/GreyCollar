@@ -1,4 +1,4 @@
-import { Label } from "@canmingir/link/minimal/components";
+import { Label } from "@canmingir/link/platform/components";
 import ReplyIcon from "@mui/icons-material/Reply";
 import SourcedAvatar from "../../components/SourcedAvatar/SourcedAvatar";
 import { fDateTime } from "../../utils/formatTime";

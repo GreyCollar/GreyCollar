@@ -58,7 +58,7 @@ async function addConversation({
       content,
     });
   } else {
-    await event.publish("SESSION_AI_MESSAGED", {
+    await event.publish("AI_ASSISTANT_MESSAGED", {
       colleagueId,
       sessionId,
       conversationId: conversation.id,
