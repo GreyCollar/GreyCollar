@@ -18,18 +18,19 @@ WORKDIR /app
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
-    RUN mkdir -p /app/oracle && \
-    wget https://download.oracle.com/otn_software/linux/instantclient/2326000/instantclient-basic-linux.x64-23.26.0.0.0.zip -O /tmp/instantclient.zip && \
-    unzip /tmp/instantclient.zip -d /app/oracle && \
-    mv /app/oracle/instantclient_23_26 /app/oracle/instantclient && \
-    rm /tmp/instantclient.zip
+#    RUN mkdir -p /app/oracle && \
+#    wget https://download.oracle.com/otn_software/linux/instantclient/2326000/instantclient-basic-linux.x64-23.26.0.0.0.zip -O /tmp/instantclient.zip && \
+#    unzip /tmp/instantclient.zip -d /app/oracle && \
+#    mv /app/oracle/instantclient_23_26 /app/oracle/instantclient && \
+#    rm /tmp/instantclient.zip
 
-    RUN mkdir -p /app/oracle/wallet && \
-    wget https://cdn.nucleoid.com/tmp/Wallet_GAS3P3TSBA5E6JCH_v2.zip -O /tmp/wallet.zip && \
-    unzip -j /tmp/wallet.zip -d /app/oracle/wallet && \
-    rm /tmp/wallet.zip
+#    RUN mkdir -p /app/oracle/wallet && \
+#    wget https://cdn.nucleoid.com/tmp/Wallet_GAS3P3TSBA5E6JCH_v2.zip -O /tmp/wallet.zip && \
+#    unzip -j /tmp/wallet.zip -d /app/oracle/wallet && \
+#    rm /tmp/wallet.zip
 
-ENV LD_LIBRARY_PATH=/app/oracle/instantclient
+#ENV LD_LIBRARY_PATH=/app/oracle/instantclient
+
 
 COPY package.json .
 COPY server.js .
