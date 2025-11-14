@@ -46,6 +46,10 @@ on:
         type: string
         description: 'Docker username'
         default: canmingir
+      config_paths:
+        required: false
+        type: string
+        description: 'Optional: Comma-separated paths for multiple configs (e.g., "./dashboard,./api")'
     secrets:
       DOCKER_ACCESS_TOKEN:
         required: false
@@ -62,8 +66,26 @@ jobs:
       - name: Set config files
         if: ${{ inputs.setup_config }}
         run: |
-          cp ./dashboard/config.${{ inputs.environment }}.js ./dashboard/config.js
-          cp ./api/config.${{ inputs.environment }}.ts ./api/config.ts
+          CONFIG_PATHS="${{ inputs.config_paths }}"
+          
+          if [ -z "$CONFIG_PATHS" ]; then
+            CONFIG_PATHS="."
+          fi
+          
+          IFS=',' read -ra PATHS <<< "$CONFIG_PATHS"
+          for path in "${PATHS[@]}"; do
+            path=$(echo "$path" | xargs)  # Trim whitespace
+            
+            if [ -f "${path}/config.${{ inputs.environment }}.js" ]; then
+              cp ${path}/config.${{ inputs.environment }}.js ${path}/config.js
+              echo "✓ Copied JS config for ${path}"
+            fi
+            
+            if [ -f "${path}/config.${{ inputs.environment }}.ts" ]; then
+              cp ${path}/config.${{ inputs.environment }}.ts ${path}/config.ts
+              echo "✓ Copied TS config for ${path}"
+            fi
+          done
 
       - name: Update version.json
         if: ${{ inputs.setup_config }}

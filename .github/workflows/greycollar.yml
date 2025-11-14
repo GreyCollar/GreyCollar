@@ -25,6 +25,7 @@ jobs:
       service_name: greycollar
       environment: ${{ startsWith(github.ref, 'refs/tags/') && 'live' || github.event.inputs.environment || 'land' }}
       context_path: .
+      config_paths: './dashboard,./api'
       install_dependencies: true
       dependency_path: .
       run_lint: true
