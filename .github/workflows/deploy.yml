@@ -50,6 +50,11 @@ on:
         required: false
         type: string
         description: 'Optional: Comma-separated paths for multiple configs (e.g., "./dashboard,./api")'
+      setup_version:
+        required: false
+        type: boolean
+        default: false
+        description: 'Whether to setup version.json'
     secrets:
       DOCKER_ACCESS_TOKEN:
         required: false
@@ -88,9 +93,21 @@ jobs:
           done
 
       - name: Update version.json
-        if: ${{ inputs.setup_config }}
+        if: ${{ inputs.setup_version }}
         run: |
-          echo "{ \"version\": \"${{ github.ref_name }}\" }" > ./dashboard/src/version.json
+          CONFIG_PATHS="${{ inputs.config_paths }}"
+          
+          if [ -z "$CONFIG_PATHS" ]; then
+            CONFIG_PATHS="."
+          fi
+          
+          IFS=',' read -ra PATHS <<< "$CONFIG_PATHS"
+          FIRST_PATH=$(echo "${PATHS[0]}" | xargs)
+
+          if [ -d "${FIRST_PATH}/src" ]; then
+            echo "{ \"version\": \"${{ github.ref_name }}\" }" > ${FIRST_PATH}/src/version.json
+            echo "✓ Updated version.json in ${FIRST_PATH}/src"
+          fi
 
       - name: Install Dependencies
         if: ${{ inputs.install_dependencies }}
